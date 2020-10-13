@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F5972C07-0950-4DB3-8734-47F0F80738A8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>AI_ZX81.My.MyApplication</StartupObject>
+    <RootNamespace>AI_ZX81</RootNamespace>
+    <AssemblyName>AI_ZX81</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>AI_ZX81.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>AI_ZX81.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon_SpydazBrain.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Compiler\AbstractExpressions.vb" />
+    <Compile Include="Grammar\ENG_Grammar.vb" />
+    <Compile Include="StackVM\ZX81_CPU.vb" />
+    <Compile Include="Compiler\ClassLexer.vb" />
+    <Compile Include="StackVM\ZX81_Memory.vb" />
+    <Compile Include="Compiler\ClassParser.vb" />
+    <Compile Include="Compiler\Environment.vb" />
+    <Compile Include="IDE\FormDevIDE.Designer.vb">
+      <DependentUpon>FormDevIDE.vb</DependentUpon>
+    </Compile>
+    <Compile Include="IDE\FormDevIDE.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StackVM\FormDisplayScreen.Designer.vb">
+      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="StackVM\FormDisplayScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IDE\Form_DisplayText.designer.vb">
+      <DependentUpon>Form_DisplayText.vb</DependentUpon>
+    </Compile>
+    <Compile Include="IDE\Form_DisplayText.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IDE\ModuleKnowledgeStructures.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Grammar\ClassGrammars.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="IDE\FormDevIDE.resx">
+      <DependentUpon>FormDevIDE.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StackVM\FormDisplayScreen.resx">
+      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IDE\Form_DisplayText.resx">
+      <DependentUpon>Form_DisplayText.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="ScratchPad.text" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ipad-mockup-768x1024.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blue-apple-watch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\smartwatch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imac-mockup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\macbook-mockup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\samsung-mockup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iphone-6mockup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ipad-mockup-hands.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dell UltraSharp 27.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\71nuo-ahpIL._AC_SL1500_.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\png-transparent-laptop-dell-xps-15-l502x-computer-keyboard-laptop-electronics-retro-computer-keyboard-thumbnail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rick-sanchez-commodore-64-computer-cases-housings-disk-storage-commodore-international-morty-sanchez-thumbnail.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1200px-Computer_Retro.svg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Apple-IIGS-Woz-edition2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\awesome-amiga-500-plus-amiga-1200-computer.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\png-transparent-zx-spectrum-vega-zx81-sinclair-research-computer-computer-electronics-computer-video-game.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon_SpydazBrain.ico" />
+    <Content Include="PL_Help.txt" />
+    <Content Include="StackVM\IF.txt" />
+    <Content Include="StackVM\WHILE.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>
