@@ -5,7 +5,7 @@ A basic programming Languge Parsed to Tokens to e parsed to expressions to be co
 Also to be used to Parse English grammar to make abstract syntax trees. 
 
 
-# Basic Program Langugae GRAMMAR
+# Basic Program Langugae Grammar
 
 BASIC FUNCTIONS 
 
