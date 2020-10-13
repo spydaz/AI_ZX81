@@ -11,16 +11,24 @@ BASIC FUNCTIONS
 
    Print ""
    DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 1.5 / $VARNAME$
+   
    Conditional Operations () Output TRUE/FALSE
+   
    IF () THEN {} ELSE {} END IF
+   
    Basic Math Operators +-/*=<>
+   
    Block Code {}
+   
    DO WHILE () {} LOOP 
+   
    FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
+   
    NEXT $VARNAME$
 
 
 # Spydaz Virtual Machine Code Language ;
+
 This language is used to execute code on the Stack VM.
 
 PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF / JMP / DIV / DUP / AND / OR / NOT /HALT
