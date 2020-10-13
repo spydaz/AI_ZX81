@@ -9,15 +9,15 @@ Also to be used to Parse English grammar to make abstract syntax trees.
 
 BASIC FUNCTIONS 
 
-Print ""
-DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 1.5 / $VARNAME$
-Conditional Operations () Output TRUE/FALSE
-IF () THEN {} ELSE {} END IF
-Basic Math Operators +-/*=<>
-Block Code {}
-DO WHILE () {} LOOP 
-FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
-NEXT $VARNAME$
+   Print ""
+   DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 1.5 / $VARNAME$
+   Conditional Operations () Output TRUE/FALSE
+   IF () THEN {} ELSE {} END IF
+   Basic Math Operators +-/*=<>
+   Block Code {}
+   DO WHILE () {} LOOP 
+   FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
+   NEXT $VARNAME$
 
 
 # Spydaz Virtual Machine Code Language ;
