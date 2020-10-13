@@ -5,11 +5,12 @@ A basic programming Languge Parsed to Tokens to e parsed to expressions to be co
 Also to be used to Parse English grammar to make abstract syntax trees. 
 
 
-# Basic Program Langugae Grammar
+# Basic Program Language Grammar
 
-BASIC FUNCTIONS 
+## BASIC FUNCTIONS 
 
    Print ""
+   
    DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 1.5 / $VARNAME$
    
    Conditional Operations () Output TRUE/FALSE
@@ -55,7 +56,7 @@ the returned address should return the value 3
  The Journey of Creation Reveals a lot about the microsoft compilr as well as the original basic/Interperter and compiler.
   
 
-  The Language Creator : A Toy Programming Language
+ ## The Language Creator : A Toy Programming Language
 
 ### Development Stages: 
 
