@@ -8,13 +8,21 @@ Also to be used to Parse English grammar to make abstract syntax trees.
 ## Basic Program Language; 
 
 Print ""
+
 DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
+
 Conditional Operations () Output TRUE/FALSE
+
 IF () THEN {} ELSE {} END IF
+
 Basic Math Operators +-/*=<>
+
 Block Code {}
+
 DO WHILE () {} LOOP 
+
 FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
+
 NEXT $VARNAME$
 
 ## Spydaz Virtual Machine Code Language ;
@@ -26,9 +34,6 @@ PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / R
 ALL commands must be on a single line and ending with the halt Command!
 
 EG : Push 1 Push 2 add ret halt the returned address should return the value 3
-
-
-
 
 
 # Expected Outcomes :
