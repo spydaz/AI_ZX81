@@ -1,0 +1,28 @@
+﻿            PUSH, 
+            6,        // Push the first argument
+            PUSH, 
+            4,        // Push the second argument
+            CALL, 
+            7,        // Call "max"
+            HALT,
+            STORE,    // Here is address 7, the start of "max" function
+            1,       // Store b in local variable 1; the stack now contains [a]
+            STORE, 
+            0,       // Store a in local variable 0; the stack is now empty
+            LOAD, 
+            0,        // The stack now contains [a]
+            LOAD, 
+            1,        // The stack now contains [a, b]
+            IS_GE,           // The stack now contains [a > b]
+            JIF_T, 
+            21,        // If the top of the stack is true (a > b), jump to the "if" path
+            LOAD, 
+            1,        // "else" path: load b on the stack
+            RET,     
+            LOAD,     // Here is address 23
+            0,        // "if" path: load a on the stack
+            RET
+
+     * We're going to create a function that returns the maximum of its two arguments.
+     *
+       function max(int a, int b) { if (a > b) { return a} else {return b} end if} 

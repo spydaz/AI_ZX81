@@ -39,7 +39,11 @@ Namespace AbstractExpressions
         ''' ie: Integer / String
         ''' </summary>
         Public VarType As String
-
+        Public Function EXECUTE() As String
+            Dim CPU As New CPU_FUNCTIONS
+            CPU._print(iValue)
+            Return iValue
+        End Function
         Public Overridable Function GetValue() As String
             Return iValue
 
@@ -62,7 +66,6 @@ Namespace AbstractExpressions
     Public MustInherit Class UnaryExpression
         Inherits ConstantExpression
         Public Identifier As String
-
         Public ParentEnv As Environment_Memory
         Public Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As Environment_Memory)
             MyBase.New(NodeType, Value, Type)
@@ -75,7 +78,6 @@ Namespace AbstractExpressions
             End If
 
         End Sub
-
 
         Public Overrides Function Evaluate(ByRef ParentEnvironment As Environment_Memory) As String
             If ParentEnvironment.CheckVar(GetName) = True Then
@@ -114,6 +116,17 @@ Namespace AbstractExpressions
         ''' (RightNode = ConstantExpression (number/1/int/))
         ''' </summary>
         Public Right As Expression
+        ''' <summary>
+        ''' Executes command on virtual machine
+        ''' </summary>
+        ''' <param name="Left"></param>
+        ''' <param name="Right"></param>
+        ''' <param name="Ioperator"></param>
+        ''' <returns></returns>
+        Public Overridable Function EXECUTE(ByRef Left As Integer, Right As Integer, Ioperator As String) As String
+            Dim cpu As New CPU_FUNCTIONS
+            Return cpu._Binary_op(Left, Right, Ioperator)
+        End Function
 
         Protected Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As Environment_Memory)
             MyBase.New(NodeType, iName, Value, Type, Env)
@@ -185,10 +198,16 @@ Namespace ConcreteExpressions
             Return iValue
         End Function
         Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
-
             iValue = EvaluateBoolean(Left, iOperator, Right)
             Return GetValue()
         End Function
+        ''' <summary>
+        ''' Evaluate node values ( imeadiatly invoked expression )
+        ''' </summary>
+        ''' <param name="Left"></param>
+        ''' <param name="iOperator"></param>
+        ''' <param name="Right"></param>
+        ''' <returns></returns>
         Private Function EvaluateBoolean(ByRef Left As ConstantExpression, ByRef iOperator As String, ByRef Right As ConstantExpression) As String
 
             If Left.VarType = "INT" And Right.VarType = "INT" Then
@@ -228,6 +247,15 @@ Namespace ConcreteExpressions
 
             Return GetValue()
         End Function
+
+
+        ''' <summary>
+        ''' Enables for evaluation of the node / Imediatly invoked expression
+        ''' </summary>
+        ''' <param name="Left"></param>
+        ''' <param name="iOperator"></param>
+        ''' <param name="Right"></param>
+        ''' <returns></returns>
         Private Function EvaluateAddative(ByRef Left As ConstantExpression, ByRef iOperator As String, ByRef Right As ConstantExpression) As String
 
             If Left.VarType = "INT" And Right.VarType = "INT" Then
@@ -259,6 +287,13 @@ Namespace ConcreteExpressions
             iValue = EvaluateMultiplicative(Left, iOperator, Right)
             Return GetValue()
         End Function
+        ''' <summary>
+        ''' Allows for evaluation of the node : Imeadialty invoked expression
+        ''' </summary>
+        ''' <param name="Left"></param>
+        ''' <param name="iOperator"></param>
+        ''' <param name="Right"></param>
+        ''' <returns></returns>
         Private Function EvaluateMultiplicative(ByRef Left As ConstantExpression, ByRef iOperator As String, ByRef Right As ConstantExpression) As String
 
             If Left.VarType = "INT" And Right.VarType = "INT" Then

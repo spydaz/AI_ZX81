@@ -355,6 +355,11 @@ Namespace STACK_VM
                     Dim returnAddress = GetCurrentFrame().GetReturnAddress()
                     InstructionAdrress = returnAddress
                     localCache.Pop()
+                Case "PRINT"
+                    Peek()
+                    Dim frm As New Form_ZX81
+                    frm.Show()
+                    frm.Print(Peek)
                 Case Else
                     Me.STATE = False
                     CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction", Me)

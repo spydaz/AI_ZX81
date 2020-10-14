@@ -81,13 +81,22 @@
   <ItemGroup>
     <Compile Include="Compiler\AbstractExpressions.vb" />
     <Compile Include="Grammar\ENG_Grammar.vb" />
+    <Compile Include="StackVM\CPU_FUNCTIONS.vb" />
+    <Compile Include="StackVM\ZX81_CPU.vb" />
     <Compile Include="Compiler\ClassLexer.vb" />
+    <Compile Include="StackVM\ZX81_Memory.vb" />
     <Compile Include="Compiler\ClassParser.vb" />
     <Compile Include="Compiler\Environment.vb" />
     <Compile Include="IDE\FormDevIDE.Designer.vb">
       <DependentUpon>FormDevIDE.vb</DependentUpon>
     </Compile>
     <Compile Include="IDE\FormDevIDE.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StackVM\FormDisplayScreen.Designer.vb">
+      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="StackVM\FormDisplayScreen.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IDE\Form_DisplayText.designer.vb">
@@ -114,18 +123,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Grammar\ClassGrammars.vb" />
-    <Compile Include="StackVM\FormDisplayScreen.designer.vb">
-      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
-    </Compile>
-    <Compile Include="StackVM\FormDisplayScreen.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="StackVM\ZX81_CPU.vb" />
-    <Compile Include="StackVM\ZX81_Memory.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IDE\FormDevIDE.resx">
       <DependentUpon>FormDevIDE.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StackVM\FormDisplayScreen.resx">
+      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IDE\Form_DisplayText.resx">
       <DependentUpon>Form_DisplayText.vb</DependentUpon>
@@ -135,9 +139,6 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="StackVM\FormDisplayScreen.resx">
-      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -204,15 +205,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon_SpydazBrain.ico" />
-    <Content Include="StackVM\IF.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="StackVM\maxFunction.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="StackVM\WHILE.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="PL_Help.txt" />
+    <Content Include="StackVM\IF.txt" />
+    <Content Include="StackVM\MAX.txt" />
+    <Content Include="StackVM\WHILE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

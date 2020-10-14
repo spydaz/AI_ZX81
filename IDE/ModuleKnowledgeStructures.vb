@@ -20,7 +20,8 @@ Public Module ModuleKnowledgeStructures
         _is_ge
         _is_gt
         _jmp
-        _jif
+        _jif_t
+        _jif_f
         _load
         _store
         _Call
