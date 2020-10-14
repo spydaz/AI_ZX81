@@ -207,6 +207,9 @@
     <Content Include="StackVM\IF.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="StackVM\maxFunction.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="StackVM\WHILE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
