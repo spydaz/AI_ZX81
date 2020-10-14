@@ -41,6 +41,8 @@ Partial Class FormDevIDE
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.ButtonInsertCode = New System.Windows.Forms.Button()
         Me.ComboBoxSyntaxHelp = New System.Windows.Forms.ComboBox()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
@@ -212,6 +214,7 @@ Partial Class FormDevIDE
         'GroupBox7
         '
         Me.GroupBox7.BackColor = System.Drawing.Color.Black
+        Me.GroupBox7.Controls.Add(Me.Label1)
         Me.GroupBox7.Controls.Add(Me.ButtonExecuteCpuCode)
         Me.GroupBox7.Controls.Add(Me.ButtonExecute)
         Me.GroupBox7.Controls.Add(Me.ButtonCompile)
@@ -265,6 +268,7 @@ Partial Class FormDevIDE
         '
         'GroupBox8
         '
+        Me.GroupBox8.Controls.Add(Me.Button1)
         Me.GroupBox8.Controls.Add(Me.ButtonInsertCode)
         Me.GroupBox8.Controls.Add(Me.ComboBoxSyntaxHelp)
         Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Left
@@ -303,6 +307,24 @@ Partial Class FormDevIDE
         Me.ComboBoxSyntaxHelp.Size = New System.Drawing.Size(589, 27)
         Me.ComboBoxSyntaxHelp.TabIndex = 0
         Me.ComboBoxSyntaxHelp.Tag = "Some Tests"
+        '
+        'Button1
+        '
+        Me.Button1.BackColor = System.Drawing.Color.Black
+        Me.Button1.Location = New System.Drawing.Point(386, 56)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(99, 32)
+        Me.Button1.TabIndex = 2
+        Me.Button1.Text = "HELP"
+        Me.Button1.UseVisualStyleBackColor = False
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(616, 32)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(626, 80)
+        Me.Label1.TabIndex = 3
+        Me.Label1.Text = resources.GetString("Label1.Text")
         '
         'FormDevIDE
         '
@@ -355,4 +377,6 @@ Partial Class FormDevIDE
     Friend WithEvents RichTextBoxProgram As TextBox
     Friend WithEvents ButtonExecuteCpuCode As Button
     Friend WithEvents ButtonInsertCode As Button
+    Friend WithEvents Button1 As Button
+    Friend WithEvents Label1 As Label
 End Class
