@@ -118,47 +118,29 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TextOut.Text" xml:space="preserve">
-    <value>Spydaz Basic Programig Language Pooject
+    <value>
 
-This is the current syntax implementation of the PL Only basic functions are implemented; 
-Functions are Lexed into tokens then they are parsed into expressions to be compiled into Spydaz Virtual machine code:
-
-BASIC FUNCTIONS 
+Basic Program Language; 
 
 Print ""
-
-DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 1.5 / $VARNAME$
-
+DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
 Conditional Operations () Output TRUE/FALSE
-
 IF () THEN {} ELSE {} END IF
-
-Basic Math Operators 
-+-/*=&lt;&gt;
-
+Basic Math Operators +-/*=&lt;&gt;
 Block Code {}
-
 DO WHILE () {} LOOP 
-
 FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
-
 NEXT $VARNAME$
 
-Each statement can be seprated by spaces and each newline signifys a new statement or statment segment.
-
-AND / OR / NOT
-
 Spydaz Virtual Machine Code Language ;
+
 This language is used to execute code on the Stack VM.
 
-PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF / JMP / DIV / DUP / AND / OR / NOT /HALT
- 
- ALL commands must be on a single line and ending with the halt Command!
+PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF_T / JIF_F / JMP / DIV / DUP / AND / OR / NOT /HALT
 
-EG : Push 1 Push 2 add ret halt
-the returned address should return the value 3
+ALL commands must be on a single line and ending with the halt Command!
 
-
+EG : Push 1 Push 2 add ret halt the returned address should return the value 3
 </value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
