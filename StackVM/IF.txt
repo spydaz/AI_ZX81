@@ -1,35 +1,30 @@
-﻿if (a > b) {
-    c = a;
-} else {
-    c = b;
-}
+﻿    PUSH, 
+	6,    			// Init a with "6"
+    STORE, 
+	0,   
+    PUSH, 
+	4, 				// Init b with "4"
+    STORE, 
+	1,    
+    LOAD,  			// Load a and b into the stack
+	0,            	// Stack contains a				
+    LOAD, 
+	1,            	// Stack contains a, b
+    ISGT,          	// Stack contains a > b
+    JIF_T, 
+	21,   
+    LOAD, 			// This is the "else" path
+	1,            	// Stack contains b
+    STORE, 
+	2,           	// Set c to the stack head, meaning c = b
+    JMP, 
+	25,
+    LOAD,  			// This is the "if" path, and this is the address 21
+	0,            	// Stack contains a
+    STORE, 
+	2,           	// Set c to the stack head, meaning c = a 
+    HALT   			// Done; this is address 26
+	
+	
+	if (a > b) {c = a} else {c = b}
 
-
-CPU cpu = new CPU(
-    // Init a with "6"
-    PUSH, 6,
-    STORE, 0,
-    
-    // Init b with "4"
-    PUSH, 4,
-    STORE, 1,
-    
-    // Load a and b into the stack
-    LOAD, 0,            // Stack contains a
-    LOAD, 1,            // Stack contains a, b
-    ISGT,               // Stack contains a > b
-    JIF, 21,
-    
-    // This is the "else" path
-    LOAD, 1,            // Stack contains b
-    STORE, 2,           // Set c to the stack head, meaning c = b
-    JMP, 25,
-    
-    // This is the "if" path, and this is the address 21
-    LOAD, 0,            // Stack contains a
-    STORE, 2,           // Set c to the stack head, meaning c = a
-    
-    // Done; this is address 25
-    HALT
-);
-PUSH 6 STORE 0 PUSH 4 STORE 1 LOAD 0 LOAD 1 IS_GT JIF 21 LOAD 1 STORE 2 JMP 25 LOAD 0 STORE 2 RET HALT

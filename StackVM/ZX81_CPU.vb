@@ -311,12 +311,23 @@ Namespace STACK_VM
                         InstructionAdrress = address
                     End If
 
-                Case "JIF"
+                Case "JIF_T"
                     ' "Should have the address after the JIF instruction"
                     '' The word after the instruction will contain the address to jump to
                     Dim address As String = Fetch()
                     If CheckJumpAddress(Integer.Parse(address)) = True And CheckStackHasAtLeastOneItem() = True Then
                         If (ToBool(CpuStack.Pop())) Then
+                            InstructionAdrress = address
+                        Else
+                        End If
+                    Else
+                    End If
+                Case "JIF_F"
+                    ' "Should have the address after the JIF instruction"
+                    '' The word after the instruction will contain the address to jump to
+                    Dim address As String = Fetch()
+                    If CheckJumpAddress(Integer.Parse(address)) = True And CheckStackHasAtLeastOneItem() = True Then
+                        If (NOT_ToBool(CpuStack.Pop())) Then
                             InstructionAdrress = address
                         Else
                         End If
@@ -672,9 +683,14 @@ Namespace GRAMMARS
             Rule.COMPONENTSTRINGS.Add("JMP")
             RuleList.Add(Rule)
             Rule = New GrammarRule
-            Rule.TAGSTRING = "_jif"
+            Rule.TAGSTRING = "_jif_t"
             Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("JIF")
+            Rule.COMPONENTSTRINGS.Add("JIF_T")
+            RuleList.Add(Rule)
+            Rule = New GrammarRule
+            Rule.TAGSTRING = "_jif_f"
+            Rule.COMPONENTSTRINGS = New List(Of String)
+            Rule.COMPONENTSTRINGS.Add("JIF_F")
             RuleList.Add(Rule)
             Rule = New GrammarRule
             Rule.TAGSTRING = "_load"
