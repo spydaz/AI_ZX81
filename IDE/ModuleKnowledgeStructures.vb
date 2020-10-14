@@ -67,16 +67,20 @@ Public Module ModuleKnowledgeStructures
             Dim Statments As New List(Of String)
 
             Dim Str As String = ""
-            For Each item In SyntaxStatments
-                If item IsNot Nothing Then
-                    Str = ""
-                    For Each item2 In item
-                        Str &= item2 & " "
-                    Next
-                    Statments.Add(Str)
-                Else
-                End If
-            Next
+            If SyntaxStatments IsNot Nothing Then
+
+
+                For Each item In SyntaxStatments
+                    If item IsNot Nothing Then
+                        Str = ""
+                        For Each item2 In item
+                            Str &= item2 & " "
+                        Next
+                        Statments.Add(Str)
+                    Else
+                    End If
+                Next
+            End If
             Return Statments
         End Function
     End Structure
@@ -239,77 +243,77 @@ Public Module ModuleKnowledgeStructures
     ''' SHOULD BE SHADOWED FOR CUSTOM TOKEN SELECTION
     ''' </summary>
     Public Enum TokenType
-        _null
-        _STRING_TYPE
-        _CODEBLOCK
-        _LISTBEGIN
-        _LISTEND
-        _CONDITIONAL_OPERATORS
-        _MATHOPERATORS
-        _MULTIPLICATIVES
-        _ADDATIVES
-        _EACH
-        _DO
-        _WHITE_SPACE
-        _NEW_LINE
-        _LETTER
-        _EOF
-        _NUMBER
-        _OPERATION
-        _LEFT_CODE_BRACKET
-        _RIGHT_CODE_BRACKET
-        _CODE_BLOCK
-        _LEFTBRACKET
-        _RIGHTBRACKET
-        _DIM
-        _ADD
-        _MINUS
-        _DIVIDE
-        _MULTIPLY
-        _EQUALS
-        _GREATER_THAN
-        _LESS_THAN
-        _NOT
-        _OR
-        _AND
-        _DECIMAL_POINT
-        _FLOAT
-        _INT
-        _BOOLEAN
-        _VARIABLE
-        _ARRAY
-        _STRING
-        _PRINT
-        _IF
-        _THEN
-        _ELSE
-        _FOR
-        _NEXT
-        _TO
-        _FUNCTION
-        _CALL
-        _END
-        _LOOP
-        _WHILE
-        _TRUE
-        _FALSE
-        _AS
-        _IN
-        _ASSIGN
-        _NOUN
-        _VERB
-        _ADVERB
-        _ADJECTIVE
-        _PREPOSITION
-        _CONJUNCTION
-        _QUESTWORD
-        _INTERJECTION
-        _PRONOUN
-        _PRONOUN_NAME
-        _PRONOUN_PLACE
-        _TRAANSITIVE_VERB
-        _INTRANSITIVE_VERB
-        _QUANTIFIER
+        _null = 0
+        _STRING_TYPE = 1
+        _CODEBLOCK = 2
+        _LISTBEGIN = 3
+        _LISTEND = 4
+        _CONDITIONAL_OPERATORS = 5
+        _MATHOPERATORS = 6
+        _MULTIPLICATIVES = 7
+        _ADDATIVES = 8
+        _EACH = 9
+        _DO = 10
+        _WHITE_SPACE = 11
+        _NEW_LINE = 12
+        _LETTER = 13
+        _EOF = 14
+        _NUMBER = 15
+        _OPERATION = 16
+        _LEFT_CODE_BRACKET = 17
+        _RIGHT_CODE_BRACKET = 18
+        _CODE_BLOCK = 19
+        _LEFTBRACKET = 20
+        _RIGHTBRACKET = 21
+        _DIM = 22
+        _ADD = 23
+        _MINUS = 24
+        _DIVIDE = 25
+        _MULTIPLY = 26
+        _EQUALS = 27
+        _GREATER_THAN = 28
+        _LESS_THAN = 29
+        _NOT = 30
+        _OR = 31
+        _AND = 32
+        _DECIMAL_POINT = 33
+        _FLOAT = 34
+        _INT = 35
+        _BOOLEAN = 36
+        _VARIABLE = 37
+        _ARRAY = 38
+        _STRING = 39
+        _PRINT = 40
+        _IF = 41
+        _THEN = 42
+        _ELSE = 43
+        _FOR = 44
+        _NEXT = 45
+        _TO = 46
+        _FUNCTION = 47
+        _CALL = 48
+        _END = 49
+        _LOOP = 50
+        _WHILE = 51
+        _TRUE = 52
+        _FALSE = 53
+        _AS = 54
+        _IN = 55
+        _ASSIGN = 56
+        _NOUN = 57
+        _VERB = 58
+        _ADVERB = 59
+        _ADJECTIVE = 60
+        _PREPOSITION = 61
+        _CONJUNCTION = 62
+        _QUESTWORD = 63
+        _INTERJECTION = 64
+        _PRONOUN = 65
+        _PRONOUN_NAME = 66
+        _PRONOUN_PLACE = 67
+        _TRAANSITIVE_VERB = 68
+        _INTRANSITIVE_VERB = 69
+        _QUANTIFIER = 70
     End Enum
 
 

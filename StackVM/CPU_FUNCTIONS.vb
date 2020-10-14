@@ -110,7 +110,6 @@
         End Select
 
     End Function
-
     Public Sub _print(ByRef Str As String)
 
         Dim VM As STACK_VM.ZX81_CPU

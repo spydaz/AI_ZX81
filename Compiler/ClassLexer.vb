@@ -110,13 +110,14 @@ Namespace Compiler
         Public Shared Function GetTokenExprTree(ByRef Program As AbstractTokenTree) As TreeNode
             'Root NOde
             Dim Main As New TreeNode
+            Main.Text = "Program"
             Dim Count As Integer = 0
             Dim CurrentItemNode As New TreeNode
             For Each item In Program.Statments
                 Count += 1
 
                 CurrentItemNode = New TreeNode
-                CurrentItemNode.Text = "Expression" & Count
+                CurrentItemNode.Text = "Statement" & Count
                 For Each ItemToken In item
                     Dim CurrentTokenNode As New TreeNode
                     If ItemToken.TokenRule.TAGSTRING = "" Then
@@ -727,6 +728,7 @@ Namespace Compiler
                             newrule.TAGSTRING = "_CODE_BLOCK"
                             NewToke.TokenRule = newrule
                             'Add Collcted Tokens for block to Statment
+                            NewToke.CodeBlock = New List(Of List(Of Token))
                             NewToke.CodeBlock.Add(NewStatment)
                             Statements.Add(NewToke)
 

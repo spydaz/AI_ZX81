@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TextOut.Text" xml:space="preserve">
-    <value>Spydaz Basic Programig Language Pooject
+    <value>Spydaz Basic Programing Language Project
 
 This is the current syntax implementation of the PL Only basic functions are implemented; 
 Functions are Lexed into tokens then they are parsed into expressions to be compiled into Spydaz Virtual machine code:
@@ -151,7 +151,7 @@ AND / OR / NOT
 Spydaz Virtual Machine Code Language ;
 This language is used to execute code on the Stack VM.
 
-PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF / JMP / DIV / DUP / AND / OR / NOT /HALT
+PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF_T / JIF_F / JMP / DIV / DUP / AND / OR / NOT /HALT
  
  ALL commands must be on a single line and ending with the halt Command!
 

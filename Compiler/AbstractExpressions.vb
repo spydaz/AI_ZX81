@@ -123,7 +123,7 @@ Namespace AbstractExpressions
         ''' <param name="Right"></param>
         ''' <param name="Ioperator"></param>
         ''' <returns></returns>
-        Public Overridable Function EXECUTE(ByRef Left As Integer, Right As Integer, Ioperator As String) As String
+        Public Overridable Overloads Function EXECUTE(ByRef Left As Integer, Right As Integer, Ioperator As String) As String
             Dim cpu As New CPU_FUNCTIONS
             Return cpu._Binary_op(Left, Right, Ioperator)
         End Function

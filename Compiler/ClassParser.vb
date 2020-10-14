@@ -20,16 +20,31 @@ Namespace Compiler
         ''' </summary>
         ''' <param name="AST"></param>
         ''' <returns></returns>
-        Public Function GetParseAST_Tree(ByRef AST As AbstractTokenTree) As List(Of AbstractSyntax)
-            Dim AST_Tre As New List(Of AbstractSyntax)
+        Public Function GetParseAST_Tree(ByRef AST As AbstractTokenTree) As List(Of List(Of AbstractSyntax))
+            Dim AST_statement As New List(Of AbstractSyntax)
             Dim ASTgramm As New AST_Grammar
-
+            Dim ast_statments As New List(Of List(Of AbstractSyntax))
             For Each item In AST.Statments
+
                 For Each item2 In ASTgramm.CreateGrammar()
-                    AST_Tre.Add(GetSyntax(item, item2))
+                    Dim Abstrac As New AbstractSyntax
+                    Abstrac = GetSyntax(item, item2)
+                    If Abstrac.RequiredTokens IsNot Nothing Then
+                        If Abstrac.RequiredTokens.Count > 1 Then
+                            AST_statement.Add(Abstrac)
+                        Else
+
+                        End If
+                    Else
+                    End If
                 Next
+
+
             Next
-            Return AST_Tre
+            If AST_statement.Count > 0 Then
+                ast_statments.Add(AST_statement)
+            End If
+            Return ast_statments
         End Function
         ''' <summary>
         ''' Given as statment (Token Statment) 
@@ -44,7 +59,7 @@ Namespace Compiler
             Dim CompList As New List(Of String)
             'Build Comparison list
             For Each item In DefinedTokens
-                CompList.Add(item.DetectedType)
+                CompList.Add(item.DetectedType.ToString)
             Next
             'Search each statement in Search Syntaxes
             For Each item In KnownSyntax.SyntaxStatments

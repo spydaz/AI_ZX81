@@ -427,14 +427,14 @@
             RuleList.Add(Add_PRINT_BOOL_FUNCTION)
             RuleList.Add(Add_PRINT_INT_FUNCTION)
 
-            RuleList.Add(ADD_DO_WHILE_FUNCTION)
-            RuleList.Add(ADD_LOOP_FUNCTION)
-            RuleList.Add(ADD_WHILE_FUNCTION)
-            RuleList.Add(ADD_ELSE_FUNCTION)
-            RuleList.Add(ADD_END_IF_FUNCTION)
-            RuleList.Add(ADD_FOR_FUNCTION)
-            RuleList.Add(ADD_IF_THEN_FUNCTION)
-            RuleList.Add(ADD_NEXT_FUNCTION)
+            'RuleList.Add(ADD_DO_WHILE_FUNCTION)
+            'RuleList.Add(ADD_LOOP_FUNCTION)
+            'RuleList.Add(ADD_WHILE_FUNCTION)
+            'RuleList.Add(ADD_ELSE_FUNCTION)
+            'RuleList.Add(ADD_END_IF_FUNCTION)
+            'RuleList.Add(ADD_FOR_FUNCTION)
+            'RuleList.Add(ADD_IF_THEN_FUNCTION)
+            'RuleList.Add(ADD_NEXT_FUNCTION)
             Return RuleList
         End Function
 
@@ -448,9 +448,9 @@
         ''' <returns></returns>
         Public Function AddMathOperation() As AbstractSyntax
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             rule.SyntaxName = "Math_Operation"
-
             'ADD
             Statement = New List(Of String)
             Statement.Add("_NUMBER")
@@ -551,6 +551,7 @@
         ''' <returns></returns>
         Public Function AddConditionalOperation() As AbstractSyntax
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             rule.SyntaxName = "Conditional_Operation"
             rule.SyntaxStatments.Add(Statement)
@@ -767,6 +768,7 @@
         Public Function Add_PRINT_STR_FUNCTION() As AbstractSyntax
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
+            rule.SyntaxStatments = New List(Of List(Of String))
             rule.SyntaxName = "_PRINT_STR"
             Statement = New List(Of String)
             Statement.Add("_PRINT")
@@ -776,6 +778,7 @@
         End Function
         Public Function Add_PRINT_BOOL_FUNCTION() As AbstractSyntax
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             rule.SyntaxName = "_PRINT_BOOL"
             Statement = New List(Of String)
@@ -786,6 +789,7 @@
         End Function
         Public Function Add_PRINT_INT_FUNCTION() As AbstractSyntax
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             rule.SyntaxName = "_PRINT_INT"
             Statement = New List(Of String)
@@ -799,7 +803,7 @@
         Public Function Add_DIM_AS_FUNCTION() As AbstractSyntax
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
-
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_DIM_AS"
             rule.SyntaxStatments.Add(Statement)
@@ -826,7 +830,7 @@
         Public Function Add_DIM_AS_EQUALS_FUNCTION() As AbstractSyntax
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
-
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING = NUMBER/TRUE/FALSE/STRING
             rule.SyntaxName = "_DIM_AS"
             rule.SyntaxStatments.Add(Statement)
@@ -869,7 +873,7 @@
         Public Function ADD_FOR_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
-
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_FOR"
             rule.SyntaxStatments.Add(Statement)
@@ -892,7 +896,7 @@
         Public Function ADD_NEXT_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
-
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_NEXT"
             rule.SyntaxStatments.Add(Statement)
@@ -907,7 +911,7 @@
         Public Function ADD_IF_THEN_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
-
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_IF"
             Statement = New List(Of String)
@@ -954,6 +958,7 @@
         End Function
         Public Function ADD_ELSE_FUNCTION()
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_ELSE"
@@ -969,6 +974,7 @@
         End Function
         Public Function ADD_END_IF_FUNCTION()
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_END_IF"
@@ -980,6 +986,7 @@
         End Function
         Public Function ADD_LOOP_FUNCTION()
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_LOOP"
@@ -994,6 +1001,7 @@
         Public Function ADD_DO_WHILE_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_DO_WHILE"
 
@@ -1010,6 +1018,7 @@
         End Function
         Public Function ADD_WHILE_FUNCTION()
             Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
             Dim Statement As New List(Of String)
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_WHILE"
@@ -1028,6 +1037,7 @@
         Public Function ADD_CODEBLOCK_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_CODEBLOCK"
 
@@ -1041,6 +1051,7 @@
         Public Function ADD_OPERATION_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
+            rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_OPERATION"
 
