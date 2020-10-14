@@ -55,14 +55,16 @@ EG : Push 1 Push 2 add ret halt the returned address should return the value 3
 
 ### Development Stages: 
 
-Create a Lexer to tokenize the input based upon a grammar with defined rules
-Create a Parser to parse Tokens into Expressions (Constant/Unary/Binary/Trinary)
-Generate - Statements from Expressions 
-Generate - List of Expressions and functions for inputted program
-Create MasterList - AST Expressions for Functions and Types  > With Internal Execution as well as Regeneration of Visual basic syntax for Expressions 
- 
 Create A Compiler to ExecuteCode or Compile as Console Application or Generate ConvertedCode to Script. 
-maybe generate machine code language and execute on a virtual cpu stack based or register based?
+maybe generate machine code language and execute on a virtual cpu stack based or register based???
+
+Create a Lexer to tokenize the input based upon a grammar with defined rules
+Create a Parser to parse Tokens into Abstract Syntax statments (Constant/Unary/Binary/Trinary)
+Select - Correct Expressions for detected syntax load and execute?
+Execute: Expressions to Assembly >  Functions : Decisions regarding evaluation of sub nodes before executing on stack vm simplfing the execution process
+Execute - execute optimized tree on STACK Virtual machine
+
+Curently _ CLose!!!
 
 
  
