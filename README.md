@@ -5,39 +5,29 @@ A basic programming Languge Parsed to Tokens to e parsed to expressions to be co
 Also to be used to Parse English grammar to make abstract syntax trees. 
 
 
-# Basic Program Language Grammar
+## Basic Program Language; 
 
-## BASIC FUNCTIONS 
+Print ""
+DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
+Conditional Operations () Output TRUE/FALSE
+IF () THEN {} ELSE {} END IF
+Basic Math Operators +-/*=<>
+Block Code {}
+DO WHILE () {} LOOP 
+FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
+NEXT $VARNAME$
 
-   Print ""
-   
-   DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 1.5 / $VARNAME$
-   
-   Conditional Operations () Output TRUE/FALSE
-   
-   IF () THEN {} ELSE {} END IF
-   
-   Basic Math Operators +-/*=<>
-   
-   Block Code {}
-   
-   DO WHILE () {} LOOP 
-   
-   FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
-   
-   NEXT $VARNAME$
-
-
-# Spydaz Virtual Machine Code Language ;
+## Spydaz Virtual Machine Code Language ;
 
 This language is used to execute code on the Stack VM.
 
-PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF / JMP / DIV / DUP / AND / OR / NOT /HALT
- 
- ALL commands must be on a single line and ending with the halt Command!
+PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF_T / JIF_F / JMP / DIV / DUP / AND / OR / NOT /HALT
 
-EG : Push 1 Push 2 add ret halt
-the returned address should return the value 3
+ALL commands must be on a single line and ending with the halt Command!
+
+EG : Push 1 Push 2 add ret halt the returned address should return the value 3
+
+
 
 
 
