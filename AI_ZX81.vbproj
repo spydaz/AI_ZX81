@@ -123,6 +123,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Grammar\ClassGrammars.vb" />
+    <Compile Include="STACK_VM_ii\VM_.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IDE\FormDevIDE.resx">

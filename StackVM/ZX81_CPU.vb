@@ -2,7 +2,7 @@
 Namespace STACK_VM
     Public Class ZX81_CPU
         Public CpuStack As New Stack
-        Public InstructionPointer As Integer
+
         Private InstructionAdrress As Integer
         Public STATE As Boolean = False
         Public ProgramData As List(Of String)
@@ -500,6 +500,9 @@ Namespace STACK_VM
             CPU_ERR.RaiseErr()
             Return "NULL"
         End Function
+
+
+
         Private Function ToInt(ByRef Bool As Boolean) As String
             If Bool = False Then
                 Return 0
@@ -521,6 +524,8 @@ Namespace STACK_VM
                 Return 1
             End If
         End Function
+
+
         Private Function CheckJumpAddress(ByRef address As Integer) As Boolean
 
             Try
@@ -563,6 +568,8 @@ Namespace STACK_VM
 
 
         End Function
+
+
     End Class
     Public Class ZX81_ERR
         Private ErrorStr As String = ""
