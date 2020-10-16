@@ -28,6 +28,7 @@ NEXT $VARNAME$
 ## Spydaz Virtual Machine Code Language ;
 
 This language is used to execute code on the Stack VM.
+
         _PUSH
         _PULL
         _PEEK
