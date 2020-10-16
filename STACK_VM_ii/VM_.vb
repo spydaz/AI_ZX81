@@ -11,7 +11,7 @@ Public Class VM_
             Return mRunningState
         End Get
     End Property
-    Private mRunningState As Boolean
+    Private mRunningState As State = State.HALT
     ''' <summary>
     ''' This is the cpu stack memory space; 
     ''' Items being interrogated will be placed in this memeory frame
@@ -63,6 +63,7 @@ Public Class VM_
     ''' Used to Store memory frames (The Heap)
     ''' </summary>
     Public R_A_M As New Stack
+    Public WaitTime As Integer = 0
     ''' <summary>
     ''' Each Program can be considered to be a task or thread; 
     ''' A name should be assigned to the Process; 
@@ -107,7 +108,14 @@ Public Class VM_
     Public Sub RUN()
         mRunningState = True
         Do While (IsHalted = False)
-            EXECUTE()
+            If IsWait = True Then
+                For I = 0 To WaitTime
+                Next
+                EXECUTE()
+                mRunningState = State.RUN
+            Else
+                EXECUTE()
+            End If
         Loop
     End Sub
     ''' <summary>
@@ -116,7 +124,16 @@ Public Class VM_
     ''' <returns></returns>
     Public ReadOnly Property IsHalted As Boolean
         Get
-            If RunningState = False Then
+            If RunningState = State.HALT = True Then
+                Return True
+            Else
+                Return False
+            End If
+        End Get
+    End Property
+    Public ReadOnly Property IsWait As Boolean
+        Get
+            If RunningState = State.PAUSE Then
                 Return True
             Else
                 Return False
@@ -135,6 +152,9 @@ Public Class VM_
             CPU_ERR = New VM_ERR("CPU HALTED", Me)
             CPU_ERR.RaiseErr()
             'ERR - state stopped
+        End If
+        If IsWait = True Then
+
         End If
     End Sub
     ''' <summary>
@@ -169,6 +189,9 @@ Public Class VM_
         Select Case ProgramInstruction.ToString
 
 #Region "Basic Assembly"
+            Case "WAIT"
+                WaitTime = Integer.Parse(Fetch().ToString)
+                mRunningState = State.PAUSE
             Case "HALT"
                 'Stop the CPU
                 Me.mRunningState = False
@@ -192,26 +215,31 @@ Public Class VM_
                     CPU_ERR.RaiseErr()
                 End Try
             Case "POP"
+                CheckStackHasAtLeastOneItem()
                 Pop()
             Case "PUSH"
                 'Push
                 Push(Fetch)
             Case "JMP"
+                CheckStackHasAtLeastOneItem()
                 ' "Should have the address after the JMP instruction"
                 '' The word after the instruction will contain the address to jump to
                 Dim address As Integer = Integer.Parse(Fetch().ToString)
                 JUMP(address)
             Case "JIF_T"
+                CheckStackHasAtLeastOneItem()
                 ' "Should have the address after the JIF instruction"
                 '' The word after the instruction will contain the address to jump to
                 Dim address As Integer = Integer.Parse(Fetch().ToString)
                 JumpIf_TRUE(address)
             Case "JIF_F"
+                CheckStackHasAtLeastOneItem()
                 ' "Should have the address after the JIF instruction"
                 '' The word after the instruction will contain the address to jump to
                 Dim address As Integer = Integer.Parse(Fetch().ToString)
                 JumpIf_False(address)
             Case "LOAD"
+                CheckStackHasAtLeastOneItem()
                 'lOADS A VARIABLE
                 Dim varNumber As Integer = Integer.Parse(Fetch().ToString)
                 CPU_CACHE.Push(GetCurrentFrame.GetVar(varNumber))
@@ -403,22 +431,74 @@ Public Class VM_
                     CPU_ERR.RaiseErr()
                 End Try
 #End Region
-            Case "POS"
+
+            Case "TO_POS"
                 If CPU_CACHE.Count >= 1 Then
                     Push(ToPositive(Integer.Parse(Pop)))
                 Else
                     Me.mRunningState = False
-                    CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - POS", Me)
+                    CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - POS", Me)
                     CPU_ERR.RaiseErr()
                 End If
-            Case "NEG"
+            Case "TO_NEG"
                 If CPU_CACHE.Count >= 1 Then
                     Push(ToNegative(Integer.Parse(Pop)))
                 Else
                     Me.mRunningState = False
-                    CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - NEG", Me)
+                    CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - NEG", Me)
                     CPU_ERR.RaiseErr()
                 End If
+
+#Region "Extended JmpCmds"
+            Case "JIF_GT"
+                Try
+                    If CPU_CACHE.Count >= 3 Then
+                        Dim address As Integer = Integer.Parse(Fetch().ToString)
+                        Push(BINARYOP("IS_GT", Integer.Parse(Pop()), Integer.Parse(Pop())))
+                        JumpIf_TRUE(address)
+                    Else
+                        Me.mRunningState = False
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_GT", Me)
+                        CPU_ERR.RaiseErr()
+                    End If
+                Catch ex As Exception
+                    Me.mRunningState = False
+                    CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_GT", Me)
+                    CPU_ERR.RaiseErr()
+                End Try
+            Case "JIF_LT"
+                Try
+                    If CPU_CACHE.Count >= 3 Then
+                        Dim address As Integer = Integer.Parse(Fetch().ToString)
+                        Push(BINARYOP("IS_LT", Integer.Parse(Pop()), Integer.Parse(Pop())))
+                        JumpIf_TRUE(address)
+                    Else
+                        Me.mRunningState = False
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_LT", Me)
+                        CPU_ERR.RaiseErr()
+                    End If
+                Catch ex As Exception
+                    Me.mRunningState = False
+                    CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_LT", Me)
+                    CPU_ERR.RaiseErr()
+                End Try
+            Case "JIF_EQ"
+                Try
+                    If CPU_CACHE.Count >= 3 Then
+                        Dim address As Integer = Integer.Parse(Fetch().ToString)
+                        Push(BINARYOP("IS_EQ", Integer.Parse(Pop()), Integer.Parse(Pop())))
+                        JumpIf_TRUE(address)
+                    Else
+                        Me.mRunningState = False
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_EQ", Me)
+                        CPU_ERR.RaiseErr()
+                    End If
+                Catch ex As Exception
+                    Me.mRunningState = False
+                    CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_EQ", Me)
+                    CPU_ERR.RaiseErr()
+                End Try
+#End Region
             Case Else
                 Me.mRunningState = False
                 CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction", Me)
@@ -453,6 +533,11 @@ Public Class VM_
 #End Region
 
 #Region "CPU _ Components"
+    Private Enum State
+        RUN
+        HALT
+        PAUSE
+    End Enum
     ''' <summary>
     ''' Memory frame for Variables
     ''' </summary>
@@ -699,13 +784,13 @@ Public Class VM_
                     CPU_ERR.RaiseErr()
                 End Try
             Case "NOT"
-
+                CheckStackHasAtLeastOneItem()
+                Push(ToInt(NOT_ToBool(Pop())))
             Case Else
                 Me.mRunningState = False
                 CPU_ERR = New VM_ERR("Invalid Operation -not", Me)
                 CPU_ERR.RaiseErr()
         End Select
-
         Me.mRunningState = False
         CPU_ERR = New VM_ERR("Invalid Operation -BinaryOp", Me)
         CPU_ERR.RaiseErr()
@@ -732,6 +817,7 @@ Public Class VM_
             Return False
         End If
     End Function
+
     Private Sub JumpIf_TRUE(ByRef Address As Integer)
         If CheckJumpAddress(Address) = True And CheckStackHasAtLeastOneItem() = True Then
             If (ToBool(Pop)) Then
@@ -741,6 +827,8 @@ Public Class VM_
         Else
         End If
     End Sub
+
+
     Private Sub JUMP(ByRef Address As Integer)
         If CheckJumpAddress(Address) = True Then
             InstructionAdrress = Address
