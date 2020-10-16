@@ -263,11 +263,15 @@ Public Class VM_
                 R_A_M.Pop()
 #End Region
 
-            Case "PRINT"
+            Case "PRINT_M"
                 Peek()
                 Dim frm As New Form_ZX81
                 frm.Show()
                 frm.Print(Peek)
+
+            Case "PRINT_C"
+                Peek()
+                Console.WriteLine(Peek())
 #Region "Operations"
             Case "ADD"
                 'ADD
@@ -499,6 +503,13 @@ Public Class VM_
                     CPU_ERR.RaiseErr()
                 End Try
 #End Region
+
+            Case "INCREMENT"
+                CheckStackHasAtLeastOneItem()
+                Push(Integer.Parse(Pop) + 1)
+            Case "DECREMENT"
+                CheckStackHasAtLeastOneItem()
+                Push(Integer.Parse(Pop) - 1)
             Case Else
                 Me.mRunningState = False
                 CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction", Me)
