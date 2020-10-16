@@ -196,6 +196,8 @@ Public Class VM_
                 'Stop the CPU
                 Me.mRunningState = False
             Case "PAUSE"
+                WaitTime = Integer.Parse(Fetch().ToString)
+                mRunningState = State.PAUSE
                 ' A Wait time Maybe Neccasary
             Case "DUP"
                 Try
@@ -262,16 +264,18 @@ Public Class VM_
                 InstructionAdrress = returnAddress
                 R_A_M.Pop()
 #End Region
-
+#Region "PRINT"
+                ' PRINT TO MONITOR
             Case "PRINT_M"
                 Peek()
                 Dim frm As New Form_ZX81
                 frm.Show()
                 frm.Print(Peek)
-
+                ' PRINT TO CONSOLE
             Case "PRINT_C"
                 Peek()
                 Console.WriteLine(Peek())
+#End Region
 #Region "Operations"
             Case "ADD"
                 'ADD
@@ -435,7 +439,7 @@ Public Class VM_
                     CPU_ERR.RaiseErr()
                 End Try
 #End Region
-
+#Region "POSITIVE VS NEGATIVE"
             Case "TO_POS"
                 If CPU_CACHE.Count >= 1 Then
                     Push(ToPositive(Integer.Parse(Pop)))
@@ -452,7 +456,7 @@ Public Class VM_
                     CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - NEG", Me)
                     CPU_ERR.RaiseErr()
                 End If
-
+#End Region
 #Region "Extended JmpCmds"
             Case "JIF_GT"
                 Try
@@ -503,13 +507,15 @@ Public Class VM_
                     CPU_ERR.RaiseErr()
                 End Try
 #End Region
-
+#Region "INCREMENT/DECREMENT"
             Case "INCREMENT"
                 CheckStackHasAtLeastOneItem()
                 Push(Integer.Parse(Pop) + 1)
             Case "DECREMENT"
                 CheckStackHasAtLeastOneItem()
                 Push(Integer.Parse(Pop) - 1)
+#End Region
+
             Case Else
                 Me.mRunningState = False
                 CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction", Me)
