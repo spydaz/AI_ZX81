@@ -1,4 +1,7 @@
 ﻿Imports Newtonsoft.Json.JsonConvert
+''' <summary>
+''' SpydazWeb X86 Assembly language Virtual X86 Processor
+''' </summary>
 Public Class VM_
 #Region "CPU"
     ''' <summary>
@@ -26,9 +29,44 @@ Public Class VM_
     ''' Jumping backwards and forwards in the program code.
     ''' </summary>
     ''' <returns></returns>
-    Public ReadOnly Property GetInstructionAddress() As Integer
+    Private ReadOnly Property GetInstructionAddress() As Integer
         Get
             Return InstructionAdrress
+        End Get
+    End Property
+    Public ReadOnly Property Get_Instruction_Pointer_Position As Integer
+        Get
+            Return GetInstructionAddress
+        End Get
+    End Property
+    ''' <summary>
+    ''' Returns the current data in the stack
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property Get_Current_Stack_Data As List(Of String)
+        Get
+            Get_Current_Stack_Data = New List(Of String)
+            For Each item In CPU_CACHE
+                Get_Current_Stack_Data.Add(item.ToString)
+            Next
+        End Get
+    End Property
+    ''' <summary>
+    ''' Returns the Current Cache (the stack)
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property View_C_P_U As Stack
+        Get
+            Return CPU_CACHE
+        End Get
+    End Property
+    ''' <summary>
+    ''' Returns the current object on top of the stack
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property Get_Current_Stack_Item As Object
+        Get
+            Return Peek()
         End Get
     End Property
     ''' <summary>
@@ -62,21 +100,39 @@ Public Class VM_
     ''' <summary>
     ''' Used to Store memory frames (The Heap)
     ''' </summary>
-    Public R_A_M As New Stack
-    Public WaitTime As Integer = 0
+    Private R_A_M As New Stack
+    ''' <summary>
+    ''' Returns the Ram as a Stack of Stack Memeory frames;
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property View_R_A_M As Stack
+        Get
+            Return R_A_M
+        End Get
+    End Property
+    Private WaitTime As Integer = 0
+
+
     ''' <summary>
     ''' Each Program can be considered to be a task or thread; 
     ''' A name should be assigned to the Process; 
     ''' Processes themselves can be stacked in a higher level processor,
     ''' allowing for paralel processing of code
+    ''' This process allows for the initialization of the CPU; THe Prgram will still need to be loaded
     ''' </summary>
     ''' <param name="ThreadName"></param>
     Public Sub New(ByRef ThreadName As String)
         Me.PROCESS_NAME = ThreadName
     End Sub
+    ''' <summary>
+    ''' Load Program and Executes Code on CPU
+    ''' </summary>
+    ''' <param name="ThreadName">A name is required to Identify the Process</param>
+    ''' <param name="Program"></param>
     Public Sub New(ByRef ThreadName As String, ByRef Program As List(Of String))
         Me.PROCESS_NAME = ThreadName
         LoadProgram(Program)
+        RUN()
     End Sub
     ''' <summary>
     '''  Loads items in to the program cache; 
@@ -142,7 +198,10 @@ Public Class VM_
     End Property
     ''' <summary>
     ''' Executes the next instruction in the Program
-    ''' Each Instruction is fed individually to the decoder
+    ''' Each Instruction is fed individually to the decoder : 
+    ''' The Execute cycle Checks the Current State to determine 
+    ''' if to fetch the next instruction to be decoded;(or EXECUTED) -
+    ''' The decoder contains the Chip logic
     ''' </summary>
     Public Sub EXECUTE()
         'The HALT command is used to STOP THE CPU
@@ -160,7 +219,9 @@ Public Class VM_
     ''' <summary>
     ''' Program Instructions can be boolean/String or integer 
     ''' so an object is assumed enabling for later classification
-    ''' of the instructions at the decoder level
+    ''' of the instructions at the decoder level : 
+    ''' The Fetch Cycle Fetches the next Instruction in the Program to be executed:
+    ''' It is fed to the decoder to be decoded and executed
     ''' </summary>
     ''' <returns></returns>
     Private Function Fetch() As Object
@@ -182,8 +243,14 @@ Public Class VM_
         End If
         Return Nothing
     End Function
-
-#End Region
+    ''' <summary>
+    ''' Contains MainInstruction Set: Decode Cycle Decodes program instructions from the program 
+    ''' the Insruction pointer points to the current Instruction being feed into the decoder: 
+    ''' Important Note : the stack will always point to the data at top of the CPU CACHE (Which is Working Memory);
+    '''                 THe memory frames being used are Extensions of this memeory and can be seen as registers, 
+    '''                 itself being a memory stack (stack of memory frames)
+    ''' </summary>
+    ''' <param name="ProgramInstruction"></param>
     Public Sub DECODE(ByRef ProgramInstruction As Object)
 
         Select Case ProgramInstruction.ToString
@@ -368,7 +435,7 @@ Public Class VM_
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                     CPU_ERR.RaiseErr()
                 End Try
-            Case "ISEQ"
+            Case "IS_EQ"
                 Try
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
@@ -508,10 +575,10 @@ Public Class VM_
                 End Try
 #End Region
 #Region "INCREMENT/DECREMENT"
-            Case "INCREMENT"
+            Case "INCR"
                 CheckStackHasAtLeastOneItem()
                 Push(Integer.Parse(Pop) + 1)
-            Case "DECREMENT"
+            Case "DECR"
                 CheckStackHasAtLeastOneItem()
                 Push(Integer.Parse(Pop) - 1)
 #End Region
@@ -524,7 +591,8 @@ Public Class VM_
         End Select
 
     End Sub
-
+#End Region
+#Region "functions required by cpu and assembly language"
 #Region "Handle Boolean"
     Private Function ToInt(ByRef Bool As Boolean) As String
         If Bool = False Then
@@ -547,76 +615,6 @@ Public Class VM_
             Return 1
         End If
     End Function
-#End Region
-
-#Region "CPU _ Components"
-    Private Enum State
-        RUN
-        HALT
-        PAUSE
-    End Enum
-    ''' <summary>
-    ''' Memory frame for Variables
-    ''' </summary>
-    Public Class StackMemoryFrame
-        Public Structure Var
-            Public Value As Integer
-            Public VarNumber As String
-        End Structure
-        Public ReturnAddress As Integer
-        Public Variables As List(Of Var)
-
-        Public Sub New(ByRef ReturnAddress As Integer)
-            ReturnAddress = ReturnAddress
-            Variables = New List(Of Var)
-        End Sub
-        Public Function GetReturnAddress() As Integer
-
-            Return ReturnAddress
-        End Function
-        Public Function GetVar(ByRef VarNumber As String) As Integer
-            For Each item In Variables
-                If item.VarNumber = VarNumber Then
-                    Return item.Value
-
-                End If
-            Next
-            Return 0
-        End Function
-        Public Sub SetVar(ByRef VarNumber As String, ByRef value As Integer)
-            Dim item As New Var
-            item.VarNumber = VarNumber
-            item.Value = value
-
-            Variables.Add(item)
-        End Sub
-    End Class
-
-    Public Class VM_ERR
-        Private ErrorStr As String = ""
-        Private frm As New Form_ZX81
-        Private CpuCurrentState As VM_
-
-        Public Sub New(ByRef Err As String, ByVal CPUSTATE As VM_)
-            ErrorStr = Err
-            CpuCurrentState = CPUSTATE
-        End Sub
-        Public Sub RaiseErr()
-            If frm Is Nothing Then
-                frm = New Form_ZX81
-                frm.Show()
-                frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
-            Else
-                frm.Show()
-                frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
-            End If
-
-        End Sub
-
-
-
-
-    End Class
 #End Region
 
 #Region "Functional Parts"
@@ -901,9 +899,118 @@ Public Class VM_
     Private Function ToPositive(Number As Integer)
         Return Math.Abs(Number)
     End Function
-
     Private Function ToNegative(Number As Integer)
         Return Math.Abs(Number) * -1
     End Function
+#End Region
+#Region "CPU _ INTERNAL _ Components"
+    Private Enum State
+        RUN
+        HALT
+        PAUSE
+    End Enum
+    ''' <summary>
+    ''' Memory frame for Variables
+    ''' </summary>
+    Public Class StackMemoryFrame
+        Public Structure Var
+            Public Value As Integer
+            Public VarNumber As String
+        End Structure
+        Public ReturnAddress As Integer
+        Public Variables As List(Of Var)
 
+        Public Sub New(ByRef ReturnAddress As Integer)
+            ReturnAddress = ReturnAddress
+            Variables = New List(Of Var)
+        End Sub
+        Public Function GetReturnAddress() As Integer
+
+            Return ReturnAddress
+        End Function
+        Public Function GetVar(ByRef VarNumber As String) As Integer
+            For Each item In Variables
+                If item.VarNumber = VarNumber Then
+                    Return item.Value
+
+                End If
+            Next
+            Return 0
+        End Function
+        Public Sub SetVar(ByRef VarNumber As String, ByRef value As Integer)
+            Dim item As New Var
+            item.VarNumber = VarNumber
+            item.Value = value
+
+            Variables.Add(item)
+        End Sub
+    End Class
+
+    Public Class VM_ERR
+        Private ErrorStr As String = ""
+        Private frm As New Form_ZX81
+        Private CpuCurrentState As VM_
+
+        Public Sub New(ByRef Err As String, ByVal CPUSTATE As VM_)
+            ErrorStr = Err
+            CpuCurrentState = CPUSTATE
+        End Sub
+        Public Sub RaiseErr()
+            If frm Is Nothing Then
+                frm = New Form_ZX81
+                frm.Show()
+                frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
+            Else
+                frm.Show()
+                frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
+            End If
+
+        End Sub
+
+
+
+
+    End Class
+#End Region
+    ''' <summary>
+    ''' COMMANDS FOR ASSEMBLY LANGUAGE FOR THIS CPU
+    ''' SPYDAZWEB_VM_X86
+    ''' </summary>
+    Public Enum VM_x86_Cmds
+        _PUSH
+        _PULL
+        _PEEK
+        _WAIT
+        _PAUSE
+        _HALT
+        _DUP
+        _JMP
+        _JIF_T
+        _JIF_F
+        _JIF_EQ
+        _JIF_GT
+        _JIF_LT
+        _LOAD
+        _STORE
+        _CALL
+        _RET
+        _PRINT_M
+        _PRINT_C
+        _ADD
+        _SUB
+        _MUL
+        _DIV
+        _AND
+        _OR
+        _NOT
+        _IS_EQ
+        _IS_GT
+        _IS_GTE
+        _IS_LT
+        _IS_LTE
+        _TO_POS
+        _TO_NEG
+        _INCR
+        _DECR
+    End Enum
 End Class
