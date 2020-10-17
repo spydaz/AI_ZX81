@@ -106,15 +106,14 @@
                     Return "FALSE"
                 End If
         End Select
-
     End Function
     Public Sub _print(ByRef Str As String)
-
         Dim VM As STACK_VM.ZX81_CPU
         Dim PROGRAM As New List(Of String)
         PROGRAM.Add("PUSH")
         PROGRAM.Add(Str)
-        PROGRAM.Add("PRINT")
+        PROGRAM.Add("PRINT_M")
+        PROGRAM.Add("HALT")
         VM = New STACK_VM.ZX81_CPU("Print", PROGRAM)
     End Sub
 

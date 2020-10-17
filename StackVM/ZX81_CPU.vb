@@ -1,9 +1,11 @@
 ﻿Imports Newtonsoft.Json.JsonConvert
+Imports System
 Namespace STACK_VM
     ''' <summary>
     ''' SpydazWeb X86 Assembly language Virtual X86 Processor
     ''' </summary>
     Public Class ZX81_CPU
+        Private IMonitor As Form_ZX81
 #Region "CPU"
         ''' <summary>
         ''' Used to monitor the Program status ; 
@@ -339,14 +341,14 @@ Namespace STACK_VM
 #Region "PRINT"
                 ' PRINT TO MONITOR
                 Case "PRINT_M"
-                    Peek()
-                    Dim frm As New Form_ZX81
-                    frm.Show()
-                    frm.Print(Peek)
+                    IMonitor = New Form_ZX81
+                    IMonitor.Show()
+                    IMonitor.Print("------------ ZX 81 ----------" & vbNewLine & Pop())
+
                 ' PRINT TO CONSOLE
                 Case "PRINT_C"
-                    Peek()
-                    Console.WriteLine(Peek())
+                    '  System.Console.WriteLine("------------ ZX 81 ----------" & vbNewLine & Peek())
+                    System.Console.ReadKey()
 #End Region
 #Region "Operations"
                 Case "ADD"
@@ -704,116 +706,128 @@ Namespace STACK_VM
         ''' <returns></returns>
         Public Function Peek() As String
             Try
-                Return CPU_CACHE.Peek().ToString
+                If CPU_CACHE.Count > 0 Then
+                    Return CPU_CACHE.Peek().ToString
+                Else
+                    mRunningState = State.HALT
+                    Return "NULL"
+                End If
             Catch ex As Exception
+                mRunningState = State.HALT
                 CPU_ERR = New VM_ERR("NULL POINTER CPU HALTED", Me)
                 CPU_ERR.RaiseErr()
-                mRunningState = State.HALT
+
                 Return "NULL"
             End Try
         End Function
         Private Function BINARYOP(ByRef INSTRUCTION As String, LEFT As Integer, RIGHT As Integer) As String
-            Select Case INSTRUCTION
-                Case "IS_EQ"
-                    Try
-                        Return ToInt((ToBool(LEFT) = ToBool(RIGHT)))
-                    Catch ex As Exception
+            If INSTRUCTION IsNot Nothing Then
+
+
+                Select Case INSTRUCTION
+                    Case "IS_EQ"
+                        Try
+                            Return ToInt((ToBool(LEFT) = ToBool(RIGHT)))
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation - isEQ", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "IS_GT"
+                        Try
+                            Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation - isGT", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "IS_GTE"
+                        Try
+                            Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation isGTE", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "IS_LT"
+                        Try
+                            Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
+                            Return LEFT + RIGHT
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation isLT", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "IS_LE"
+                        Try
+                            Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation isLTE", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "ADD"
+                        Try
+                            Return LEFT + RIGHT
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation -add", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "SUB"
+                        Try
+                            Return LEFT - RIGHT
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation -sub", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "MUL"
+                        Try
+                            Return LEFT * RIGHT
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation -mul", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "DIV"
+                        Try
+                            Return LEFT / RIGHT
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation -div", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "OR"
+                        Try
+                            Return ToInt((ToBool(LEFT) Or ToBool(RIGHT)))
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation -or", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "AND"
+                        Try
+                            Return ToInt((ToBool(LEFT) And ToBool(RIGHT)))
+                        Catch ex As Exception
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Invalid Operation -and", Me)
+                            CPU_ERR.RaiseErr()
+                        End Try
+                    Case "NOT"
+                        CheckStackHasAtLeastOneItem()
+                        Push(ToInt(NOT_ToBool(Pop())))
+                    Case Else
                         Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation - isEQ", Me)
+                        CPU_ERR = New VM_ERR("Invalid Operation -not", Me)
                         CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_GT"
-                    Try
-                        Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation - isGT", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_GTE"
-                    Try
-                        Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation isGTE", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_LT"
-                    Try
-                        Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
-                        Return LEFT + RIGHT
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation isLT", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_LE"
-                    Try
-                        Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation isLTE", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "ADD"
-                    Try
-                        Return LEFT + RIGHT
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation -add", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "SUB"
-                    Try
-                        Return LEFT - RIGHT
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation -sub", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "MUL"
-                    Try
-                        Return LEFT * RIGHT
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation -mul", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "DIV"
-                    Try
-                        Return LEFT / RIGHT
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation -div", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "OR"
-                    Try
-                        Return ToInt((ToBool(LEFT) Or ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation -or", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "AND"
-                    Try
-                        Return ToInt((ToBool(LEFT) And ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.mRunningState = State.HALT
-                        CPU_ERR = New VM_ERR("Invalid Operation -and", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "NOT"
-                    CheckStackHasAtLeastOneItem()
-                    Push(ToInt(NOT_ToBool(Pop())))
-                Case Else
-                    Me.mRunningState = State.HALT
-                    CPU_ERR = New VM_ERR("Invalid Operation -not", Me)
-                    CPU_ERR.RaiseErr()
-            End Select
-            Me.mRunningState = State.HALT
-            CPU_ERR = New VM_ERR("Invalid Operation -BinaryOp", Me)
-            CPU_ERR.RaiseErr()
+                End Select
+
+
+            Else
+                Me.mRunningState = State.HALT
+            End If
+
             Return "NULL"
         End Function
         Private Function CheckStackHasAtLeastOneItem(ByRef Current As Stack) As Boolean
@@ -982,6 +996,7 @@ Namespace STACK_VM
         ''' SPYDAZWEB_VM_X86
         ''' </summary>
         Public Enum VM_x86_Cmds
+            _NULL
             _PUSH
             _PULL
             _PEEK
@@ -1019,4 +1034,6 @@ Namespace STACK_VM
             _DECR
         End Enum
     End Class
+
+
 End Namespace

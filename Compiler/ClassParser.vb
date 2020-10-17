@@ -77,5 +77,23 @@ Namespace Compiler
 
             Return Nothing
         End Function
+
+        Public Sub executeON_CPU(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax)))
+            Dim LST As New List(Of AbstractExpressions.Expression)
+            Dim CPU_FUNC As New CPU_FUNCTIONS
+            For Each ITEM In POPULATED_TREE
+                For Each TOK In ITEM
+                    Select Case TOK.SyntaxName
+                        Case "_PRINT_STR"
+                            CPU_FUNC._print(TOK.RequiredTokens(1).TokenValue)
+                        Case "_PRINT_INT"
+                            CPU_FUNC._print(TOK.RequiredTokens(1).TokenValue)
+                    End Select
+
+                Next
+
+            Next
+        End Sub
+
     End Class
 End Namespace

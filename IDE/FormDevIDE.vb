@@ -28,7 +28,7 @@ Public Class FormDevIDE
         LexPL(GetCode)
     End Sub
     Public Function GetCode() As String
-        Return RichTextBoxProgram.Text.Replace("  ", " ")
+        Return UCase(RichTextBoxProgram.Text.Replace("  ", " "))
     End Function
     Public Sub DisplayOutput(ByRef OutputStr As String)
         RichTextBoxDisplayOutput.Text = OutputStr
@@ -179,6 +179,7 @@ Public Class FormDevIDE
 
                 Next
                 DisplayError("Parse Completed" & vbNewLine & "Abstract Token Tree Generated" & vbNewLine)
+                'add test --------------------
             Else
                 Errr = True
                 DisplayError("No tokens detected" & vbNewLine)
@@ -194,5 +195,30 @@ Public Class FormDevIDE
 
     Private Sub ButtonClearTree_Click(sender As Object, e As EventArgs) Handles ButtonClearTree.Click
         AST.Nodes.Clear()
+    End Sub
+
+    Private Sub ButtonExecuteTree_Click(sender As Object, e As EventArgs) Handles ButtonExecuteTree.Click
+        Dim Errr As Boolean = False
+        Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(UCase(GetCode)))
+        If CurrentTokens IsNot Nothing Then
+            If CurrentTokens.Count > 0 Then
+                Dim Tokentree As AbstractTokenTree = New ClassLexer(UCase(GetCode), PL_Grammar.CreatePLGrammar, "PL").Abstract_Token_Tree
+                Dim Parser As New ClassParser
+                AST.Nodes.Clear()
+                AST.Nodes.Add(ClassLexer.GetTokenExprTree(Tokentree))
+                Dim tree = Parser.GetParseAST_Tree(Tokentree)
+                'Add Test --------------------
+                Parser.executeON_CPU(tree)
+            Else
+                Errr = True
+                DisplayError("No tokens detected" & vbNewLine)
+            End If
+        Else
+            Errr = True
+            DisplayError("Parse NOT Completed" & vbNewLine & "Abstract Token NOT Tree Generated" & vbNewLine)
+        End If
+        If Errr = True Then
+            DisplayError("TOKENS NOT FULLY DEFINED - NO SYNTAX DEFINED" & vbNewLine)
+        End If
     End Sub
 End Class

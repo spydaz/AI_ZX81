@@ -35,17 +35,18 @@ Partial Class FormDevIDE
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.TextBoxEnterStatments = New System.Windows.Forms.TextBox()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.ButtonClearTree = New System.Windows.Forms.Button()
+        Me.ButtonExecuteTree = New System.Windows.Forms.Button()
         Me.ButtonParseTree = New System.Windows.Forms.Button()
         Me.ButtonExecuteCpuCode = New System.Windows.Forms.Button()
         Me.ButtonExecute = New System.Windows.Forms.Button()
         Me.ButtonCompile = New System.Windows.Forms.Button()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.ButtonHelp = New System.Windows.Forms.Button()
         Me.ButtonInsertCode = New System.Windows.Forms.Button()
         Me.ComboBoxSyntaxHelp = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
@@ -67,10 +68,10 @@ Partial Class FormDevIDE
         Me.GroupBox1.Font = New System.Drawing.Font("Comic Sans MS", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox1.ForeColor = System.Drawing.Color.White
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
-        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox1.Size = New System.Drawing.Size(1540, 400)
+        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox1.Size = New System.Drawing.Size(1155, 325)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "SpydazWeb AI Programming Language Editor"
@@ -83,11 +84,11 @@ Partial Class FormDevIDE
         Me.GroupBox6.Controls.Add(Me.RichTextBoxDisplayOutput)
         Me.GroupBox6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox6.ForeColor = System.Drawing.Color.Lime
-        Me.GroupBox6.Location = New System.Drawing.Point(718, 21)
-        Me.GroupBox6.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox6.Location = New System.Drawing.Point(479, 17)
+        Me.GroupBox6.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox6.Name = "GroupBox6"
-        Me.GroupBox6.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox6.Size = New System.Drawing.Size(319, 377)
+        Me.GroupBox6.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox6.Size = New System.Drawing.Size(317, 306)
         Me.GroupBox6.TabIndex = 2
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "Program Output"
@@ -99,10 +100,10 @@ Partial Class FormDevIDE
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RichTextBoxDisplayOutput.BackColor = System.Drawing.Color.Gainsboro
         Me.RichTextBoxDisplayOutput.Font = New System.Drawing.Font("Consolas", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.RichTextBoxDisplayOutput.Location = New System.Drawing.Point(7, 22)
-        Me.RichTextBoxDisplayOutput.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.RichTextBoxDisplayOutput.Location = New System.Drawing.Point(5, 18)
+        Me.RichTextBoxDisplayOutput.Margin = New System.Windows.Forms.Padding(2)
         Me.RichTextBoxDisplayOutput.Name = "RichTextBoxDisplayOutput"
-        Me.RichTextBoxDisplayOutput.Size = New System.Drawing.Size(306, 248)
+        Me.RichTextBoxDisplayOutput.Size = New System.Drawing.Size(308, 202)
         Me.RichTextBoxDisplayOutput.TabIndex = 0
         Me.RichTextBoxDisplayOutput.Text = ""
         '
@@ -113,11 +114,11 @@ Partial Class FormDevIDE
         Me.GroupBox5.Dock = System.Windows.Forms.DockStyle.Right
         Me.GroupBox5.Font = New System.Drawing.Font("Comic Sans MS", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox5.ForeColor = System.Drawing.Color.Aqua
-        Me.GroupBox5.Location = New System.Drawing.Point(1037, 21)
-        Me.GroupBox5.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox5.Location = New System.Drawing.Point(796, 17)
+        Me.GroupBox5.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox5.Size = New System.Drawing.Size(500, 377)
+        Me.GroupBox5.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox5.Size = New System.Drawing.Size(357, 306)
         Me.GroupBox5.TabIndex = 1
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "Abstract Syntax Tree"
@@ -127,10 +128,10 @@ Partial Class FormDevIDE
         Me.AST.BackColor = System.Drawing.SystemColors.Info
         Me.AST.Dock = System.Windows.Forms.DockStyle.Fill
         Me.AST.Font = New System.Drawing.Font("Comic Sans MS", 9.0!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.AST.Location = New System.Drawing.Point(3, 21)
-        Me.AST.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.AST.Location = New System.Drawing.Point(2, 17)
+        Me.AST.Margin = New System.Windows.Forms.Padding(2)
         Me.AST.Name = "AST"
-        Me.AST.Size = New System.Drawing.Size(494, 354)
+        Me.AST.Size = New System.Drawing.Size(353, 287)
         Me.AST.TabIndex = 0
         '
         'GroupBox2
@@ -140,11 +141,11 @@ Partial Class FormDevIDE
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Left
         Me.GroupBox2.Font = New System.Drawing.Font("Comic Sans MS", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox2.ForeColor = System.Drawing.Color.Yellow
-        Me.GroupBox2.Location = New System.Drawing.Point(3, 21)
-        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox2.Location = New System.Drawing.Point(2, 17)
+        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox2.Size = New System.Drawing.Size(715, 377)
+        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox2.Size = New System.Drawing.Size(477, 306)
         Me.GroupBox2.TabIndex = 0
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Program"
@@ -152,11 +153,11 @@ Partial Class FormDevIDE
         'RichTextBoxProgram
         '
         Me.RichTextBoxProgram.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.RichTextBoxProgram.Location = New System.Drawing.Point(3, 21)
-        Me.RichTextBoxProgram.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.RichTextBoxProgram.Location = New System.Drawing.Point(2, 17)
+        Me.RichTextBoxProgram.Margin = New System.Windows.Forms.Padding(2)
         Me.RichTextBoxProgram.Multiline = True
         Me.RichTextBoxProgram.Name = "RichTextBoxProgram"
-        Me.RichTextBoxProgram.Size = New System.Drawing.Size(709, 354)
+        Me.RichTextBoxProgram.Size = New System.Drawing.Size(473, 287)
         Me.RichTextBoxProgram.TabIndex = 0
         '
         'GroupBox3
@@ -166,11 +167,11 @@ Partial Class FormDevIDE
         Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.GroupBox3.Font = New System.Drawing.Font("Comic Sans MS", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox3.ForeColor = System.Drawing.Color.Lime
-        Me.GroupBox3.Location = New System.Drawing.Point(0, 598)
-        Me.GroupBox3.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox3.Location = New System.Drawing.Point(0, 486)
+        Me.GroupBox3.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox3.Size = New System.Drawing.Size(1540, 228)
+        Me.GroupBox3.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox3.Size = New System.Drawing.Size(1155, 185)
         Me.GroupBox3.TabIndex = 1
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Error Output"
@@ -179,12 +180,12 @@ Partial Class FormDevIDE
         '
         Me.TextBoxErrorOutput.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TextBoxErrorOutput.Font = New System.Drawing.Font("Consolas", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBoxErrorOutput.Location = New System.Drawing.Point(3, 21)
-        Me.TextBoxErrorOutput.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.TextBoxErrorOutput.Location = New System.Drawing.Point(2, 17)
+        Me.TextBoxErrorOutput.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxErrorOutput.Multiline = True
         Me.TextBoxErrorOutput.Name = "TextBoxErrorOutput"
         Me.TextBoxErrorOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBoxErrorOutput.Size = New System.Drawing.Size(1534, 205)
+        Me.TextBoxErrorOutput.Size = New System.Drawing.Size(1151, 166)
         Me.TextBoxErrorOutput.TabIndex = 0
         '
         'GroupBox4
@@ -194,11 +195,11 @@ Partial Class FormDevIDE
         Me.GroupBox4.Dock = System.Windows.Forms.DockStyle.Top
         Me.GroupBox4.Font = New System.Drawing.Font("Comic Sans MS", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox4.ForeColor = System.Drawing.Color.Aqua
-        Me.GroupBox4.Location = New System.Drawing.Point(0, 400)
-        Me.GroupBox4.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox4.Location = New System.Drawing.Point(0, 325)
+        Me.GroupBox4.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox4.Size = New System.Drawing.Size(1540, 81)
+        Me.GroupBox4.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox4.Size = New System.Drawing.Size(1155, 66)
         Me.GroupBox4.TabIndex = 2
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Enter Statements"
@@ -208,10 +209,10 @@ Partial Class FormDevIDE
         Me.TextBoxEnterStatments.BackColor = System.Drawing.SystemColors.Info
         Me.TextBoxEnterStatments.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TextBoxEnterStatments.Font = New System.Drawing.Font("Comic Sans MS", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBoxEnterStatments.Location = New System.Drawing.Point(3, 21)
-        Me.TextBoxEnterStatments.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.TextBoxEnterStatments.Location = New System.Drawing.Point(2, 17)
+        Me.TextBoxEnterStatments.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxEnterStatments.Name = "TextBoxEnterStatments"
-        Me.TextBoxEnterStatments.Size = New System.Drawing.Size(1534, 40)
+        Me.TextBoxEnterStatments.Size = New System.Drawing.Size(1151, 33)
         Me.TextBoxEnterStatments.TabIndex = 0
         '
         'GroupBox7
@@ -219,6 +220,7 @@ Partial Class FormDevIDE
         Me.GroupBox7.BackColor = System.Drawing.Color.Black
         Me.GroupBox7.Controls.Add(Me.Label1)
         Me.GroupBox7.Controls.Add(Me.ButtonClearTree)
+        Me.GroupBox7.Controls.Add(Me.ButtonExecuteTree)
         Me.GroupBox7.Controls.Add(Me.ButtonParseTree)
         Me.GroupBox7.Controls.Add(Me.ButtonExecuteCpuCode)
         Me.GroupBox7.Controls.Add(Me.ButtonExecute)
@@ -227,32 +229,55 @@ Partial Class FormDevIDE
         Me.GroupBox7.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox7.Font = New System.Drawing.Font("Comic Sans MS", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox7.ForeColor = System.Drawing.Color.White
-        Me.GroupBox7.Location = New System.Drawing.Point(0, 481)
-        Me.GroupBox7.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox7.MinimumSize = New System.Drawing.Size(1559, 101)
+        Me.GroupBox7.Location = New System.Drawing.Point(0, 391)
+        Me.GroupBox7.Margin = New System.Windows.Forms.Padding(2)
+        Me.GroupBox7.MinimumSize = New System.Drawing.Size(1169, 82)
         Me.GroupBox7.Name = "GroupBox7"
-        Me.GroupBox7.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox7.Size = New System.Drawing.Size(1559, 117)
+        Me.GroupBox7.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox7.Size = New System.Drawing.Size(1169, 95)
         Me.GroupBox7.TabIndex = 3
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Tools"
         '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(398, 20)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(341, 73)
+        Me.Label1.TabIndex = 5
+        Me.Label1.Text = "Basic programming statements should be entered line; CPU intructions should be en" &
+    "tered on a single line." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Enter statments Using the box Edit in the window; "
+        '
         'ButtonClearTree
         '
         Me.ButtonClearTree.BackColor = System.Drawing.Color.Black
-        Me.ButtonClearTree.Location = New System.Drawing.Point(1126, 68)
+        Me.ButtonClearTree.Location = New System.Drawing.Point(844, 55)
+        Me.ButtonClearTree.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonClearTree.Name = "ButtonClearTree"
-        Me.ButtonClearTree.Size = New System.Drawing.Size(129, 31)
+        Me.ButtonClearTree.Size = New System.Drawing.Size(97, 25)
         Me.ButtonClearTree.TabIndex = 4
         Me.ButtonClearTree.Text = "Clear Tree"
         Me.ButtonClearTree.UseVisualStyleBackColor = False
         '
+        'ButtonExecuteTree
+        '
+        Me.ButtonExecuteTree.BackColor = System.Drawing.Color.Black
+        Me.ButtonExecuteTree.Location = New System.Drawing.Point(743, 20)
+        Me.ButtonExecuteTree.Margin = New System.Windows.Forms.Padding(2)
+        Me.ButtonExecuteTree.Name = "ButtonExecuteTree"
+        Me.ButtonExecuteTree.Size = New System.Drawing.Size(97, 28)
+        Me.ButtonExecuteTree.TabIndex = 3
+        Me.ButtonExecuteTree.Text = "Execute Tree"
+        Me.ButtonExecuteTree.UseVisualStyleBackColor = False
+        '
         'ButtonParseTree
         '
         Me.ButtonParseTree.BackColor = System.Drawing.Color.Black
-        Me.ButtonParseTree.Location = New System.Drawing.Point(1126, 25)
+        Me.ButtonParseTree.Location = New System.Drawing.Point(844, 20)
+        Me.ButtonParseTree.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonParseTree.Name = "ButtonParseTree"
-        Me.ButtonParseTree.Size = New System.Drawing.Size(129, 35)
+        Me.ButtonParseTree.Size = New System.Drawing.Size(97, 28)
         Me.ButtonParseTree.TabIndex = 3
         Me.ButtonParseTree.Text = "Parse Tree"
         Me.ButtonParseTree.UseVisualStyleBackColor = False
@@ -261,10 +286,10 @@ Partial Class FormDevIDE
         '
         Me.ButtonExecuteCpuCode.BackColor = System.Drawing.Color.PeachPuff
         Me.ButtonExecuteCpuCode.ForeColor = System.Drawing.Color.Black
-        Me.ButtonExecuteCpuCode.Location = New System.Drawing.Point(1427, 21)
-        Me.ButtonExecuteCpuCode.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ButtonExecuteCpuCode.Location = New System.Drawing.Point(1070, 17)
+        Me.ButtonExecuteCpuCode.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonExecuteCpuCode.Name = "ButtonExecuteCpuCode"
-        Me.ButtonExecuteCpuCode.Size = New System.Drawing.Size(103, 82)
+        Me.ButtonExecuteCpuCode.Size = New System.Drawing.Size(77, 67)
         Me.ButtonExecuteCpuCode.TabIndex = 2
         Me.ButtonExecuteCpuCode.Text = "Execute on Virtual CPU"
         Me.ButtonExecuteCpuCode.UseVisualStyleBackColor = False
@@ -272,10 +297,10 @@ Partial Class FormDevIDE
         'ButtonExecute
         '
         Me.ButtonExecute.BackColor = System.Drawing.Color.Black
-        Me.ButtonExecute.Location = New System.Drawing.Point(1261, 64)
-        Me.ButtonExecute.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ButtonExecute.Location = New System.Drawing.Point(946, 52)
+        Me.ButtonExecute.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonExecute.Name = "ButtonExecute"
-        Me.ButtonExecute.Size = New System.Drawing.Size(159, 38)
+        Me.ButtonExecute.Size = New System.Drawing.Size(119, 31)
         Me.ButtonExecute.TabIndex = 0
         Me.ButtonExecute.Text = "Lex English"
         Me.ButtonExecute.UseVisualStyleBackColor = False
@@ -283,10 +308,10 @@ Partial Class FormDevIDE
         'ButtonCompile
         '
         Me.ButtonCompile.BackColor = System.Drawing.Color.Black
-        Me.ButtonCompile.Location = New System.Drawing.Point(1261, 22)
-        Me.ButtonCompile.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ButtonCompile.Location = New System.Drawing.Point(946, 18)
+        Me.ButtonCompile.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonCompile.Name = "ButtonCompile"
-        Me.ButtonCompile.Size = New System.Drawing.Size(159, 38)
+        Me.ButtonCompile.Size = New System.Drawing.Size(119, 31)
         Me.ButtonCompile.TabIndex = 0
         Me.ButtonCompile.Text = "Lex ProgramLogic"
         Me.ButtonCompile.UseVisualStyleBackColor = False
@@ -299,21 +324,32 @@ Partial Class FormDevIDE
         Me.GroupBox8.Controls.Add(Me.ComboBoxSyntaxHelp)
         Me.GroupBox8.Dock = System.Windows.Forms.DockStyle.Left
         Me.GroupBox8.ForeColor = System.Drawing.Color.Aqua
-        Me.GroupBox8.Location = New System.Drawing.Point(3, 21)
-        Me.GroupBox8.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.GroupBox8.Location = New System.Drawing.Point(2, 17)
+        Me.GroupBox8.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.GroupBox8.Size = New System.Drawing.Size(595, 94)
+        Me.GroupBox8.Padding = New System.Windows.Forms.Padding(2)
+        Me.GroupBox8.Size = New System.Drawing.Size(392, 76)
         Me.GroupBox8.TabIndex = 1
         Me.GroupBox8.TabStop = False
         Me.GroupBox8.Text = "Select Syntax"
         '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(8, 49)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(186, 16)
+        Me.Label2.TabIndex = 3
+        Me.Label2.Text = "Tests and Scripts insert and edit"
+        '
         'ButtonHelp
         '
         Me.ButtonHelp.BackColor = System.Drawing.Color.Black
-        Me.ButtonHelp.Location = New System.Drawing.Point(402, 54)
+        Me.ButtonHelp.Location = New System.Drawing.Point(246, 43)
+        Me.ButtonHelp.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonHelp.Name = "ButtonHelp"
-        Me.ButtonHelp.Size = New System.Drawing.Size(83, 36)
+        Me.ButtonHelp.Size = New System.Drawing.Size(62, 29)
         Me.ButtonHelp.TabIndex = 2
         Me.ButtonHelp.Text = "Help"
         Me.ButtonHelp.UseVisualStyleBackColor = False
@@ -322,10 +358,10 @@ Partial Class FormDevIDE
         '
         Me.ButtonInsertCode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonInsertCode.BackColor = System.Drawing.Color.Black
-        Me.ButtonInsertCode.Location = New System.Drawing.Point(491, 53)
-        Me.ButtonInsertCode.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ButtonInsertCode.Location = New System.Drawing.Point(314, 43)
+        Me.ButtonInsertCode.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonInsertCode.Name = "ButtonInsertCode"
-        Me.ButtonInsertCode.Size = New System.Drawing.Size(99, 38)
+        Me.ButtonInsertCode.Size = New System.Drawing.Size(74, 31)
         Me.ButtonInsertCode.TabIndex = 1
         Me.ButtonInsertCode.Text = "Insert"
         Me.ButtonInsertCode.UseVisualStyleBackColor = False
@@ -337,46 +373,28 @@ Partial Class FormDevIDE
         Me.ComboBoxSyntaxHelp.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ComboBoxSyntaxHelp.FormattingEnabled = True
         Me.ComboBoxSyntaxHelp.Items.AddRange(New Object() {"Print ""Hello World""", "DIM $VAR$ AS STRING = ""FOO-BAR""", "DIM $VAR$ AS BOOLEAN = TRUE", "DIM $VAR$ AS INT = 0", "FOR $VAR$ = 1 TO 10 { } NEXT $VAR$", "IF ( $VAR$ = TRUE) THEN { } ELSE { } END IF", "DO WHILE ( $VAR$ = TRUE )", "{ }", "LOOP", "PRINT ""HELLO WORLD""", "DIM $VAR$ AS STRING = ""TEST""", "4 + 5", "6 * 8", "( 78 + 7.8 )", "$A$ = FALSE", "PUSH", "ADD", "HALT", "MUL", "DIV", "SUB", "PUSH 1 NOT HALT - testUnaryNotTrue - RESPONSE = 0", "PUSH 0 NOT HALT - testUnaryNotFalse - RESPONSE = 1", "PUSH 1 PUSH 1 AND HALT testAndTrueTrue - RESPONSE = 1", "PUSH 1 PUSH 0 OR HALT  - testOrTrueFalse - RESPONSE = 1", "PUSH 42 POP HALT - testPop - RESPONSE - NULL / 0", "PUSH 42 DUP HALT - testDup - RESPONSE 42", "PUSH 42  PUSH 0 JIF_F 8 PUSH 1JMP 3 HALT  - test jUMP IF FALSE - RESPONSE = 3", "PUSH 1 JIF_t 5 POP PUSH 0 JIF_ t HALT - testConditionalJump - RESPONSE = 10", "PUSH 42 STORE 0 HALT - testStoreVariable - RESPONSE = 42", "PUSH 42 STORE 0 LOAD 0 HALT - testStoreAndLoadVariable"})
-        Me.ComboBoxSyntaxHelp.Location = New System.Drawing.Point(3, 21)
-        Me.ComboBoxSyntaxHelp.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ComboBoxSyntaxHelp.Location = New System.Drawing.Point(2, 17)
+        Me.ComboBoxSyntaxHelp.Margin = New System.Windows.Forms.Padding(2)
         Me.ComboBoxSyntaxHelp.Name = "ComboBoxSyntaxHelp"
-        Me.ComboBoxSyntaxHelp.Size = New System.Drawing.Size(589, 27)
+        Me.ComboBoxSyntaxHelp.Size = New System.Drawing.Size(388, 22)
         Me.ComboBoxSyntaxHelp.TabIndex = 0
         Me.ComboBoxSyntaxHelp.Tag = "Some Tests"
         '
-        'Label1
-        '
-        Me.Label1.Location = New System.Drawing.Point(613, 32)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(450, 61)
-        Me.Label1.TabIndex = 5
-        Me.Label1.Text = "Basic programming statements should be entered line; CPU intructions should be en" &
-    "tered on a single line." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Enter statments Using the box Edit in the window; "
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(10, 60)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(240, 19)
-        Me.Label2.TabIndex = 3
-        Me.Label2.Text = "Tests and Scripts insert and edit"
-        '
         'FormDevIDE
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(1540, 826)
+        Me.ClientSize = New System.Drawing.Size(1155, 671)
         Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox1)
         Me.DoubleBuffered = True
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.MinimumSize = New System.Drawing.Size(1533, 819)
+        Me.Margin = New System.Windows.Forms.Padding(2)
+        Me.MinimumSize = New System.Drawing.Size(1154, 673)
         Me.Name = "FormDevIDE"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Development IDE"
@@ -419,4 +437,5 @@ Partial Class FormDevIDE
     Friend WithEvents ButtonClearTree As Button
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
+    Friend WithEvents ButtonExecuteTree As Button
 End Class
