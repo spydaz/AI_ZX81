@@ -11,7 +11,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("SUB")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("Subtract", PROGRAM)
                 Return VM.Peek()
             Case "+"
                 PROGRAM.Add("PUSH")
@@ -20,7 +20,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("ADD")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("Add", PROGRAM)
                 Return VM.Peek()
             Case "/"
                 PROGRAM.Add("PUSH")
@@ -29,7 +29,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("DIV")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("divide", PROGRAM)
                 Return VM.Peek()
             Case "*"
                 PROGRAM.Add("PUSH")
@@ -38,7 +38,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("MUL")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("Multiply", PROGRAM)
                 Return VM.Peek()
             Case ">"
                 PROGRAM.Add("PUSH")
@@ -47,7 +47,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("IS_GT")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("IsGreaterThan", PROGRAM)
                 If VM.Peek = 1 Then
                     Return "TRUE"
                 Else
@@ -60,7 +60,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("IS_LT")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("IsLessThan", PROGRAM)
                 If VM.Peek = 1 Then
                     Return "TRUE"
                 Else
@@ -73,7 +73,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("IS_GTE")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("IsGreaterThanEquals", PROGRAM)
                 If VM.Peek = 1 Then
                     Return "TRUE"
                 Else
@@ -86,7 +86,7 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("IS_LTE")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("IsLessThanEquals", PROGRAM)
                 If VM.Peek = 1 Then
                     Return "TRUE"
                 Else
@@ -99,14 +99,12 @@
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("IS_EQ")
                 PROGRAM.Add("HALT")
-                VM = New STACK_VM.ZX81_CPU(PROGRAM)
+                VM = New STACK_VM.ZX81_CPU("isEquals", PROGRAM)
                 If VM.Peek = 1 Then
                     Return "TRUE"
                 Else
                     Return "FALSE"
                 End If
-
-
         End Select
 
     End Function
@@ -117,7 +115,7 @@
         PROGRAM.Add("PUSH")
         PROGRAM.Add(Str)
         PROGRAM.Add("PRINT")
-        VM = New STACK_VM.ZX81_CPU(PROGRAM)
+        VM = New STACK_VM.ZX81_CPU("Print", PROGRAM)
     End Sub
 
 End Class

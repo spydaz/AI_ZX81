@@ -127,7 +127,7 @@ Public Class FormDevIDE
 
         'Dim CPU As ZX81_CPU = New ZX81_CPU(InstructionLst)
         'CPU.Run()
-        Dim CPU As VM_ = New VM_("Test", InstructionLst)
+        Dim CPU As ZX81_CPU = New ZX81_CPU("Test", InstructionLst)
         DisplayOutput("CURRENT POINTER = " & CPU.Get_Instruction_Pointer_Position & vbNewLine & "CONTAINED DATA = " & CPU.Peek)
         AST.Nodes.Add(ROOT)
     End Sub

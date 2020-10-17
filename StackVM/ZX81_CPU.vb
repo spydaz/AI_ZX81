@@ -1,508 +1,604 @@
 ﻿Imports Newtonsoft.Json.JsonConvert
 Namespace STACK_VM
+    ''' <summary>
+    ''' SpydazWeb X86 Assembly language Virtual X86 Processor
+    ''' </summary>
     Public Class ZX81_CPU
-        Public CpuStack As New Stack
-
-        Private InstructionAdrress As Integer
-        Public STATE As Boolean = False
-        Public ProgramData As List(Of String)
-        Public CPU_ERR As ZX81_ERR
-        Public localCache As New Stack
-        Public CurrentCache As StackMemoryFrame
-        Public Sub New(ByRef Instuctions As List(Of String))
-
-
-            If Instuctions.Count > 1 Then
-                CurrentCache = New StackMemoryFrame(0)
-                '  localCache.Push(CurrentCache)
-                ProgramData = Instuctions
-
-            Else
-                Me.STATE = False
-                ProgramData = New List(Of String)
-                CPU_ERR = New ZX81_ERR("Raise Error No instruction set", Me)
-                CPU_ERR.RaiseErr()
-                Me.STATE = False
-            End If
-
-        End Sub
-        Private Function GetStack() As Stack
-            Return CpuStack
-        End Function
-        Private Sub Push(ByRef Value As String)
-            CpuStack.Push(Value)
-        End Sub
-        Private Function Pop() As String
-            Return CpuStack.Pop()
-        End Function
+#Region "CPU"
         ''' <summary>
-        ''' REQUIRED TO SEE IN SIDE CURRENT POINTER LOCATION
+        ''' Used to monitor the Program status ; 
+        ''' If the program is being executed then the cpu must be running
+        ''' the Property value can only be changed within the program
+        ''' </summary>
+        Public ReadOnly Property RunningState As Boolean
+            Get
+                If mRunningState = State.RUN Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+                Return mRunningState
+            End Get
+        End Property
+        Private mRunningState As State = State.HALT
+        ''' <summary>
+        ''' This is the cpu stack memory space; 
+        ''' Items being interrogated will be placed in this memeory frame
+        ''' calling functions will access this frame ; 
+        ''' the cpu stack can be considered to be a bus; Functions are devices / 
+        ''' or gate logic which is connected to the bus via the cpu; 
+        ''' </summary>
+        Private CPU_CACHE As New Stack
+        ''' <summary>
+        ''' Returns the Current position of the instruction Pointer 
+        ''' in the Program being executed The instruction Pionet can be manipulated 
+        ''' Jumping backwards and forwards in the program code.
         ''' </summary>
         ''' <returns></returns>
-        Public Function Peek() As String
-
-            Try
-                Return CpuStack.Peek()
-            Catch ex As Exception
-                CPU_ERR = New ZX81_ERR("NULL POINTER CPU HALTED", Me)
-                CPU_ERR.RaiseErr()
-                STATE = False
-                Return "NULL"
-            End Try
-
-
-
-        End Function
-
-
-        'CPU SET: 
-        Public ReadOnly Property GetInstructionAddress() As Integer
+        Private ReadOnly Property GetInstructionAddress() As Integer
             Get
                 Return InstructionAdrress
             End Get
         End Property
-        Public Sub Run()
-            STATE = True
-            Do While (Ishalted = False)
-                Step_forward()
+        Public ReadOnly Property Get_Instruction_Pointer_Position As Integer
+            Get
+                Return GetInstructionAddress
+            End Get
+        End Property
+        ''' <summary>
+        ''' Returns the current data in the stack
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property Get_Current_Stack_Data As List(Of String)
+            Get
+                Get_Current_Stack_Data = New List(Of String)
+                For Each item In CPU_CACHE
+                    Get_Current_Stack_Data.Add(item.ToString)
+                Next
+            End Get
+        End Property
+        ''' <summary>
+        ''' Returns the Current Cache (the stack)
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property View_C_P_U As Stack
+            Get
+                Return CPU_CACHE
+            End Get
+        End Property
+        ''' <summary>
+        ''' Returns the current object on top of the stack
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property Get_Current_Stack_Item As Object
+            Get
+                Return Peek()
+            End Get
+        End Property
+        ''' <summary>
+        ''' Used to pass the intensive error messaging required; 
+        ''' </summary>
+        Private CPU_ERR As VM_ERR
+        ''' <summary>
+        ''' Used to hold the Program being sent to the CPU
+        ''' A list of objects has been chosen to allow for a Richer CPU
+        ''' enabling for objects to be passed instead of strings; 
+        ''' due to this being a compiler as well as a morenized CPU
+        ''' converting strings to string or integers or booleans etc 
+        ''' makes it much harder to create quick easy code;
+        ''' the sender is expeected to understand the logic of the items in the program
+        ''' the decoder only decodes bassed on what is expected; 
+        ''' </summary>
+        Private ProgramData As New List(Of Object)
+        ''' <summary>
+        ''' the InstructionAdrress is the current position in the program; 
+        ''' it could be considered to be the line numbe
+        ''' </summary>
+        Private InstructionAdrress As Integer
+        ''' <summary>
+        ''' Name of current program or process running in CPU thread
+        ''' </summary>
+        Public PROCESS_NAME As String = ""
+        ''' <summary>
+        ''' Used for local memory frame
+        ''' </summary>
+        Private CurrentCache As StackMemoryFrame
+        ''' <summary>
+        ''' Used to Store memory frames (The Heap)
+        ''' </summary>
+        Private R_A_M As New Stack
+        ''' <summary>
+        ''' Returns the Ram as a Stack of Stack Memeory frames;
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property View_R_A_M As Stack
+            Get
+                Return R_A_M
+            End Get
+        End Property
+        Private WaitTime As Integer = 0
+
+
+        ''' <summary>
+        ''' Each Program can be considered to be a task or thread; 
+        ''' A name should be assigned to the Process; 
+        ''' Processes themselves can be stacked in a higher level processor,
+        ''' allowing for paralel processing of code
+        ''' This process allows for the initialization of the CPU; THe Prgram will still need to be loaded
+        ''' </summary>
+        ''' <param name="ThreadName"></param>
+        Public Sub New(ByRef ThreadName As String)
+            Me.PROCESS_NAME = ThreadName
+        End Sub
+        ''' <summary>
+        ''' Load Program and Executes Code on CPU
+        ''' </summary>
+        ''' <param name="ThreadName">A name is required to Identify the Process</param>
+        ''' <param name="Program"></param>
+        Public Sub New(ByRef ThreadName As String, ByRef Program As List(Of String))
+            Me.PROCESS_NAME = ThreadName
+            LoadProgram(Program)
+            RUN()
+        End Sub
+        ''' <summary>
+        '''  Loads items in to the program cache; 
+        '''  this has been added to allow for continuious running of the VM
+        '''  the run/wait Command will be added to the assembler 
+        '''  enabling for the pausing of the program and restarting of the program stack
+        ''' </summary>
+        ''' <param name="Prog"></param>
+        Public Sub LoadProgram(ByRef Prog As List(Of String))
+            ProgramData.AddRange(Prog)
+            'Initializes a Stack for use (Memory for variables in code can be stored here)
+            CurrentCache = New StackMemoryFrame(0)
+        End Sub
+        ''' <summary>
+        '''  Loads items in to the program cache; 
+        '''  this has been added to allow for continuious running of the VM
+        '''  the run/wait Command will be added to the assembler 
+        '''  enabling for the pausing of the program and restarting of the program stack
+        ''' </summary>
+        ''' <param name="Prog"></param>
+        Public Sub LoadProgram(ByRef Prog As List(Of Object))
+            ProgramData.AddRange(Prog)
+            'Initializes a Stack for use (Memory for variables in code can be stored here)
+            CurrentCache = New StackMemoryFrame(0)
+        End Sub
+        ''' <summary>
+        ''' Begins eexecution of the instructions held in program data
+        ''' </summary>
+        Public Sub RUN()
+            mRunningState = State.RUN
+            Do While (IsHalted = False)
+                If IsWait = True Then
+                    For I = 0 To WaitTime
+                    Next
+                    EXECUTE()
+                    mRunningState = State.RUN
+                Else
+                    EXECUTE()
+                End If
             Loop
         End Sub
-        Private Sub Step_forward()
-            If Ishalted = False Then
-                Decode(Fetch)
-            Else
-                CPU_ERR = New ZX81_ERR("CPU HALTED", Me)
-                CPU_ERR.RaiseErr()
-                'ERR - state stopped
-            End If
-        End Sub
-        Private Function Fetch() As String
-
-
-
-            If InstructionAdrress >= ProgramData.Count Then
-                CPU_ERR = New ZX81_ERR("Raise Error Invalid Address -FETCH", Me)
-                CPU_ERR.RaiseErr()
-                Me.STATE = False
-                '
-            Else
-                Dim Next_Wrd As String = ProgramData(InstructionAdrress)
-                InstructionAdrress += 1
-                Return Next_Wrd
-            End If
-
-            Return Nothing
-        End Function
-        Public ReadOnly Property Ishalted As Boolean
+        ''' <summary>
+        ''' Checks the status of the cpu
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property IsHalted As Boolean
             Get
-                If STATE = False Then
+                If mRunningState = State.HALT = True Then
                     Return True
                 Else
                     Return False
                 End If
             End Get
         End Property
-        Public Sub Decode(ByRef Instruct As String)
-            'Instruction Set
-            Select Case Instruct
-                Case "NOT"
-                    CheckStackHasAtLeastOneItem()
-                    CpuStack.Push(ToInt(NOT_ToBool(CpuStack.Pop())))
+        Public ReadOnly Property IsWait As Boolean
+            Get
+                If RunningState = State.PAUSE Then
+                    Return True
+                Else
+                    Return False
+                End If
+            End Get
+        End Property
+        ''' <summary>
+        ''' Executes the next instruction in the Program
+        ''' Each Instruction is fed individually to the decoder : 
+        ''' The Execute cycle Checks the Current State to determine 
+        ''' if to fetch the next instruction to be decoded;(or EXECUTED) -
+        ''' The decoder contains the Chip logic
+        ''' </summary>
+        Public Sub EXECUTE()
+            'The HALT command is used to STOP THE CPU
+            If IsHalted = False Then
+                DECODE(Fetch)
+            Else
+                CPU_ERR = New VM_ERR("CPU HALTED", Me)
+                CPU_ERR.RaiseErr()
+                'ERR - state stopped
+            End If
+
+        End Sub
+        ''' <summary>
+        ''' Program Instructions can be boolean/String or integer 
+        ''' so an object is assumed enabling for later classification
+        ''' of the instructions at the decoder level : 
+        ''' The Fetch Cycle Fetches the next Instruction in the Program to be executed:
+        ''' It is fed to the decoder to be decoded and executed
+        ''' </summary>
+        ''' <returns></returns>
+        Private Function Fetch() As Object
+            'Check that it is not the end of the program
+            If InstructionAdrress >= ProgramData.Count Then
+                CPU_ERR = New VM_ERR("End of instruction list reached! No more instructions in Program data Error Invalid Address -FETCH(Missing HALT command)", Me)
+                CPU_ERR.RaiseErr()
+                'End of instruction list reached no more instructions in program data
+                'HALT CPU!!
+                Me.mRunningState = State.HALT
+                '
+            Else
+                'Each Instruction is considered to be a string 
+                'or even a integer or boolean the string is the most universal
+                Dim CurrentInstruction As Object = ProgramData(InstructionAdrress)
+                'Move to next instruction
+                InstructionAdrress += 1
+                Return CurrentInstruction
+            End If
+            Return Nothing
+        End Function
+        ''' <summary>
+        ''' Contains MainInstruction Set: Decode Cycle Decodes program instructions from the program 
+        ''' the Insruction pointer points to the current Instruction being feed into the decoder: 
+        ''' Important Note : the stack will always point to the data at top of the CPU CACHE (Which is Working Memory);
+        '''                 THe memory frames being used are Extensions of this memeory and can be seen as registers, 
+        '''                 itself being a memory stack (stack of memory frames)
+        ''' </summary>
+        ''' <param name="ProgramInstruction"></param>
+        Public Sub DECODE(ByRef ProgramInstruction As Object)
+
+            Select Case ProgramInstruction
+
+#Region "Basic Assembly"
+                Case "WAIT"
+                    WaitTime = Integer.Parse(Fetch().ToString)
+                    mRunningState = State.PAUSE
+                Case "HALT"
+                    'Stop the CPU
+                    Me.mRunningState = State.HALT
+                Case "PAUSE"
+                    WaitTime = Integer.Parse(Fetch().ToString)
+                    mRunningState = State.PAUSE
+                ' A Wait time Maybe Neccasary
                 Case "DUP"
                     Try
-                        If CpuStack.Count >= 1 Then
+                        If CPU_CACHE.Count >= 1 Then
+                            'Get Current item on the stack
                             Dim n As String = Peek()
+                            'Push another copy onto the stack
                             Push(n)
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - DUP", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("STACK ERROR : Stack Not intialized - DUP", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - DUP", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - DUP", Me)
                         CPU_ERR.RaiseErr()
                     End Try
-                Case "HALT"
-                    'HALT:
-                    STATE = False
                 Case "POP"
-                    Try
-                        If CpuStack.Count >= 1 Then
-                            Pop()
-
-                        Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - pop", Me)
-                            CPU_ERR.RaiseErr()
-                        End If
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - POP", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
+                    CheckStackHasAtLeastOneItem()
+                    Pop()
                 Case "PUSH"
                     'Push
                     Push(Fetch)
+                Case "JMP"
+                    CheckStackHasAtLeastOneItem()
+                    ' "Should have the address after the JMP instruction"
+                    '' The word after the instruction will contain the address to jump to
+                    Dim address As Integer = Integer.Parse(Fetch().ToString)
+                    JUMP(address)
+                Case "JIF_T"
+                    CheckStackHasAtLeastOneItem()
+                    ' "Should have the address after the JIF instruction"
+                    '' The word after the instruction will contain the address to jump to
+                    Dim address As Integer = Integer.Parse(Fetch().ToString)
+                    JumpIf_TRUE(address)
+                Case "JIF_F"
+                    CheckStackHasAtLeastOneItem()
+                    ' "Should have the address after the JIF instruction"
+                    '' The word after the instruction will contain the address to jump to
+                    Dim address As Integer = Integer.Parse(Fetch().ToString)
+                    JumpIf_False(address)
+                Case "LOAD"
+                    CheckStackHasAtLeastOneItem()
+                    'lOADS A VARIABLE
+                    Dim varNumber As Integer = Integer.Parse(Fetch().ToString)
+                    CPU_CACHE.Push(GetCurrentFrame.GetVar(varNumber))
+                Case "STORE"
+                    ' "Should have the variable number after the STORE instruction"
+                    Dim varNumber As Integer = Integer.Parse(Fetch().ToString)
+                    CheckStackHasAtLeastOneItem()
+                    CurrentCache.SetVar(varNumber, CPU_CACHE.Pop())
+                    R_A_M.Push(CurrentCache)
+                Case "CALL"
+                    ' The word after the instruction will contain the function address
+                    Dim address As Integer = Integer.Parse(Fetch().ToString)
+                    CheckJumpAddress(address)
+                    R_A_M.Push(New StackMemoryFrame(InstructionAdrress))  '// Push a New stack frame on to the memory heap
+                    InstructionAdrress = address '                   // And jump!
+                Case "RET"
+                    ' Pop the stack frame And return to the previous address from the memory heap
+                    CheckThereIsAReturnAddress()
+                    Dim returnAddress = GetCurrentFrame().GetReturnAddress()
+                    InstructionAdrress = returnAddress
+                    R_A_M.Pop()
+#End Region
+#Region "PRINT"
+                ' PRINT TO MONITOR
+                Case "PRINT_M"
+                    Peek()
+                    Dim frm As New Form_ZX81
+                    frm.Show()
+                    frm.Print(Peek)
+                ' PRINT TO CONSOLE
+                Case "PRINT_C"
+                    Peek()
+                    Console.WriteLine(Peek())
+#End Region
+#Region "Operations"
                 Case "ADD"
                     'ADD
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - ADD", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - ADD", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - ADD", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - ADD", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "SUB"
                     'SUB
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - SUB", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - SUB", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - SUB", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - SUB", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "MUL"
                     'MUL
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - MUL", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - MUL", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - MUL", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - MUL", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "DIV"
                     'DIV
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - DIV", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - DIV", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - DIV", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - DIV", Me)
                         CPU_ERR.RaiseErr()
                     End Try
+                Case "NOT"
+                    CheckStackHasAtLeastOneItem()
+                    Push(ToInt(NOT_ToBool(Pop())))
                 Case "AND"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - AND", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - AND", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - AND", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - AND", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "OR"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - OR", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - OR", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                         CPU_ERR.RaiseErr()
                     End Try
-                Case "ISEQ"
+                Case "IS_EQ"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - ISEQ", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - ISEQ", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - OR", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "IS_GTE"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_GTE", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GTE", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_GTE", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GTE", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "IS_GT"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_GT", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GT", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_GT", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GT", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "IS_LT"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_LT", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LT", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_LT", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LT", Me)
                         CPU_ERR.RaiseErr()
                     End Try
                 Case "IS_LTE"
                     Try
-                        If CpuStack.Count >= 2 Then
-                            Push(BINARYOP(Instruct, Integer.Parse(CpuStack.Pop()), Integer.Parse(CpuStack.Pop())))
+                        If CPU_CACHE.Count >= 2 Then
+                            Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                         Else
-                            Me.STATE = False
-                            CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_LTE", Me)
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LTE", Me)
                             CPU_ERR.RaiseErr()
                         End If
                     Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction - IS_LTE", Me)
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LTE", Me)
                         CPU_ERR.RaiseErr()
                     End Try
-
-                Case "JMP"
-                    ' "Should have the address after the JMP instruction"
-                    '' The word after the instruction will contain the address to jump to
-                    Dim address As String = Fetch()
-                    If CheckJumpAddress(Integer.Parse(address)) = True Then
-                        InstructionAdrress = address
-                    End If
-
-                Case "JIF_T"
-                    ' "Should have the address after the JIF instruction"
-                    '' The word after the instruction will contain the address to jump to
-                    Dim address As String = Fetch()
-                    If CheckJumpAddress(Integer.Parse(address)) = True And CheckStackHasAtLeastOneItem() = True Then
-                        If (ToBool(CpuStack.Pop())) Then
-                            InstructionAdrress = address
-                        Else
-                        End If
+#End Region
+#Region "POSITIVE VS NEGATIVE"
+                Case "TO_POS"
+                    If CPU_CACHE.Count >= 1 Then
+                        Push(ToPositive(Integer.Parse(Pop)))
                     Else
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - POS", Me)
+                        CPU_ERR.RaiseErr()
                     End If
-                Case "JIF_F"
-                    ' "Should have the address after the JIF instruction"
-                    '' The word after the instruction will contain the address to jump to
-                    Dim address As String = Fetch()
-                    If CheckJumpAddress(Integer.Parse(address)) = True And CheckStackHasAtLeastOneItem() = True Then
-                        If (NOT_ToBool(CpuStack.Pop())) Then
-                            InstructionAdrress = address
-                        Else
-                        End If
+                Case "TO_NEG"
+                    If CPU_CACHE.Count >= 1 Then
+                        Push(ToNegative(Integer.Parse(Pop)))
                     Else
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - NEG", Me)
+                        CPU_ERR.RaiseErr()
                     End If
-                Case "LOAD"
-                    'lOADS A VARIABLE
-                    Dim varNumber As String = Fetch()
-                    CpuStack.Push(GetCurrentFrame.GetVar(varNumber))
-                Case "STORE"
-                    ' "Should have the variable number after the STORE instruction"
-                    Dim varNumber As String = Fetch()
+#End Region
+#Region "Extended JmpCmds"
+                Case "JIF_GT"
+                    Try
+                        If CPU_CACHE.Count >= 3 Then
+                            Dim address As Integer = Integer.Parse(Fetch().ToString)
+                            Push(BINARYOP("IS_GT", Integer.Parse(Pop()), Integer.Parse(Pop())))
+                            JumpIf_TRUE(address)
+                        Else
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_GT", Me)
+                            CPU_ERR.RaiseErr()
+                        End If
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_GT", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "JIF_LT"
+                    Try
+                        If CPU_CACHE.Count >= 3 Then
+                            Dim address As Integer = Integer.Parse(Fetch().ToString)
+                            Push(BINARYOP("IS_LT", Integer.Parse(Pop()), Integer.Parse(Pop())))
+                            JumpIf_TRUE(address)
+                        Else
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_LT", Me)
+                            CPU_ERR.RaiseErr()
+                        End If
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_LT", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "JIF_EQ"
+                    Try
+                        If CPU_CACHE.Count >= 3 Then
+                            Dim address As Integer = Integer.Parse(Fetch().ToString)
+                            Push(BINARYOP("IS_EQ", Integer.Parse(Pop()), Integer.Parse(Pop())))
+                            JumpIf_TRUE(address)
+                        Else
+                            Me.mRunningState = State.HALT
+                            CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_EQ", Me)
+                            CPU_ERR.RaiseErr()
+                        End If
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_EQ", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+#End Region
+#Region "INCREMENT/DECREMENT"
+                Case "INCR"
                     CheckStackHasAtLeastOneItem()
-                    CurrentCache.SetVar(varNumber, CpuStack.Pop())
-                    localCache.Push(CurrentCache)
-                Case "CALL"
-                    ' The word after the instruction will contain the function address
-                    Dim address As String = Fetch()
-                    CheckJumpAddress(address)
-                    localCache.Push(New StackMemoryFrame(InstructionAdrress))  '// Push a New stack frame
-                    InstructionAdrress = address '                   // And jump!
-                Case "RET"
-                    ' Pop the stack frame And return to the previous address
-                    CheckThereIsAReturnAddress()
-                    Dim returnAddress = GetCurrentFrame().GetReturnAddress()
-                    InstructionAdrress = returnAddress
-                    localCache.Pop()
-                Case "PRINT"
-                    Peek()
-                    Dim frm As New Form_ZX81
-                    frm.Show()
-                    frm.Print(Peek)
+                    Push(Integer.Parse(Pop) + 1)
+                Case "DECR"
+                    CheckStackHasAtLeastOneItem()
+                    Push(Integer.Parse(Pop) - 1)
+#End Region
+
                 Case Else
-                    Me.STATE = False
-                    CPU_ERR = New ZX81_ERR("Error Decoding Invalid Instruction", Me)
+                    Me.mRunningState = State.HALT
+                    CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction", Me)
                     CPU_ERR.RaiseErr()
+
             End Select
 
         End Sub
-        Public Function GetCurrentFrame() As StackMemoryFrame
-            If localCache IsNot Nothing Then
-                Return localCache.Peek()
-            Else
-                Return Nothing
-                Me.STATE = False
-                CPU_ERR = New ZX81_ERR("Error Decoding STACK MEMORY FRAME - GetCurrentFrame", Me)
-                CPU_ERR.RaiseErr()
-            End If
-
-        End Function
-
-        Public Function GetStackData() As String
-            Dim Str As String = ""
-            Str = ToJson(Me)
-            Return Str
-        End Function
-        Private Function ToJson(ByRef OBJ As Object) As String
-            Return SerializeObject(OBJ)
-
-        End Function
-        Private Function CheckStackHasAtLeastOneItem() As Boolean
-            If CpuStack.Count >= 1 Then
-                Return True
-            Else
-                Return False
-            End If
-        End Function
-        Private Function BINARYOP(ByRef INSTRUCTION As String, LEFT As Integer, RIGHT As Integer) As String
-            Select Case INSTRUCTION
-                Case "IS_EQ"
-                    Try
-                        Return ToInt((ToBool(LEFT) = ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_GT"
-                    Try
-                        Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_GTE"
-                    Try
-                        Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_LT"
-                    Try
-                        Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
-                        Return LEFT + RIGHT
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "IS_LE"
-                    Try
-                        Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "ADD"
-                    Try
-                        Return LEFT + RIGHT
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "SUB"
-                    Try
-                        Return LEFT - RIGHT
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "MUL"
-                    Try
-                        Return LEFT * RIGHT
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "DIV"
-                    Try
-                        Return LEFT / RIGHT
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "OR"
-                    Try
-                        Return ToInt((ToBool(LEFT) Or ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "AND"
-                    Try
-                        Return ToInt((ToBool(LEFT) And ToBool(RIGHT)))
-                    Catch ex As Exception
-                        Me.STATE = False
-                        CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                        CPU_ERR.RaiseErr()
-                    End Try
-                Case "NOT"
-
-                Case Else
-                    Me.STATE = False
-                    CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-                    CPU_ERR.RaiseErr()
-                    Return "NULL"
-            End Select
-
-            Me.STATE = False
-            CPU_ERR = New ZX81_ERR("Invalid Operation", Me)
-            CPU_ERR.RaiseErr()
-            Return "NULL"
-        End Function
-
-
-
+#End Region
+#Region "functions required by cpu and assembly language"
+#Region "Handle Boolean"
         Private Function ToInt(ByRef Bool As Boolean) As String
             If Bool = False Then
                 Return 0
@@ -524,270 +620,403 @@ Namespace STACK_VM
                 Return 1
             End If
         End Function
+#End Region
 
-
+#Region "Functional Parts"
+        ''' <summary>
+        ''' Checks if there is a jump address available
+        ''' </summary>
+        ''' <param name="address"></param>
+        ''' <returns></returns>
         Private Function CheckJumpAddress(ByRef address As Integer) As Boolean
-
             Try
+                'Check if it is in range
                 If address < 0 Or address >= ProgramData.Count Then
-                    Me.STATE = False
-                    CPU_ERR = New ZX81_ERR(String.Format("Invalid jump address %d at %d", address, GetInstructionAddress), Me)
+                    'Not in range
+                    Me.mRunningState = State.HALT
+                    CPU_ERR = New VM_ERR(String.Format("Invalid jump address %d at %d", address, GetInstructionAddress), Me)
                     CPU_ERR.RaiseErr()
                     Return False
-
                 Else
                     Return True
                 End If
             Catch ex As Exception
-                Me.STATE = False
-                CPU_ERR = New ZX81_ERR(String.Format("Invalid jump address %d at %d", address, GetInstructionAddress), Me)
+                Me.mRunningState = State.HALT
+                CPU_ERR = New VM_ERR(String.Format("Invalid jump address %d at %d", address, GetInstructionAddress), Me)
                 CPU_ERR.RaiseErr()
                 Return False
             End Try
-
         End Function
+        ''' <summary>
+        ''' Function used by the internal functions to check if there is a return address
+        ''' </summary>
+        ''' <returns></returns>
         Private Function CheckThereIsAReturnAddress() As Boolean
-
-
             Try
-                If (localCache.Count >= 1) Then
+                If (R_A_M.Count >= 1) Then
                     Return True
                 Else
-
-                    Me.STATE = False
-                    CPU_ERR = New ZX81_ERR(String.Format("Invalid RET instruction: no current function call %d", GetInstructionAddress), Me)
+                    Me.mRunningState = State.HALT
+                    CPU_ERR = New VM_ERR(String.Format("Invalid RET instruction: no current function call %d", GetInstructionAddress), Me)
                     CPU_ERR.RaiseErr()
                     Return False
                 End If
             Catch ex As Exception
-                Me.STATE = False
-                CPU_ERR = New ZX81_ERR(String.Format("Invalid RET instruction: no current function call %d", GetInstructionAddress), Me)
+                Me.mRunningState = State.HALT
+                CPU_ERR = New VM_ERR(String.Format("Invalid RET instruction: no current function call %d", GetInstructionAddress), Me)
                 CPU_ERR.RaiseErr()
                 Return False
             End Try
+        End Function
+        ''' <summary>
+        ''' RAM is a STACK MEMORY - Here we can take a look at the stack item
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function GetCurrentFrame() As StackMemoryFrame
+            If R_A_M IsNot Nothing Then
+                Return R_A_M.Peek()
+            Else
+                Return Nothing
+                Me.mRunningState = State.HALT
+                CPU_ERR = New VM_ERR("Error Decoding STACK MEMORY FRAME - GetCurrentFrame", Me)
+                CPU_ERR.RaiseErr()
+            End If
+        End Function
+        ''' <summary>
+        ''' Outputs stack data for verbose output
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function GetStackData() As String
+            Dim Str As String = ""
+            Str = ToJson(Me)
+            Return Str
+        End Function
+        Private Function ToJson(ByRef OBJ As Object) As String
+            Return SerializeObject(OBJ)
+        End Function
+#End Region
 
-
+#Region "Operational Functions"
+        ''' <summary>
+        ''' REQUIRED TO SEE IN-SIDE CURRENT POINTER LOCATION
+        ''' ----------Public For Testing Purposes-----------
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function Peek() As String
+            Try
+                Return CPU_CACHE.Peek().ToString
+            Catch ex As Exception
+                CPU_ERR = New VM_ERR("NULL POINTER CPU HALTED", Me)
+                CPU_ERR.RaiseErr()
+                mRunningState = State.HALT
+                Return "NULL"
+            End Try
+        End Function
+        Private Function BINARYOP(ByRef INSTRUCTION As String, LEFT As Integer, RIGHT As Integer) As String
+            Select Case INSTRUCTION
+                Case "IS_EQ"
+                    Try
+                        Return ToInt((ToBool(LEFT) = ToBool(RIGHT)))
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation - isEQ", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "IS_GT"
+                    Try
+                        Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation - isGT", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "IS_GTE"
+                    Try
+                        Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation isGTE", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "IS_LT"
+                    Try
+                        Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
+                        Return LEFT + RIGHT
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation isLT", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "IS_LE"
+                    Try
+                        Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation isLTE", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "ADD"
+                    Try
+                        Return LEFT + RIGHT
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation -add", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "SUB"
+                    Try
+                        Return LEFT - RIGHT
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation -sub", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "MUL"
+                    Try
+                        Return LEFT * RIGHT
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation -mul", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "DIV"
+                    Try
+                        Return LEFT / RIGHT
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation -div", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "OR"
+                    Try
+                        Return ToInt((ToBool(LEFT) Or ToBool(RIGHT)))
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation -or", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "AND"
+                    Try
+                        Return ToInt((ToBool(LEFT) And ToBool(RIGHT)))
+                    Catch ex As Exception
+                        Me.mRunningState = State.HALT
+                        CPU_ERR = New VM_ERR("Invalid Operation -and", Me)
+                        CPU_ERR.RaiseErr()
+                    End Try
+                Case "NOT"
+                    CheckStackHasAtLeastOneItem()
+                    Push(ToInt(NOT_ToBool(Pop())))
+                Case Else
+                    Me.mRunningState = State.HALT
+                    CPU_ERR = New VM_ERR("Invalid Operation -not", Me)
+                    CPU_ERR.RaiseErr()
+            End Select
+            Me.mRunningState = State.HALT
+            CPU_ERR = New VM_ERR("Invalid Operation -BinaryOp", Me)
+            CPU_ERR.RaiseErr()
+            Return "NULL"
+        End Function
+        Private Function CheckStackHasAtLeastOneItem(ByRef Current As Stack) As Boolean
+            If Current.Count >= 1 Then
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+        Private Function CheckStackHasAtLeastOneItem() As Boolean
+            If CPU_CACHE.Count >= 1 Then
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+        Private Function CheckRamHasAtLeastOneItem() As Boolean
+            If CPU_CACHE.Count >= 1 Then
+                Return True
+            Else
+                Return False
+            End If
         End Function
 
-
-    End Class
-    Public Class ZX81_ERR
-        Private ErrorStr As String = ""
-        Private frm As New Form_ZX81
-        Private CpuCurrentState As ZX81_CPU
-
-        Public Sub New(ByRef Err As String, ByVal CPUSTATE As ZX81_CPU)
-            ErrorStr = Err
-            CpuCurrentState = CPUSTATE
-        End Sub
-        Public Sub RaiseErr()
-            If frm Is Nothing Then
-                frm = New Form_ZX81
-                frm.Show()
-                frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
+        Private Sub JumpIf_TRUE(ByRef Address As Integer)
+            If CheckJumpAddress(Address) = True And CheckStackHasAtLeastOneItem() = True Then
+                If (ToBool(Pop)) Then
+                    InstructionAdrress = Address
+                Else
+                End If
             Else
-                frm.Show()
-                frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
+            End If
+        End Sub
+
+
+        Private Sub JUMP(ByRef Address As Integer)
+            If CheckJumpAddress(Address) = True Then
+                InstructionAdrress = Address
             End If
 
         End Sub
-
-
-
-
-    End Class
-End Namespace
-Namespace GRAMMARS
-    Public Class CPU_GRAMMAR
-        Public Shared Function CreatePLGrammar() As List(Of GrammarRule)
-            Dim Rule As New GrammarRule
-            Dim RuleList As New List(Of GrammarRule)
-            Dim Quote As String = "'"
-            'Spaces
-            Rule.TAGSTRING = "_WHITE_SPACE"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add(" ")
-            'Print Command
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_halt"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("HALT")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_push"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("PUSH")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_pop"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("POP")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_add"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("ADD")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_sub"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("SUB")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_div"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("DIV")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_mul"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("MUL")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_and"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("AND")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_or"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("OR")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_not"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("NOT")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_dup"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("DUP")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_is_eq"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("IS_EQ")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_is_ge"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("IS_GE")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_is_le"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("IS_LE")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_lt"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("LT")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_gt"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("GT")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_jmp"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("JMP")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_jif_t"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("JIF_T")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_jif_f"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("JIF_F")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_load"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("LOAD")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_store"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("STORE")
-            RuleList.Add(Rule)
-            Rule = New GrammarRule
-            Rule.TAGSTRING = "_ret"
-            Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("RET")
-            RuleList.Add(Rule)
-            Return RuleList
+        Private Sub JumpIf_False(ByRef Address As Integer)
+            If CheckJumpAddress(Address) = True And CheckStackHasAtLeastOneItem() = True Then
+                If (NOT_ToBool(Pop)) Then
+                    InstructionAdrress = Address
+                Else
+                End If
+            Else
+            End If
+        End Sub
+        ''' <summary>
+        ''' Puts a value on the cpu stack to be available to funcitons
+        ''' </summary>
+        ''' <param name="Value"></param>
+        Private Sub Push(ByRef Value As Object)
+            Try
+                CPU_CACHE.Push(Value)
+            Catch ex As Exception
+                CPU_ERR = New VM_ERR("STACK ERROR - CPU HALTED -push", Me)
+                CPU_ERR.RaiseErr()
+                mRunningState = State.HALT
+            End Try
+        End Sub
+        ''' <summary>
+        ''' Pops a value of the cpu_Stack (current workspace)
+        ''' </summary>
+        ''' <returns></returns>
+        Private Function Pop() As Object
+            Try
+                If CPU_CACHE.Count >= 1 Then
+                    Return CPU_CACHE.Pop()
+                Else
+                    CPU_ERR = New VM_ERR("STACK ERROR - NULL POINTER CPU HALTED -pop", Me)
+                    CPU_ERR.RaiseErr()
+                    mRunningState = State.HALT
+                    Return "NULL"
+                End If
+            Catch ex As Exception
+                CPU_ERR = New VM_ERR("STACK ERROR - NULL POINTER CPU HALTED -pop", Me)
+                CPU_ERR.RaiseErr()
+                mRunningState = State.HALT
+                Return "NULL"
+            End Try
+            Return "NULL"
         End Function
+#End Region
 
-        '    grammar Sbvm;
+        Private Function ToPositive(Number As Integer)
+            Return Math.Abs(Number)
+        End Function
+        Private Function ToNegative(Number As Integer)
+            Return Math.Abs(Number) * -1
+        End Function
+#End Region
+#Region "CPU _ INTERNAL _ Components"
+        Private Enum State
+            RUN
+            HALT
+            PAUSE
+        End Enum
+        ''' <summary>
+        ''' Memory frame for Variables
+        ''' </summary>
+        Public Class StackMemoryFrame
+            Public Structure Var
+                Public Value As Integer
+                Public VarNumber As String
+            End Structure
+            Public ReturnAddress As Integer
+            Public Variables As List(Of Var)
 
-        '// A program Is a sequence of lines
-        'program: line*;
+            Public Sub New(ByRef ReturnAddress As Integer)
+                ReturnAddress = ReturnAddress
+                Variables = New List(Of Var)
+            End Sub
+            Public Function GetReturnAddress() As Integer
 
-        '// A line Is either a label, Or an instruction, followed by a newline
-        'line: (label | instruction | emptyLine) NEWLINE;
+                Return ReturnAddress
+            End Function
+            Public Function GetVar(ByRef VarNumber As String) As Integer
+                For Each item In Variables
+                    If item.VarNumber = VarNumber Then
+                        Return item.Value
 
-        'emptyLine: ;
+                    End If
+                Next
+                Return 0
+            End Function
+            Public Sub SetVar(ByRef VarNumber As String, ByRef value As Integer)
+                Dim item As New Var
+                item.VarNumber = VarNumber
+                item.Value = value
 
-        '// Labels are simply identifiers, followed by colons
-        'label: IDENTIFIER ':';
+                Variables.Add(item)
+            End Sub
+        End Class
 
-        '// An instruction can be of many kinds
-        'instruction: halt |
-        '             push |
-        '             add |
-        '             Sub |
-        '             mul |
-        '             div |
-        '             Not |
-        '             And |
-        '             Or |
-        '             pop |
-        '             dup |
-        '             iseq |
-        '             isge |
-        '             isgt |
-        '             jmp |
-        '             jif |
-        '             load |
-        '             store |
-        '             Call |
-        '             ret
-        '             ;
-        'halt: 'HALT';
-        'push: 'PUSH' NUMBER;
-        'add: 'ADD';
-        'Sub 'SUB';
-        'mul: 'MUL';
-        'div: 'DIV';
-        'Not 'NOT';
-        'And 'AND';
-        'Or 'OR';
-        'pop: 'POP';
-        'dup: 'DUP';
-        'iseq: 'ISEQ';
-        'isge: 'ISGE';
-        'isgt: 'ISGT';
-        'jmp: 'JMP' IDENTIFIER;
-        'jif: 'JIF' IDENTIFIER;
-        'load: 'LOAD' NUMBER;
-        'store: 'STORE' NUMBER;
-        '        Call 'CALL' IDENTIFIER;
-        'ret: 'RET';
+        Public Class VM_ERR
+            Private ErrorStr As String = ""
+            Private frm As New Form_ZX81
+            Private CpuCurrentState As ZX81_CPU
+
+            Public Sub New(ByRef Err As String, ByVal CPUSTATE As ZX81_CPU)
+                ErrorStr = Err
+                CpuCurrentState = CPUSTATE
+            End Sub
+            Public Sub RaiseErr()
+                If frm Is Nothing Then
+                    frm = New Form_ZX81
+                    frm.Show()
+                    frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
+                Else
+                    frm.Show()
+                    frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
+                End If
+
+            End Sub
 
 
-        'IDENTIFIER: [a-zA-Z][a-zA-Z0-9_]*;
-        'NUMBER: [0-9]+;
-        'NEWLINE: '\r'? '\n';
 
-        '// Skip all whitespaces
-        'WHITESPACE: [ \t]+ -> skip;
 
-        '// Skip comments
-        'COMMENT: '//' ~('\r' | '\n')* -> skip;
-
+        End Class
+#End Region
+        ''' <summary>
+        ''' COMMANDS FOR ASSEMBLY LANGUAGE FOR THIS CPU
+        ''' SPYDAZWEB_VM_X86
+        ''' </summary>
+        Public Enum VM_x86_Cmds
+            _PUSH
+            _PULL
+            _PEEK
+            _WAIT
+            _PAUSE
+            _HALT
+            _DUP
+            _JMP
+            _JIF_T
+            _JIF_F
+            _JIF_EQ
+            _JIF_GT
+            _JIF_LT
+            _LOAD
+            _STORE
+            _CALL
+            _RET
+            _PRINT_M
+            _PRINT_C
+            _ADD
+            _SUB
+            _MUL
+            _DIV
+            _AND
+            _OR
+            _NOT
+            _IS_EQ
+            _IS_GT
+            _IS_GTE
+            _IS_LT
+            _IS_LTE
+            _TO_POS
+            _TO_NEG
+            _INCR
+            _DECR
+        End Enum
     End Class
 End Namespace
