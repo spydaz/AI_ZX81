@@ -29,7 +29,41 @@ NEXT $VARNAME$
 
 This language is used to execute code on the Stack VM.
 
-PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF_T / JIF_F / JMP / DIV / DUP / AND / OR / NOT /HALT
+        _PUSH
+        _PULL
+        _PEEK
+        _WAIT
+        _PAUSE
+        _HALT
+        _DUP
+        _JMP
+        _JIF_T
+        _JIF_F
+        _JIF_EQ
+        _JIF_GT
+        _JIF_LT
+        _LOAD
+        _STORE
+        _CALL
+        _RET
+        _PRINT_M
+        _PRINT_C
+        _ADD
+        _SUB
+        _MUL
+        _DIV
+        _AND
+        _OR
+        _NOT
+        _IS_EQ
+        _IS_GT
+        _IS_GTE
+        _IS_LT
+        _IS_LTE
+        _TO_POS
+        _TO_NEG
+        _INCR
+        _DECR
 
 ALL commands must be on a single line and ending with the halt Command!
 
