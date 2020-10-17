@@ -11,6 +11,12 @@ Public Class VM_
     ''' </summary>
     Public ReadOnly Property RunningState As Boolean
         Get
+            If mRunningState = State.RUN Then
+                Return True
+            Else
+                Return False
+            End If
+
             Return mRunningState
         End Get
     End Property
@@ -162,7 +168,7 @@ Public Class VM_
     ''' Begins eexecution of the instructions held in program data
     ''' </summary>
     Public Sub RUN()
-        mRunningState = True
+        mRunningState = State.RUN
         Do While (IsHalted = False)
             If IsWait = True Then
                 For I = 0 To WaitTime
@@ -180,7 +186,7 @@ Public Class VM_
     ''' <returns></returns>
     Public ReadOnly Property IsHalted As Boolean
         Get
-            If RunningState = State.HALT = True Then
+            If mRunningState = State.HALT = True Then
                 Return True
             Else
                 Return False
@@ -212,9 +218,7 @@ Public Class VM_
             CPU_ERR.RaiseErr()
             'ERR - state stopped
         End If
-        If IsWait = True Then
 
-        End If
     End Sub
     ''' <summary>
     ''' Program Instructions can be boolean/String or integer 
@@ -231,7 +235,7 @@ Public Class VM_
             CPU_ERR.RaiseErr()
             'End of instruction list reached no more instructions in program data
             'HALT CPU!!
-            Me.mRunningState = False
+            Me.mRunningState = State.HALT
             '
         Else
             'Each Instruction is considered to be a string 
@@ -253,7 +257,7 @@ Public Class VM_
     ''' <param name="ProgramInstruction"></param>
     Public Sub DECODE(ByRef ProgramInstruction As Object)
 
-        Select Case ProgramInstruction.ToString
+        Select Case ProgramInstruction
 
 #Region "Basic Assembly"
             Case "WAIT"
@@ -261,7 +265,7 @@ Public Class VM_
                 mRunningState = State.PAUSE
             Case "HALT"
                 'Stop the CPU
-                Me.mRunningState = False
+                Me.mRunningState = State.HALT
             Case "PAUSE"
                 WaitTime = Integer.Parse(Fetch().ToString)
                 mRunningState = State.PAUSE
@@ -274,12 +278,12 @@ Public Class VM_
                         'Push another copy onto the stack
                         Push(n)
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("STACK ERROR : Stack Not intialized - DUP", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - DUP", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -350,12 +354,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - ADD", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - ADD", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -365,12 +369,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - SUB", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - SUB", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -380,12 +384,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - MUL", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - MUL", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -395,12 +399,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - DIV", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - DIV", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -412,12 +416,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - AND", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - AND", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -426,12 +430,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -440,12 +444,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - ISEQ", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - OR", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -454,12 +458,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GTE", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GTE", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -468,12 +472,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GT", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_GT", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -482,12 +486,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LT", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LT", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -496,12 +500,12 @@ Public Class VM_
                     If CPU_CACHE.Count >= 2 Then
                         Push(BINARYOP(ProgramInstruction, Integer.Parse(Pop()), Integer.Parse(Pop())))
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LTE", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - IS_LTE", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -511,7 +515,7 @@ Public Class VM_
                 If CPU_CACHE.Count >= 1 Then
                     Push(ToPositive(Integer.Parse(Pop)))
                 Else
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - POS", Me)
                     CPU_ERR.RaiseErr()
                 End If
@@ -519,7 +523,7 @@ Public Class VM_
                 If CPU_CACHE.Count >= 1 Then
                     Push(ToNegative(Integer.Parse(Pop)))
                 Else
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - NEG", Me)
                     CPU_ERR.RaiseErr()
                 End If
@@ -532,12 +536,12 @@ Public Class VM_
                         Push(BINARYOP("IS_GT", Integer.Parse(Pop()), Integer.Parse(Pop())))
                         JumpIf_TRUE(address)
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_GT", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_GT", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -548,12 +552,12 @@ Public Class VM_
                         Push(BINARYOP("IS_LT", Integer.Parse(Pop()), Integer.Parse(Pop())))
                         JumpIf_TRUE(address)
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_LT", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_LT", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -564,12 +568,12 @@ Public Class VM_
                         Push(BINARYOP("IS_EQ", Integer.Parse(Pop()), Integer.Parse(Pop())))
                         JumpIf_TRUE(address)
                     Else
-                        Me.mRunningState = False
+                        Me.mRunningState = State.HALT
                         CPU_ERR = New VM_ERR("Error Decoding Invalid arguments - JIF_EQ", Me)
                         CPU_ERR.RaiseErr()
                     End If
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction - JIF_EQ", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -584,7 +588,7 @@ Public Class VM_
 #End Region
 
             Case Else
-                Me.mRunningState = False
+                Me.mRunningState = State.HALT
                 CPU_ERR = New VM_ERR("Error Decoding Invalid Instruction", Me)
                 CPU_ERR.RaiseErr()
 
@@ -628,7 +632,7 @@ Public Class VM_
             'Check if it is in range
             If address < 0 Or address >= ProgramData.Count Then
                 'Not in range
-                Me.mRunningState = False
+                Me.mRunningState = State.HALT
                 CPU_ERR = New VM_ERR(String.Format("Invalid jump address %d at %d", address, GetInstructionAddress), Me)
                 CPU_ERR.RaiseErr()
                 Return False
@@ -636,7 +640,7 @@ Public Class VM_
                 Return True
             End If
         Catch ex As Exception
-            Me.mRunningState = False
+            Me.mRunningState = State.HALT
             CPU_ERR = New VM_ERR(String.Format("Invalid jump address %d at %d", address, GetInstructionAddress), Me)
             CPU_ERR.RaiseErr()
             Return False
@@ -651,13 +655,13 @@ Public Class VM_
             If (R_A_M.Count >= 1) Then
                 Return True
             Else
-                Me.mRunningState = False
+                Me.mRunningState = State.HALT
                 CPU_ERR = New VM_ERR(String.Format("Invalid RET instruction: no current function call %d", GetInstructionAddress), Me)
                 CPU_ERR.RaiseErr()
                 Return False
             End If
         Catch ex As Exception
-            Me.mRunningState = False
+            Me.mRunningState = State.HALT
             CPU_ERR = New VM_ERR(String.Format("Invalid RET instruction: no current function call %d", GetInstructionAddress), Me)
             CPU_ERR.RaiseErr()
             Return False
@@ -672,7 +676,7 @@ Public Class VM_
             Return R_A_M.Peek()
         Else
             Return Nothing
-            Me.mRunningState = False
+            Me.mRunningState = State.HALT
             CPU_ERR = New VM_ERR("Error Decoding STACK MEMORY FRAME - GetCurrentFrame", Me)
             CPU_ERR.RaiseErr()
         End If
@@ -703,7 +707,7 @@ Public Class VM_
         Catch ex As Exception
             CPU_ERR = New VM_ERR("NULL POINTER CPU HALTED", Me)
             CPU_ERR.RaiseErr()
-            mRunningState = False
+            mRunningState = State.HALT
             Return "NULL"
         End Try
     End Function
@@ -713,7 +717,7 @@ Public Class VM_
                 Try
                     Return ToInt((ToBool(LEFT) = ToBool(RIGHT)))
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation - isEQ", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -721,7 +725,7 @@ Public Class VM_
                 Try
                     Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation - isGT", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -729,7 +733,7 @@ Public Class VM_
                 Try
                     Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation isGTE", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -738,7 +742,7 @@ Public Class VM_
                     Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
                     Return LEFT + RIGHT
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation isLT", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -746,7 +750,7 @@ Public Class VM_
                 Try
                     Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation isLTE", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -754,7 +758,7 @@ Public Class VM_
                 Try
                     Return LEFT + RIGHT
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation -add", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -762,7 +766,7 @@ Public Class VM_
                 Try
                     Return LEFT - RIGHT
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation -sub", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -770,7 +774,7 @@ Public Class VM_
                 Try
                     Return LEFT * RIGHT
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation -mul", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -778,7 +782,7 @@ Public Class VM_
                 Try
                     Return LEFT / RIGHT
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation -div", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -786,7 +790,7 @@ Public Class VM_
                 Try
                     Return ToInt((ToBool(LEFT) Or ToBool(RIGHT)))
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation -or", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -794,7 +798,7 @@ Public Class VM_
                 Try
                     Return ToInt((ToBool(LEFT) And ToBool(RIGHT)))
                 Catch ex As Exception
-                    Me.mRunningState = False
+                    Me.mRunningState = State.HALT
                     CPU_ERR = New VM_ERR("Invalid Operation -and", Me)
                     CPU_ERR.RaiseErr()
                 End Try
@@ -802,11 +806,11 @@ Public Class VM_
                 CheckStackHasAtLeastOneItem()
                 Push(ToInt(NOT_ToBool(Pop())))
             Case Else
-                Me.mRunningState = False
+                Me.mRunningState = State.HALT
                 CPU_ERR = New VM_ERR("Invalid Operation -not", Me)
                 CPU_ERR.RaiseErr()
         End Select
-        Me.mRunningState = False
+        Me.mRunningState = State.HALT
         CPU_ERR = New VM_ERR("Invalid Operation -BinaryOp", Me)
         CPU_ERR.RaiseErr()
         Return "NULL"
@@ -869,7 +873,7 @@ Public Class VM_
         Catch ex As Exception
             CPU_ERR = New VM_ERR("STACK ERROR - CPU HALTED -push", Me)
             CPU_ERR.RaiseErr()
-            mRunningState = False
+            mRunningState = State.HALT
         End Try
     End Sub
     ''' <summary>
@@ -883,13 +887,13 @@ Public Class VM_
             Else
                 CPU_ERR = New VM_ERR("STACK ERROR - NULL POINTER CPU HALTED -pop", Me)
                 CPU_ERR.RaiseErr()
-                mRunningState = False
+                mRunningState = State.HALT
                 Return "NULL"
             End If
         Catch ex As Exception
             CPU_ERR = New VM_ERR("STACK ERROR - NULL POINTER CPU HALTED -pop", Me)
             CPU_ERR.RaiseErr()
-            mRunningState = False
+            mRunningState = State.HALT
             Return "NULL"
         End Try
         Return "NULL"
