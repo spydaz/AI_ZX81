@@ -2,7 +2,9 @@
 
 Basic Program Language; 
 
-Print ""
+Print "Hello World"("PRINT_STR")
+Print 23 ("PRINT_INT")
+
 DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
 Conditional Operations () Output TRUE/FALSE
 IF () THEN {} ELSE {} END IF

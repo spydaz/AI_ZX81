@@ -49,6 +49,12 @@ Public Class VM
                         Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                     Case "_PRINT_INT"
                         Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
+                    Case "Math_Operation"
+                        Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
+                    Case "Conditional_Operation"
+                        Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
+
+
                 End Select
             Next
         Next
