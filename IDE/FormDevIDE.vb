@@ -28,7 +28,8 @@ Public Class FormDevIDE
         LexPL(GetCode)
     End Sub
     Public Function GetCode() As String
-        Return UCase(RichTextBoxProgram.Text.Replace("  ", " "))
+        Dim text = RichTextBoxProgram.Text.Replace("  ", " ")
+        Return UCase(text)
     End Function
     Public Sub DisplayOutput(ByRef OutputStr As String)
         RichTextBoxDisplayOutput.Text = OutputStr
@@ -36,14 +37,12 @@ Public Class FormDevIDE
     Public Sub DisplayError(ByRef ErrorStr As String)
         TextBoxErrorOutput.Text &= ErrorStr
     End Sub
-
     Private Sub ButtonInsertCode_Click(sender As Object, e As EventArgs) Handles ButtonInsertCode.Click
         If ComboBoxSyntaxHelp.SelectedItem IsNot Nothing Then
             TextBoxEnterStatments.Text &= ComboBoxSyntaxHelp.SelectedItem.ToString
 
         End If
     End Sub
-
     Public Sub LexPL(ByRef UserProgram As String)
         On Error Resume Next
 #Region "PL_GRAMMAR"
@@ -198,8 +197,9 @@ Public Class FormDevIDE
     End Sub
 
     Private Sub ButtonExecuteTree_Click(sender As Object, e As EventArgs) Handles ButtonExecuteTree.Click
+        Dim cpu As New STACK_VM.ZX81_CPU("IDE")
         Dim Errr As Boolean = False
-        Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(UCase(GetCode)))
+        Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(GetCode()))
         If CurrentTokens IsNot Nothing Then
             If CurrentTokens.Count > 0 Then
                 Dim Tokentree As AbstractTokenTree = New ClassLexer(UCase(GetCode), PL_Grammar.CreatePLGrammar, "PL").Abstract_Token_Tree
@@ -208,7 +208,8 @@ Public Class FormDevIDE
                 AST.Nodes.Add(ClassLexer.GetTokenExprTree(Tokentree))
                 Dim tree = Parser.GetParseAST_Tree(Tokentree)
                 'Add Test --------------------
-                Parser.executeON_CPU(tree)
+                Dim vm As New VM("IDE")
+                Parser.executeON_CPU(vm, tree)
             Else
                 Errr = True
                 DisplayError("No tokens detected" & vbNewLine)

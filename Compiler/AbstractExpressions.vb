@@ -39,11 +39,7 @@ Namespace AbstractExpressions
         ''' ie: Integer / String
         ''' </summary>
         Public VarType As String
-        Public Function EXECUTE() As String
-            Dim CPU As New CPU_FUNCTIONS
-            CPU._print(iValue)
-            Return iValue
-        End Function
+
         Public Overridable Function GetValue() As String
             Return iValue
 
@@ -116,17 +112,7 @@ Namespace AbstractExpressions
         ''' (RightNode = ConstantExpression (number/1/int/))
         ''' </summary>
         Public Right As Expression
-        ''' <summary>
-        ''' Executes command on virtual machine
-        ''' </summary>
-        ''' <param name="Left"></param>
-        ''' <param name="Right"></param>
-        ''' <param name="Ioperator"></param>
-        ''' <returns></returns>
-        Public Overridable Overloads Function EXECUTE(ByRef Left As Integer, Right As Integer, Ioperator As String) As String
-            Dim cpu As New CPU_FUNCTIONS
-            Return cpu._Binary_op(Left, Right, Ioperator)
-        End Function
+
 
         Protected Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As Environment_Memory)
             MyBase.New(NodeType, iName, Value, Type, Env)

@@ -132,6 +132,8 @@ Namespace STACK_VM
         ''' <param name="ThreadName"></param>
         Public Sub New(ByRef ThreadName As String)
             Me.PROCESS_NAME = ThreadName
+            'Initializes a Stack for use (Memory for variables in code can be stored here)
+            CurrentCache = New StackMemoryFrame(0)
         End Sub
         ''' <summary>
         ''' Load Program and Executes Code on CPU
@@ -140,6 +142,8 @@ Namespace STACK_VM
         ''' <param name="Program"></param>
         Public Sub New(ByRef ThreadName As String, ByRef Program As List(Of String))
             Me.PROCESS_NAME = ThreadName
+            'Initializes a Stack for use (Memory for variables in code can be stored here)
+            CurrentCache = New StackMemoryFrame(0)
             LoadProgram(Program)
             RUN()
         End Sub
@@ -152,8 +156,7 @@ Namespace STACK_VM
         ''' <param name="Prog"></param>
         Public Sub LoadProgram(ByRef Prog As List(Of String))
             ProgramData.AddRange(Prog)
-            'Initializes a Stack for use (Memory for variables in code can be stored here)
-            CurrentCache = New StackMemoryFrame(0)
+
         End Sub
         ''' <summary>
         '''  Loads items in to the program cache; 
@@ -341,10 +344,27 @@ Namespace STACK_VM
 #Region "PRINT"
                 ' PRINT TO MONITOR
                 Case "PRINT_M"
-                    IMonitor = New Form_ZX81
-                    IMonitor.Show()
-                    IMonitor.Print("------------ ZX 81 ----------" & vbNewLine & Pop())
-
+                    If IMonitor IsNot Nothing Then
+                        If IMonitor.Visible = False Then
+                            IMonitor.Show()
+                        End If
+                    Else
+                        IMonitor = New Form_ZX81
+                        IMonitor.Show()
+                        IMonitor.Print("------------ ZX 81 ----------" & vbNewLine)
+                    End If
+                    IMonitor.Print(Pop())
+                Case "CLS"
+                    If IMonitor IsNot Nothing Then
+                        If IMonitor.Visible = False Then
+                            IMonitor.Show()
+                        End If
+                    Else
+                        IMonitor = New Form_ZX81
+                        IMonitor.Show()
+                        IMonitor.Print("------------ ZX 81 ----------" & vbNewLine)
+                    End If
+                    IMonitor.CLS()
                 ' PRINT TO CONSOLE
                 Case "PRINT_C"
                     '  System.Console.WriteLine("------------ ZX 81 ----------" & vbNewLine & Peek())

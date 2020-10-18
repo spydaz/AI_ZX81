@@ -5,7 +5,7 @@
     ''' </summary>
     Public LocalVars As New Environment_Memory
     Public Sub Print(ByRef Userinput As String)
-        Me.Zx81_DisplayScreen.Text = Userinput
+        Me.Zx81_DisplayScreen.Text &= Userinput & vbNewLine
     End Sub
     Public Sub CLS()
         Me.Zx81_DisplayScreen.Text = ""

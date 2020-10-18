@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="Compiler\AbstractExpressions.vb" />
     <Compile Include="Grammar\ENG_Grammar.vb" />
-    <Compile Include="StackVM\CPU_FUNCTIONS.vb" />
+    <Compile Include="StackVM\VM.vb" />
     <Compile Include="Compiler\ClassLexer.vb" />
     <Compile Include="StackVM\ZX81_Memory.vb" />
     <Compile Include="Compiler\ClassParser.vb" />
