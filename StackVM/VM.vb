@@ -16,15 +16,24 @@ Public Class VM
         End Property
         Private iname As String = ""
         Private Shared iCPU As STACK_VM.ZX81_CPU
-        Public ReadOnly Property CPU As STACK_VM.ZX81_CPU
-            Get
-                Return iCPU
-            End Get
-        End Property
-        Dim RAM As Environment_Memory
-        Public Sub New(ByRef iName As String)
-            Me.iname = iName
-            RAM = New Environment_Memory
+    Public ReadOnly Property CPU As STACK_VM.ZX81_CPU
+        Get
+            Return iCPU
+        End Get
+    End Property
+    ''' <summary>
+    ''' To be used to store variables from functions/Expressions etc
+    ''' each string should be looked up in memeory
+    ''' </summary>
+    Public ReadOnly Property RAM As Environment_Memory
+        Get
+            Return iRAM
+        End Get
+    End Property
+    Private iRAM As Environment_Memory
+    Public Sub New(ByRef iName As String)
+        Me.iname = iName
+        iRAM = New Environment_Memory
         iCPU = New STACK_VM.ZX81_CPU(Name)
         iProgram = New List(Of List(Of AbstractSyntax))
     End Sub
