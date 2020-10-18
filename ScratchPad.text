@@ -1,32 +1,101 @@
-﻿
-Expected Outcomes :
+﻿      'IF/THEN/ELSE/END
+    'If [condition] Then If-True [ELSE If-False] End
+    'EG
+    '« IF 1 == THEN "Equal to one" END »
+    'RPL
+    'The IF construct evaluates the condition then tests the bottom of the stack for the result. 
+    ' « 1 == IF THEN "Equal to one" END »
+    'Postfix conditional testing may be accomplished by 
+    '   Using the IFT ("if-then") And 
+    '   IFTE ("if-then-else") functions. 
+    ' IFT and IFTE pop two or three commands off the stack, respectively. 
+    '   The topmost value Is evaluated As a Boolean And, 
+    '   If True, the second topmost value Is pushed back On the stack. 
+    '   'IFTE allows a third "else" value that will be pushed back On the stack If the Boolean Is False. 
+    ' « 1 == "One" IFT »
+    ' « 1 == "One" "Not one" IFTE »
+    'IFT and IFTE will evaluate a program block given as one of its arguments, 
+    '   allowing a more compact form Of conditional logic than an If/Then/Else/End Structure. 
 
- The ability to parse text to a set of rules as well as,
- create a set of production rules enabling for,
- the generation of a collection of Syntax Trees,
- for each statement or codeblock.
 
- This may be applied to a Language such as English to generate Syntax Trees based on Customized grammars. 
- This will further Extend the SpydazWeb AI SDK; 
- It is also noted that the ability to generate some form of Generic Code will also be potentially achieved. 
- It is my understanding that there is a simular functionality in microsoft roslyn and Experssions etc. 
+    'CASE/THEN/END
+    'To support more complex conditional logic, RPL provides the CASE/THEN/END structure for handling multiple exclusive tests.
+    'Only one Of the branches within the Case statement will be executed. 
+    '  Case 
+    'condition_1 THEN if-condition_1 END 
+    ' ...
+    'condition_n THEN if-condition_n END
+    'If -none
+    '  End
+    'Eg:    illustrates the use of a CASE/THEN/END block. 
+    '       Given a letter at the bottom Of the stack, 
+    '       it replaces it With its String equivalent Or "Unknown letter" 
+    ' « 
+    '  Case 
+    '     DUP "A" == THEN "Alpha" END
+    '     DUP "B" == THEN "Beta" END
+    '     DUP "G" == THEN "Gamma" END
+    '     "Unknown letter"
+    '  End
+    '  SWAP DROP  @ Get rid Of the original letter
+    '»
+    'This code is identical to the following nested IF/THEN/ELSE/END block equivalent: 
+    '«
+    '   If DUP "A" ==
+    '   THEN
+    '      "Alpha"
+    '   Else
+    '   If DUP "B" == Then
+    '         "Beta"
+    '      Else
+    '   If DUP "G" == Then
+    '            "Gamma"
+    '         Else
+    '            "Unknown letter"
+    '         End
+    '   End
+    '   End
+    '   SWAP DROP  @ Get rid Of the original letter
+    '»
 
- The Journey of Creation Reveals a lot about the microsoft compilr as well as the original basic/Interperter and compiler.
+
+    'Looping statements
+    '    For/NEXT
+
+    'RPL provides a For/Next statement For looping from one index To another. The index For the Loop Is stored In a temporary local variable that can be accessed In the Loop. The syntax Of the For/Next block Is:
+
+    'index_from index_to For variable_name loop_statement Next
+
+    'The following example uses the For Loop To sum the numbers from 1 To 10. The index variable Of the For Loop Is "I":
+
+    ' « 
+    '    0       @ Start with zero on the stack
+    '    1 10    @ Loop from 1 to 10
+    '    For I   @ "I" Is the local variable
+    '       I +  @ Add "I" to the running total
+    '    Next    @ Repeat...
+    ' »
   
+  'START/NEXT
 
-  The Language Creator : A Toy Programming Language
+    'The START/Next block Is used For a simple block that runs from a start index To an End index. Unlike the For/Next Loop, the looping variable Is Not available. The syntax Of the START/Next block Is:
 
-  Development Statges: 
+    ' index_from index_to START loop_statement Next
 
- Create a Lexer to tokenize the input based upon a grammar with defined rules
- Create a Parser to parse Tokens into Expressions (Constant/Unary/Binary/Trinary)
-	
-	Generate - Statements from Expressions 
-	Generate - List of Expressions and functions for inputted program
- 
- Create MasterList - AST Expressions for Functions and Types  > With Internal Execution as well as Regeneration of Visual basic syntax for Expressions 
- 
- Create A Compiler to ExecuteCode or Compile as Console Application or Generate ConvertedCode to Script.
+    'For/STEP And START/STEP
 
+    'Both FOR/NEXT And START/NEXT support a user-defined step increment. By replacing the terminating NEXT keyword with an increment And the STEP keyword, the loop variable will be incremented Or decremented by a different value than the default of +1. For instance, the following loop steps back from 10 to 2 by decrementing the loop index by 2
 
- 
+    ' « 10 2 START -2 STEP »
+
+    'While/ REPEAT /END
+
+    'The WHILE/REPEAT/END block in RPL supports an indefinite loop with the condition test at the start of the loop. The syntax of the WHILE/REPEAT/END block Is
+
+    ' While condition REPEAT loop_statement End
+
+    'Do/UNTIL/END
+
+    'The DO/UNTIL/END block in RPL supports an indefinite loop with the condition test at the end of the loop. The syntax of the DO/UNTIL/END block Is
+
+    ' Do loop_statement UNTIL condition END

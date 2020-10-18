@@ -755,7 +755,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_GT"
                         Try
-                            Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
+                            Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation - isGT", Me)
@@ -763,7 +763,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_GTE"
                         Try
-                            Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
+                            Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation isGTE", Me)
@@ -771,8 +771,8 @@ Namespace STACK_VM
                         End Try
                     Case "IS_LT"
                         Try
-                            Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
-                            Return LEFT + RIGHT
+                            Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
+
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation isLT", Me)
@@ -780,7 +780,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_LE"
                         Try
-                            Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
+                            Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation isLTE", Me)
@@ -796,7 +796,7 @@ Namespace STACK_VM
                         End Try
                     Case "SUB"
                         Try
-                            Return LEFT - RIGHT
+                            Return RIGHT - LEFT
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation -sub", Me)
@@ -804,7 +804,7 @@ Namespace STACK_VM
                         End Try
                     Case "MUL"
                         Try
-                            Return LEFT * RIGHT
+                            Return RIGHT * LEFT
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation -mul", Me)
@@ -812,7 +812,7 @@ Namespace STACK_VM
                         End Try
                     Case "DIV"
                         Try
-                            Return LEFT / RIGHT
+                            Return RIGHT / LEFT
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation -div", Me)

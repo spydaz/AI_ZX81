@@ -2,20 +2,19 @@
 ''' Virtual Machine
 ''' </summary>
 Public Class VM
-        Private iProgram As List(Of List(Of AbstractSyntax))
-        Public ReadOnly Property Program As List(Of List(Of AbstractSyntax))
-            Get
-                Return iProgram
-            End Get
-        End Property
-
-        Public ReadOnly Property Name As String
+    Private iProgram As List(Of List(Of AbstractSyntax))
+    Public ReadOnly Property Program As List(Of List(Of AbstractSyntax))
+        Get
+            Return iProgram
+        End Get
+    End Property
+    Public ReadOnly Property Name As String
             Get
                 Return iname
             End Get
         End Property
-        Private iname As String = ""
-        Private Shared iCPU As STACK_VM.ZX81_CPU
+    Private iname As String = ""
+    Private Shared iCPU As STACK_VM.ZX81_CPU
     Public ReadOnly Property CPU As STACK_VM.ZX81_CPU
         Get
             Return iCPU
@@ -38,7 +37,7 @@ Public Class VM
         iProgram = New List(Of List(Of AbstractSyntax))
     End Sub
     ''' <summary>
-    ''' Executes Program on CPU
+    ''' Executes Program on CPU stack
     ''' </summary>
     Public Sub ExecuteProgram()
         Dim Prog As New List(Of String)
@@ -53,8 +52,6 @@ Public Class VM
                         Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
                     Case "Conditional_Operation"
                         Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
-
-
                 End Select
             Next
         Next
@@ -90,7 +87,6 @@ Public Class VM
                 PROGRAM.Add("SUB")
                 PROGRAM.Add("PRINT_M")
 
-
             Case "+"
                 PROGRAM.Add("PUSH")
                 PROGRAM.Add(Left.ToString)
@@ -113,7 +109,7 @@ Public Class VM
                 PROGRAM.Add("PUSH")
                 PROGRAM.Add(Right.ToString)
                 PROGRAM.Add("MUL")
-
+                PROGRAM.Add("PRINT_M")
             Case ">"
                 PROGRAM.Add("PUSH")
                 PROGRAM.Add(Left.ToString)

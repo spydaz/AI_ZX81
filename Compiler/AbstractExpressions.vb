@@ -176,7 +176,7 @@ Namespace ConcreteExpressions
         Private Env As Environment_Memory
         Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As Environment_Memory)
             MyBase.New("_OPERATION", "_CONDITIONAL_OPERATION", "", "BOOLEAN", ParentEnv)
-            Expr = Left.GetExpr & iOperator & Left.GetExpr
+            Expr = Left.GetExpr & iOperator & Right.GetExpr
             Env = ParentEnv
         End Sub
         Public Overrides Function GetValue() As String
@@ -198,18 +198,17 @@ Namespace ConcreteExpressions
 
             If Left.VarType = "INT" And Right.VarType = "INT" Then
                 Select Case iOperator
+                    Case ">="
+                        Return (Integer.Parse(Left.GetValue) >= Integer.Parse(Left.GetValue)).ToString
+                    Case "<="
+                        Return (Integer.Parse(Left.GetValue) <= Integer.Parse(Left.GetValue)).ToString
                     Case ">"
                         Return (Integer.Parse(Left.GetValue) > Integer.Parse(Left.GetValue)).ToString
                     Case "<"
                         Return (Integer.Parse(Left.GetValue) < Integer.Parse(Left.GetValue)).ToString
                     Case "="
                         Return (Integer.Parse(Left.GetValue) = Integer.Parse(Left.GetValue)).ToString
-                    Case "!="
-                        Return (Integer.Parse(Left.GetValue) = Integer.Parse(Left.GetValue)).ToString
-                    Case "!>"
-                        Return (Integer.Parse(Left.GetValue) > Integer.Parse(Left.GetValue)).ToString
-                    Case "!<"
-                        Return (Integer.Parse(Left.GetValue) < Integer.Parse(Left.GetValue)).ToString
+
                 End Select
 
 
@@ -222,7 +221,7 @@ Namespace ConcreteExpressions
         Private Env As Environment_Memory
         Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As Environment_Memory)
             MyBase.New("_OPERATION", "ADDATIVE_OPERATION", "", "INT", ParentEnv)
-            Expr = (Left.GetExpr & iOperator & Left.GetExpr)
+            Expr = (Left.GetExpr & iOperator & Right.GetExpr)
         End Sub
         Public Overrides Function GetValue() As String
             Evaluate(Env)
@@ -247,9 +246,9 @@ Namespace ConcreteExpressions
             If Left.VarType = "INT" And Right.VarType = "INT" Then
                 Select Case iOperator
                     Case "+"
-                        Return (Integer.Parse(Left.GetValue) + Integer.Parse(Left.GetValue)).ToString
+                        Return (Integer.Parse(Left.GetValue) + Integer.Parse(Right.GetValue)).ToString
                     Case "-"
-                        Return (Integer.Parse(Left.GetValue) - Integer.Parse(Left.GetValue)).ToString
+                        Return (Integer.Parse(Left.GetValue) - Integer.Parse(Right.GetValue)).ToString
                 End Select
 
 
@@ -262,7 +261,7 @@ Namespace ConcreteExpressions
         Private env As Environment_Memory
         Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As Environment_Memory)
             MyBase.New("_OPERATION", "MULTIPLICAIVE_OPERATION", "", "INT", ParentEnv)
-            Expr = (Left.GetExpr & iOperator & Left.GetExpr)
+            Expr = (Left.GetExpr & iOperator & Right.GetExpr)
         End Sub
 
         Public Overrides Function GetValue() As String
@@ -285,9 +284,9 @@ Namespace ConcreteExpressions
             If Left.VarType = "INT" And Right.VarType = "INT" Then
                 Select Case iOperator
                     Case "*"
-                        Return (Integer.Parse(Left.GetValue) * Integer.Parse(Left.GetValue)).ToString
+                        Return (Integer.Parse(Left.GetValue) * Integer.Parse(Right.GetValue)).ToString
                     Case "/"
-                        Return (Integer.Parse(Left.GetValue) / Integer.Parse(Left.GetValue)).ToString
+                        Return (Integer.Parse(Left.GetValue) / Integer.Parse(Right.GetValue)).ToString
                 End Select
 
 

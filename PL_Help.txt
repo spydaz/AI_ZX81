@@ -2,9 +2,13 @@
 
 Basic Program Language; 
 
+{executable}
 Print "Hello World"("PRINT_STR")
 Print 23 ("PRINT_INT")
+9+4-8*8 9/9 8-6
+4>7 5<4 5>=4 5<=4 5=8
 
+[to be implemented]
 DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
 Conditional Operations () Output TRUE/FALSE
 IF () THEN {} ELSE {} END IF
@@ -18,7 +22,41 @@ Spydaz Virtual Machine Code Language ;
 
 This language is used to execute code on the Stack VM.
 
-PUSH / POP / LOAD / STORE / ADD/ MUL / SUB / IS_EQ / IS_GE / IS_LE / LT / GT / RET / JIF_T / JIF_F / JMP / DIV / DUP / AND / OR / NOT /HALT
+    _PUSH
+    _PULL
+    _PEEK
+    _WAIT
+    _PAUSE
+    _HALT
+    _DUP
+    _JMP
+    _JIF_T
+    _JIF_F
+    _JIF_EQ
+    _JIF_GT
+    _JIF_LT
+    _LOAD
+    _STORE
+    _CALL
+    _RET
+    _PRINT_M
+    _PRINT_C -<issues<
+    _ADD
+    _SUB
+    _MUL
+    _DIV
+    _AND
+    _OR
+    _NOT
+    _IS_EQ
+    _IS_GT
+    _IS_GTE
+    _IS_LT
+    _IS_LTE
+    _TO_POS
+    _TO_NEG
+    _INCR
+    _DECR
 
 ALL commands must be on a single line and ending with the halt Command!
 
