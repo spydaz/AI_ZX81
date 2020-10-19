@@ -51,6 +51,8 @@
                             Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                         Case "_PRINT_INT"
                             Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
+                        Case "_PRINT_BOOL"
+                            Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                         Case "Math_Operation"
                             Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
                         Case "Conditional_Operation"
@@ -165,6 +167,7 @@
             Return PROGRAM
 
         End Function
+#Region "IF"
         ''' <summary>
         '''       If ["condition"] Then ["If-True"]  End
         ''' </summary>
@@ -206,35 +209,35 @@
             'END
             Return PROGRAM
         End Function
-        Private Function _for_I_start_To_finish(ByRef Start As Integer, ByRef Finish As Integer, ByRef _loop As List(Of String)) As List(Of String)
-
+#End Region
+        Private Function for_value_to_value(ByRef Start As Integer, ByRef Finish As Integer)
             Dim PROGRAM As New List(Of String)
             PROGRAM.Add("PUSH")
             PROGRAM.Add(Start)
             PROGRAM.Add("STORE")
-            PROGRAM.Add(1)
+            PROGRAM.Add(0)
             PROGRAM.Add("PUSH")
             PROGRAM.Add(Finish)
             PROGRAM.Add("STORE")
-            PROGRAM.Add(2) '(COMPARISION)
+            PROGRAM.Add(1)
+            'Start Statments
+
+            'BeginNext
             PROGRAM.Add("LOAD")
             PROGRAM.Add(1)
             PROGRAM.Add("LOAD")
-            PROGRAM.Add(2)
-            PROGRAM.Add("JIF_GTE")
-            PROGRAM.Add(15)
-            PROGRAM.Add("HALT") 'END lOOP
-            PROGRAM.AddRange(_loop)
-            PROGRAM.Add("LOAD") ' (LOAD FOR INCREMENT)
-            PROGRAM.Add("1")
-            PROGRAM.Add("PUSH")
-            PROGRAM.Add("1")
-            PROGRAM.Add("ADD")
+            PROGRAM.Add(0)
+            PROGRAM.Add("INCR")
+            PROGRAM.Add("REMOVE")
+            PROGRAM.Add(0)
             PROGRAM.Add("STORE")
-            PROGRAM.Add("1")
-            PROGRAM.Add("JMP") '(BACK TO COMPARISON)
-            PROGRAM.Add("14")
-            Return PROGRAM
+            PROGRAM.Add(0)
+            'LOOP
+            PROGRAM.Add("JIF_LT")
+            'LineBefore store
+            PROGRAM.Add(8)
+            'end of loop
+            PROGRAM.Add("HALT")
         End Function
     End Class
     Public Enum instruction

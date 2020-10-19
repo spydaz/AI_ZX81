@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compiler\Parser\AbstractExpressions.vb" />
+    <Compile Include="Grammar\AST_GRAMMAR.vb" />
     <Compile Include="Grammar\ENG_Grammar.vb" />
     <Compile Include="StackVM\ZX81_GPU.vb" />
     <Compile Include="StackVM\ZX81_VM.vb" />

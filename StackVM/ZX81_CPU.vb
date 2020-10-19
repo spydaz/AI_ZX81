@@ -323,11 +323,15 @@ Namespace STACK_VM
                     'lOADS A VARIABLE
                     Dim varNumber As Integer = Integer.Parse(Fetch().ToString)
                     CPU_CACHE.Push(GetCurrentFrame.GetVar(varNumber))
+                Case "REMOVE"
+                    'lOADS A VARIABLE
+                    Dim varNumber As Integer = Integer.Parse(Fetch().ToString)
+                    GetCurrentFrame.RemoveVar(varNumber)
                 Case "STORE"
                     ' "Should have the variable number after the STORE instruction"
                     Dim varNumber As Integer = Integer.Parse(Fetch().ToString)
                     CheckStackHasAtLeastOneItem()
-                    CurrentCache.SetVar(varNumber, CPU_CACHE.Pop())
+                    CurrentCache.SetVar(varNumber, CPU_CACHE.Peek())
                     R_A_M.Push(CurrentCache)
                 Case "CALL"
                     ' The word after the instruction will contain the function address
@@ -348,7 +352,6 @@ Namespace STACK_VM
                     GPU.ConsolePrint(Pop)
 
                 Case "CLS"
-
                     GPU.Console_CLS()
                 ' PRINT TO CONSOLE
                 Case "PRINT_C"
@@ -628,7 +631,6 @@ Namespace STACK_VM
             End If
         End Function
 #End Region
-
 #Region "Functional Parts"
         ''' <summary>
         ''' Checks if there is a jump address available
@@ -680,8 +682,8 @@ Namespace STACK_VM
         ''' </summary>
         ''' <returns></returns>
         Public Function GetCurrentFrame() As StackMemoryFrame
-            If R_A_M IsNot Nothing Then
-                Return R_A_M.Peek()
+            If R_A_M.Count > 0 Then
+                Return R_A_M.Pop()
             Else
                 Return Nothing
                 Me.mRunningState = State.HALT
@@ -702,7 +704,6 @@ Namespace STACK_VM
             Return SerializeObject(OBJ)
         End Function
 #End Region
-
 #Region "Operational Functions"
         ''' <summary>
         ''' REQUIRED TO SEE IN-SIDE CURRENT POINTER LOCATION
@@ -856,7 +857,6 @@ Namespace STACK_VM
                 Return False
             End If
         End Function
-
         Private Sub JumpIf_TRUE(ByRef Address As Integer)
             If CheckJumpAddress(Address) = True And CheckStackHasAtLeastOneItem() = True Then
                 If (ToBool(Pop)) Then
@@ -866,8 +866,6 @@ Namespace STACK_VM
             Else
             End If
         End Sub
-
-
         Private Sub JUMP(ByRef Address As Integer)
             If CheckJumpAddress(Address) = True Then
                 InstructionAdrress = Address
@@ -919,7 +917,6 @@ Namespace STACK_VM
             Return "NULL"
         End Function
 #End Region
-
         Private Function ToPositive(Number As Integer)
             Return Math.Abs(Number)
         End Function
@@ -938,38 +935,49 @@ Namespace STACK_VM
         ''' </summary>
         Public Class StackMemoryFrame
             Public Structure Var
-                Public Value As Integer
+                Public Value As String
                 Public VarNumber As String
             End Structure
             Public ReturnAddress As Integer
             Public Variables As List(Of Var)
-
             Public Sub New(ByRef ReturnAddress As Integer)
                 ReturnAddress = ReturnAddress
                 Variables = New List(Of Var)
             End Sub
             Public Function GetReturnAddress() As Integer
-
                 Return ReturnAddress
             End Function
-            Public Function GetVar(ByRef VarNumber As String) As Integer
+            Public Function GetVar(ByRef VarNumber As String) As String
                 For Each item In Variables
                     If item.VarNumber = VarNumber Then
                         Return item.Value
-
                     End If
                 Next
                 Return 0
             End Function
-            Public Sub SetVar(ByRef VarNumber As String, ByRef value As Integer)
+            Public Sub SetVar(ByRef VarNumber As String, ByRef value As String)
                 Dim item As New Var
+                Dim added As Boolean = False
                 item.VarNumber = VarNumber
                 item.Value = value
-
+                For Each ITM In Variables
+                    If ITM.VarNumber = VarNumber Then
+                        ITM.Value = value
+                    End If
+                Next
                 Variables.Add(item)
+
+            End Sub
+            Public Sub RemoveVar(ByRef VarNumber As String)
+                For Each item In Variables
+                    If item.VarNumber = VarNumber = True Then
+                        Variables.Remove(item)
+                        Exit For
+                    Else
+                    End If
+                Next
             End Sub
         End Class
-
         Public Class VM_ERR
             Private ErrorStr As String = ""
             Private frm As New FormDisplayConsole
@@ -1001,6 +1009,7 @@ Namespace STACK_VM
         ''' SPYDAZWEB_VM_X86
         ''' </summary>
         Public Enum VM_x86_Cmds
+            _REMOVE
             _NULL
             _PUSH
             _PULL
