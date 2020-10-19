@@ -4,29 +4,10 @@
 Public Module ModuleKnowledgeStructures
     Public ConditionalOperators() As String = {"_GREATER_THAN", "_LESS_THAN", "_EQUALS", "_NOT"}
     Public LogicalOperators() As String = {"_AND", "_OR", "_NAND", "_NOR", "_XOR"}
-    Public Enum instruction
-        _halt
-        _push
-        _add
-        _Sub
-        _mul
-        _div
-        _Not
-        _And
-        _Or
-        _pop
-        _dup
-        _is_eq
-        _is_ge
-        _is_gt
-        _jmp
-        _jif_t
-        _jif_f
-        _load
-        _store
-        _Call
-        _ret
-    End Enum
+
+
+
+#Region "Parser"
     ''' <summary>
     ''' Abstrax Syntax Token Uses the data stored and 
     ''' Assoicated Expression to execute the components 
@@ -37,7 +18,7 @@ Public Module ModuleKnowledgeStructures
     ''' The data is stored in the token to be extracted for use by the expression within
     ''' </summary>
     Public Structure AbstractSyntax
-        Public Expr As AbstractExpressions.Expression
+        Public Expr As Compiler.Expression
         ''' <summary>
         ''' Name of Syntax item - Refers to operation
         ''' </summary>
@@ -99,6 +80,8 @@ Public Module ModuleKnowledgeStructures
         Public State As Integer
         Public CurrentOperation As String
     End Structure
+#End Region
+#Region "Lexer"
     ''' <summary>
     ''' Used to contain detected tokens
     ''' </summary>
@@ -238,7 +221,6 @@ Public Module ModuleKnowledgeStructures
 
         End Function
     End Structure
-
     ''' <summary>
     ''' SHOULD BE SHADOWED FOR CUSTOM TOKEN SELECTION
     ''' </summary>
@@ -315,6 +297,7 @@ Public Module ModuleKnowledgeStructures
         _INTRANSITIVE_VERB = 69
         _QUANTIFIER = 70
     End Enum
+#End Region
 
 
 

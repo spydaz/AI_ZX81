@@ -1,4 +1,4 @@
-﻿Public Class Form_ZX81
+﻿Public Class FormDisplayConsole
     Public Globalvars As New Stack
     ''' <summary>
     ''' Uses Compiler Memory for Expressions

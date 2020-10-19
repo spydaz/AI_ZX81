@@ -79,29 +79,30 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler\AbstractExpressions.vb" />
+    <Compile Include="Compiler\Parser\AbstractExpressions.vb" />
     <Compile Include="Grammar\ENG_Grammar.vb" />
-    <Compile Include="StackVM\VM.vb" />
-    <Compile Include="Compiler\ClassLexer.vb" />
+    <Compile Include="StackVM\ZX81_GPU.vb" />
+    <Compile Include="StackVM\ZX81_VM.vb" />
+    <Compile Include="Compiler\Lexer\ClassLexer.vb" />
     <Compile Include="StackVM\ZX81_Memory.vb" />
-    <Compile Include="Compiler\ClassParser.vb" />
-    <Compile Include="Compiler\Environment.vb" />
+    <Compile Include="Compiler\Parser\ClassParser.vb" />
+    <Compile Include="Interpretor\Environment.vb" />
     <Compile Include="IDE\FormDevIDE.Designer.vb">
       <DependentUpon>FormDevIDE.vb</DependentUpon>
     </Compile>
     <Compile Include="IDE\FormDevIDE.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="StackVM\FormDisplayScreen.Designer.vb">
-      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
+    <Compile Include="StackVM\FormDisplayConsole.Designer.vb">
+      <DependentUpon>FormDisplayConsole.vb</DependentUpon>
     </Compile>
-    <Compile Include="StackVM\FormDisplayScreen.vb">
+    <Compile Include="StackVM\FormDisplayConsole.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IDE\Form_DisplayText.designer.vb">
-      <DependentUpon>Form_DisplayText.vb</DependentUpon>
+    <Compile Include="IDE\Form_DisplayHelpNotes.designer.vb">
+      <DependentUpon>Form_DisplayHelpNotes.vb</DependentUpon>
     </Compile>
-    <Compile Include="IDE\Form_DisplayText.vb">
+    <Compile Include="IDE\Form_DisplayHelpNotes.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IDE\ModuleKnowledgeStructures.vb" />
@@ -128,11 +129,11 @@
     <EmbeddedResource Include="IDE\FormDevIDE.resx">
       <DependentUpon>FormDevIDE.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="StackVM\FormDisplayScreen.resx">
-      <DependentUpon>FormDisplayScreen.vb</DependentUpon>
+    <EmbeddedResource Include="StackVM\FormDisplayConsole.resx">
+      <DependentUpon>FormDisplayConsole.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="IDE\Form_DisplayText.resx">
-      <DependentUpon>Form_DisplayText.vb</DependentUpon>
+    <EmbeddedResource Include="IDE\Form_DisplayHelpNotes.resx">
+      <DependentUpon>Form_DisplayHelpNotes.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

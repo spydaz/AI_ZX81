@@ -1,4 +1,4 @@
-﻿Public Class Form_DisplayText
+﻿Public Class Form_DisplayHelpNotes
 
     Private Delegate Sub iClearText(ByRef mTextbox As RichTextBox, ByRef Message As String)
 

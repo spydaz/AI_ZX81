@@ -1,4 +1,5 @@
 ﻿Imports AI_ZX81.GRAMMARS
+Imports AI_ZX81.STACK_VM
 
 'Production _ rules
 ' The Parse / Generator is used to manage statements created by the Tokenizer / Lexer
@@ -78,8 +79,8 @@ Namespace Compiler
             Return Nothing
         End Function
 
-        Public Sub executeON_CPU(ByRef VM As VM, ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax)))
-            Dim My_VM As VM = VM
+        Public Sub executeON_CPU(ByRef VM As ZX81_VM, ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax)))
+            Dim My_VM As ZX81_VM = VM
             My_VM.SetProgram(POPULATED_TREE)
             My_VM.ExecuteProgram()
         End Sub

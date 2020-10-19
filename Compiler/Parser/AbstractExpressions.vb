@@ -1,8 +1,8 @@
-﻿Imports AI_ZX81.AbstractExpressions
+﻿Imports AI_ZX81.Compiler
 Imports Newtonsoft.Json.JsonConvert
 
 
-Namespace AbstractExpressions
+Namespace Compiler
 
     ''' <summary>
     ''' To be Used as a Node in a Syntax Tree

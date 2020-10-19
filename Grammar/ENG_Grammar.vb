@@ -3,6 +3,9 @@
 
 
 Namespace GRAMMARS
+    ''' <summary>
+    ''' Used as For seaperate Grammar Projects (Natural Language interface)
+    ''' </summary>
     Public Class EnglishLanguageGrammar
 
 

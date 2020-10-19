@@ -5,7 +5,8 @@ Namespace STACK_VM
     ''' SpydazWeb X86 Assembly language Virtual X86 Processor
     ''' </summary>
     Public Class ZX81_CPU
-        Private IMonitor As Form_ZX81
+        Public GPU As New ZX81_GPU
+
 #Region "CPU"
         ''' <summary>
         ''' Used to monitor the Program status ; 
@@ -344,27 +345,11 @@ Namespace STACK_VM
 #Region "PRINT"
                 ' PRINT TO MONITOR
                 Case "PRINT_M"
-                    If IMonitor IsNot Nothing Then
-                        If IMonitor.Visible = False Then
-                            IMonitor.Show()
-                        End If
-                    Else
-                        IMonitor = New Form_ZX81
-                        IMonitor.Show()
-                        IMonitor.Print("------------ ZX 81 ----------" & vbNewLine)
-                    End If
-                    IMonitor.Print(Pop())
+                    GPU.ConsolePrint(Pop)
+
                 Case "CLS"
-                    If IMonitor IsNot Nothing Then
-                        If IMonitor.Visible = False Then
-                            IMonitor.Show()
-                        End If
-                    Else
-                        IMonitor = New Form_ZX81
-                        IMonitor.Show()
-                        IMonitor.Print("------------ ZX 81 ----------" & vbNewLine)
-                    End If
-                    IMonitor.CLS()
+
+                    GPU.Console_CLS()
                 ' PRINT TO CONSOLE
                 Case "PRINT_C"
                     '  System.Console.WriteLine("------------ ZX 81 ----------" & vbNewLine & Peek())
@@ -987,7 +972,7 @@ Namespace STACK_VM
 
         Public Class VM_ERR
             Private ErrorStr As String = ""
-            Private frm As New Form_ZX81
+            Private frm As New FormDisplayConsole
             Private CpuCurrentState As ZX81_CPU
 
             Public Sub New(ByRef Err As String, ByVal CPUSTATE As ZX81_CPU)
@@ -996,7 +981,7 @@ Namespace STACK_VM
             End Sub
             Public Sub RaiseErr()
                 If frm Is Nothing Then
-                    frm = New Form_ZX81
+                    frm = New FormDisplayConsole
                     frm.Show()
                     frm.Print(ErrorStr & vbNewLine & CpuCurrentState.GetStackData())
                 Else

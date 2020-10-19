@@ -132,7 +132,7 @@ Public Class FormDevIDE
     End Sub
 
     Private Sub ButtonHelp_Click(sender As Object, e As EventArgs) Handles ButtonHelp.Click
-        Dim frm As New Form_DisplayText
+        Dim frm As New Form_DisplayHelpNotes
         frm.Show()
 
     End Sub
@@ -208,7 +208,7 @@ Public Class FormDevIDE
                 AST.Nodes.Add(ClassLexer.GetTokenExprTree(Tokentree))
                 Dim tree = Parser.GetParseAST_Tree(Tokentree)
                 'Add Test --------------------
-                Dim vm As New VM("IDE")
+                Dim vm As New ZX81_VM("IDE")
                 Parser.executeON_CPU(vm, tree)
             Else
                 Errr = True
