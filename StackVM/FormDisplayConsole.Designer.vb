@@ -52,7 +52,7 @@ Partial Class FormDisplayConsole
         Me.Zx81_DisplayScreen.Name = "Zx81_DisplayScreen"
         Me.Zx81_DisplayScreen.Size = New System.Drawing.Size(775, 503)
         Me.Zx81_DisplayScreen.TabIndex = 0
-        Me.Zx81_DisplayScreen.Text = "Welcome"
+        Me.Zx81_DisplayScreen.Text = "SpydazWeb AI ZX81 Copyright © 2020" & Global.Microsoft.VisualBasic.ChrW(10) & "Ready." & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'FormDisplayConsole
         '

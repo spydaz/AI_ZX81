@@ -243,7 +243,7 @@ Partial Class FormDevIDE
         '
         Me.Label1.Location = New System.Drawing.Point(531, 25)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(455, 90)
+        Me.Label1.Size = New System.Drawing.Size(424, 75)
         Me.Label1.TabIndex = 5
         Me.Label1.Text = "Basic programming statements should be entered line; CPU intructions should be en" &
     "tered on a single line." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Enter statments Using the box Edit in the window; "
@@ -251,10 +251,10 @@ Partial Class FormDevIDE
         'ButtonClearTree
         '
         Me.ButtonClearTree.BackColor = System.Drawing.Color.Black
-        Me.ButtonClearTree.Location = New System.Drawing.Point(1125, 68)
+        Me.ButtonClearTree.Location = New System.Drawing.Point(1394, 66)
         Me.ButtonClearTree.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.ButtonClearTree.Name = "ButtonClearTree"
-        Me.ButtonClearTree.Size = New System.Drawing.Size(129, 31)
+        Me.ButtonClearTree.Size = New System.Drawing.Size(129, 34)
         Me.ButtonClearTree.TabIndex = 4
         Me.ButtonClearTree.Text = "Clear Tree"
         Me.ButtonClearTree.UseVisualStyleBackColor = False
@@ -262,44 +262,44 @@ Partial Class FormDevIDE
         'ButtonExecuteTree
         '
         Me.ButtonExecuteTree.BackColor = System.Drawing.Color.Black
-        Me.ButtonExecuteTree.Location = New System.Drawing.Point(991, 25)
+        Me.ButtonExecuteTree.Location = New System.Drawing.Point(1117, 22)
         Me.ButtonExecuteTree.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.ButtonExecuteTree.Name = "ButtonExecuteTree"
         Me.ButtonExecuteTree.Size = New System.Drawing.Size(129, 34)
         Me.ButtonExecuteTree.TabIndex = 3
-        Me.ButtonExecuteTree.Text = "Execute Tree"
+        Me.ButtonExecuteTree.Text = "RUN"
         Me.ButtonExecuteTree.UseVisualStyleBackColor = False
         '
         'ButtonParseTree
         '
         Me.ButtonParseTree.BackColor = System.Drawing.Color.Black
-        Me.ButtonParseTree.Location = New System.Drawing.Point(1125, 25)
+        Me.ButtonParseTree.Location = New System.Drawing.Point(1255, 22)
         Me.ButtonParseTree.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.ButtonParseTree.Name = "ButtonParseTree"
         Me.ButtonParseTree.Size = New System.Drawing.Size(129, 34)
         Me.ButtonParseTree.TabIndex = 3
-        Me.ButtonParseTree.Text = "Parse Tree"
+        Me.ButtonParseTree.Text = "COMPILE"
         Me.ButtonParseTree.UseVisualStyleBackColor = False
         '
         'ButtonExecuteCpuCode
         '
         Me.ButtonExecuteCpuCode.BackColor = System.Drawing.Color.PeachPuff
         Me.ButtonExecuteCpuCode.ForeColor = System.Drawing.Color.Black
-        Me.ButtonExecuteCpuCode.Location = New System.Drawing.Point(1427, 21)
+        Me.ButtonExecuteCpuCode.Location = New System.Drawing.Point(979, 22)
         Me.ButtonExecuteCpuCode.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.ButtonExecuteCpuCode.Name = "ButtonExecuteCpuCode"
-        Me.ButtonExecuteCpuCode.Size = New System.Drawing.Size(103, 82)
+        Me.ButtonExecuteCpuCode.Size = New System.Drawing.Size(129, 34)
         Me.ButtonExecuteCpuCode.TabIndex = 2
-        Me.ButtonExecuteCpuCode.Text = "Execute on Virtual CPU"
+        Me.ButtonExecuteCpuCode.Text = "Run X86 Code"
         Me.ButtonExecuteCpuCode.UseVisualStyleBackColor = False
         '
         'ButtonExecute
         '
         Me.ButtonExecute.BackColor = System.Drawing.Color.Black
-        Me.ButtonExecute.Location = New System.Drawing.Point(1261, 64)
+        Me.ButtonExecute.Location = New System.Drawing.Point(1255, 66)
         Me.ButtonExecute.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.ButtonExecute.Name = "ButtonExecute"
-        Me.ButtonExecute.Size = New System.Drawing.Size(159, 38)
+        Me.ButtonExecute.Size = New System.Drawing.Size(129, 34)
         Me.ButtonExecute.TabIndex = 0
         Me.ButtonExecute.Text = "Lex English"
         Me.ButtonExecute.UseVisualStyleBackColor = False
@@ -307,12 +307,12 @@ Partial Class FormDevIDE
         'ButtonCompile
         '
         Me.ButtonCompile.BackColor = System.Drawing.Color.Black
-        Me.ButtonCompile.Location = New System.Drawing.Point(1261, 22)
+        Me.ButtonCompile.Location = New System.Drawing.Point(1393, 22)
         Me.ButtonCompile.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.ButtonCompile.Name = "ButtonCompile"
-        Me.ButtonCompile.Size = New System.Drawing.Size(159, 38)
+        Me.ButtonCompile.Size = New System.Drawing.Size(129, 34)
         Me.ButtonCompile.TabIndex = 0
-        Me.ButtonCompile.Text = "Lex ProgramLogic"
+        Me.ButtonCompile.Text = "DEBUG"
         Me.ButtonCompile.UseVisualStyleBackColor = False
         '
         'GroupBox8

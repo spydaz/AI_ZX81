@@ -2,15 +2,15 @@
     ''' <summary>
     ''' Currently only Variables can be stored
     ''' </summary>
-    Public CurrentVars As List(Of AbstractExpressions.UnaryExpression)
+    Public CurrentVars As List(Of Compiler.UnaryExpression)
     Public Sub New()
-        CurrentVars = New List(Of AbstractExpressions.UnaryExpression)
+        CurrentVars = New List(Of Compiler.UnaryExpression)
     End Sub
 
 
     'Variables
 
-    Public Function UpdateVar(ByRef Var As AbstractExpressions.UnaryExpression) As AbstractExpressions.UnaryExpression
+    Public Function UpdateVar(ByRef Var As Compiler.UnaryExpression) As Compiler.UnaryExpression
         For Each item In CurrentVars
             If item.GetName = Var.GetName Then
                 Var.iValue = item.GetValue
@@ -20,7 +20,7 @@
         Next
         Return Var
     End Function
-    Public Function RemoveVar(ByRef Var As AbstractExpressions.UnaryExpression)
+    Public Function RemoveVar(ByRef Var As Compiler.UnaryExpression)
         For Each item In CurrentVars
             If item.GetName = Var.GetName Then
                 CurrentVars.Remove(item)
@@ -28,7 +28,7 @@
         Next
         Return Var
     End Function
-    Public Sub AddVar(ByRef Var As AbstractExpressions.UnaryExpression)
+    Public Sub AddVar(ByRef Var As Compiler.UnaryExpression)
         If CheckVar(Var.GetName) = False Then
             CurrentVars.Add(Var)
         End If

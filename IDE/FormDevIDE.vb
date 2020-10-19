@@ -109,15 +109,18 @@ Public Class FormDevIDE
     End Sub
     Dim CPU As ZX81_CPU
     Private Sub ButtonExecuteCpuCode_Click(sender As Object, e As EventArgs) Handles ButtonExecuteCpuCode.Click
-        AST.Nodes.Clear()
+        CLEAR()
+
         Dim PROG() As String = Split(RichTextBoxProgram.Text.Replace(vbCrLf, " "), " ")
         Dim InstructionLst As New List(Of String)
         Dim ROOT As New TreeNode
-        ROOT.Tag = "ASSEMBLY_CODE"
+        ROOT.Text = "ASSEMBLY_CODE"
+        Dim Count As Integer = 0
         For Each item In PROG
+            Count += 1
             If item <> "" Then
                 Dim NDE As New TreeNode
-                NDE.Text = item
+                NDE.Text = Count & ": " & item
                 ROOT.Nodes.Add(NDE)
                 InstructionLst.Add(item)
             End If
@@ -138,6 +141,7 @@ Public Class FormDevIDE
     End Sub
 
     Private Sub ButtonParseTree_Click(sender As Object, e As EventArgs) Handles ButtonParseTree.Click
+        CLEAR()
         Dim Errr As Boolean = False
         Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(UCase(GetCode)))
         If CurrentTokens IsNot Nothing Then
@@ -193,10 +197,16 @@ Public Class FormDevIDE
     End Sub
 
     Private Sub ButtonClearTree_Click(sender As Object, e As EventArgs) Handles ButtonClearTree.Click
-        AST.Nodes.Clear()
+        cLEAR()
     End Sub
-
+    Public Sub CLEAR()
+        AST.Nodes.Clear()
+        TextBoxErrorOutput.Clear()
+        TextBoxEnterStatments.Clear()
+        RichTextBoxDisplayOutput.Clear()
+    End Sub
     Private Sub ButtonExecuteTree_Click(sender As Object, e As EventArgs) Handles ButtonExecuteTree.Click
+        CLEAR()
         Dim cpu As New STACK_VM.ZX81_CPU("IDE")
         Dim Errr As Boolean = False
         Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(GetCode()))
