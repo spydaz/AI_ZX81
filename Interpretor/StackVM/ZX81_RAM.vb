@@ -1,4 +1,4 @@
-﻿Public Class Environment_Memory
+﻿Public Class ZX81_RAM
     Public Structure Variable
         Public iName As String
         Public iValue As String

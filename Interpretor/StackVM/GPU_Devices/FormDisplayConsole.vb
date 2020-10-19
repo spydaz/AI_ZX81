@@ -3,7 +3,7 @@
     ''' <summary>
     ''' Uses Compiler Memory for Expressions
     ''' </summary>
-    Public LocalVars As New Environment_Memory
+    Public LocalVars As New ZX81_RAM
     Public Sub Print(ByRef Userinput As String)
         Me.Zx81_DisplayScreen.Text &= Userinput & vbNewLine
     End Sub

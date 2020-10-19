@@ -1,5 +1,5 @@
 ﻿Imports AI_ZX81.ConcreteExpressions
-Imports AI_ZX81.Environment_Memory
+Imports AI_ZX81.ZX81_RAM
 
 Namespace STACK_VM
 
@@ -30,15 +30,15 @@ Namespace STACK_VM
         ''' To be used to store variables from functions/Expressions etc
         ''' each string should be looked up in memeory
         ''' </summary>
-        Public ReadOnly Property RAM As Environment_Memory
+        Public ReadOnly Property RAM As ZX81_RAM
             Get
                 Return iRAM
             End Get
         End Property
-        Private iRAM As Environment_Memory
+        Private iRAM As ZX81_RAM
         Public Sub New(ByRef iName As String)
             Me.iname = iName
-            iRAM = New Environment_Memory
+            iRAM = New ZX81_RAM
             iCPU = New STACK_VM.ZX81_CPU(Name)
             iProgram = New List(Of List(Of AbstractSyntax))
         End Sub
@@ -63,10 +63,14 @@ Namespace STACK_VM
                         Case "Conditional_Operation"
                             Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
                         Case "_DIM_AS"
-                            If TOK.RequiredTokens.Count >= 3 Then
+                            If TOK.RequiredTokens.Count = 6 Then
                                 _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue, TOK.RequiredTokens(5).TokenValue)
                             Else
-                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                                If TOK.RequiredTokens.Count = 3 Then
+                                    _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                                Else
+                                End If
+
                             End If
                         Case "ASSIGN_EQUALS"
                             _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)

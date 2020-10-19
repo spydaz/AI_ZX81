@@ -32,28 +32,28 @@ Partial Class Form_DisplayHelpNotes
         '
         Me.TextOut.BackColor = System.Drawing.SystemColors.GradientInactiveCaption
         Me.TextOut.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextOut.Font = New System.Drawing.Font("Courier New", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextOut.Font = New System.Drawing.Font("Courier New", 10.15!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextOut.ForeColor = System.Drawing.SystemColors.InfoText
         Me.TextOut.Location = New System.Drawing.Point(0, 0)
         Me.TextOut.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.TextOut.Name = "TextOut"
-        Me.TextOut.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical
-        Me.TextOut.Size = New System.Drawing.Size(1320, 623)
+        Me.TextOut.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
+        Me.TextOut.Size = New System.Drawing.Size(1914, 623)
         Me.TextOut.TabIndex = 0
         Me.TextOut.Text = resources.GetString("TextOut.Text")
         '
-        'Form_DisplayText
+        'Form_DisplayHelpNotes
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(1320, 623)
+        Me.ClientSize = New System.Drawing.Size(1914, 623)
         Me.Controls.Add(Me.TextOut)
         Me.DoubleBuffered = True
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.Name = "Form_DisplayText"
+        Me.Name = "Form_DisplayHelpNotes"
         Me.ResumeLayout(False)
 
     End Sub

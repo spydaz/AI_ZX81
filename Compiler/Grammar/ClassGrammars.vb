@@ -30,6 +30,12 @@
             Rule.COMPONENTSTRINGS.Add(ControlChars.CrLf)
             RuleList.Add(Rule)
 
+            Rule = New GrammarRule
+            Rule.TAGSTRING = "_BOOLEAN"
+            Rule.COMPONENTSTRINGS = New List(Of String)
+            Rule.COMPONENTSTRINGS.Add("BOOLEAN")
+            RuleList.Add(Rule)
+
             'RuleList.Add(AddListBeginPoint)
             'RuleList.Add(AddListEndPoint)
             RuleList = AddMathOperators(RuleList)

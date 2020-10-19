@@ -80,33 +80,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compiler\Parser\AbstractExpressions.vb" />
-    <Compile Include="Grammar\AST_GRAMMAR.vb" />
-    <Compile Include="Grammar\ENG_Grammar.vb" />
-    <Compile Include="StackVM\ZX81_GPU.vb" />
-    <Compile Include="StackVM\ZX81_VM.vb" />
+    <Compile Include="Compiler\Grammar\AST_GRAMMAR.vb" />
+    <Compile Include="Compiler\Grammar\ENG_Grammar.vb" />
+    <Compile Include="Interpretor\StackVM\ZX81_GPU.vb" />
+    <Compile Include="Interpretor\StackVM\ZX81_VM.vb" />
     <Compile Include="Compiler\Lexer\ClassLexer.vb" />
-    <Compile Include="StackVM\ZX81_Memory.vb" />
+    <Compile Include="Interpretor\StackVM\ZX81_CacheMemory.vb" />
     <Compile Include="Compiler\Parser\ClassParser.vb" />
-    <Compile Include="Interpretor\Environment.vb" />
-    <Compile Include="IDE\FormDevIDE.Designer.vb">
+    <Compile Include="Interpretor\StackVM\ZX81_RAM.vb" />
+    <Compile Include="Dev_IDE\FormDevIDE.Designer.vb">
       <DependentUpon>FormDevIDE.vb</DependentUpon>
     </Compile>
-    <Compile Include="IDE\FormDevIDE.vb">
+    <Compile Include="Dev_IDE\FormDevIDE.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="StackVM\FormDisplayConsole.Designer.vb">
+    <Compile Include="Interpretor\StackVM\GPU_Devices\FormDisplayConsole.Designer.vb">
       <DependentUpon>FormDisplayConsole.vb</DependentUpon>
     </Compile>
-    <Compile Include="StackVM\FormDisplayConsole.vb">
+    <Compile Include="Interpretor\StackVM\GPU_Devices\FormDisplayConsole.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IDE\Form_DisplayHelpNotes.designer.vb">
+    <Compile Include="Dev_IDE\Form_DisplayHelpNotes.designer.vb">
       <DependentUpon>Form_DisplayHelpNotes.vb</DependentUpon>
     </Compile>
-    <Compile Include="IDE\Form_DisplayHelpNotes.vb">
+    <Compile Include="Dev_IDE\Form_DisplayHelpNotes.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IDE\ModuleKnowledgeStructures.vb" />
+    <Compile Include="Dev_IDE\ModuleKnowledgeStructures.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -123,17 +123,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Grammar\ClassGrammars.vb" />
-    <Compile Include="StackVM\ZX81_CPU.vb" />
+    <Compile Include="Compiler\Grammar\ClassGrammars.vb" />
+    <Compile Include="Interpretor\StackVM\ZX81_CPU.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IDE\FormDevIDE.resx">
+    <EmbeddedResource Include="Dev_IDE\FormDevIDE.resx">
       <DependentUpon>FormDevIDE.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="StackVM\FormDisplayConsole.resx">
+    <EmbeddedResource Include="Interpretor\StackVM\GPU_Devices\FormDisplayConsole.resx">
       <DependentUpon>FormDisplayConsole.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="IDE\Form_DisplayHelpNotes.resx">
+    <EmbeddedResource Include="Dev_IDE\Form_DisplayHelpNotes.resx">
       <DependentUpon>Form_DisplayHelpNotes.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -144,6 +144,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Compiler\ProgrammingLanguageSyntax.PL" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -155,7 +156,7 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="ScratchPad.text" />
+    <None Include="CurrentScripts\ScratchPad.text" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ipad-mockup-768x1024.png" />
@@ -207,10 +208,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon_SpydazBrain.ico" />
-    <Content Include="PL_Help.txt" />
-    <Content Include="StackVM\IF.txt" />
-    <Content Include="StackVM\MAX.txt" />
-    <Content Include="StackVM\WHILE.txt" />
+    <Content Include="CurrentScripts\PL_Help.txt" />
+    <Content Include="CurrentScripts\IF.txt" />
+    <Content Include="CurrentScripts\MAX.txt" />
+    <Content Include="CurrentScripts\WHILE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

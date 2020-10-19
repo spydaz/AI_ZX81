@@ -9,7 +9,7 @@ Namespace Compiler
     ''' </summary>
     Public MustInherit Class Expression
         Public Expr As String
-        Public MustOverride Function Evaluate(ByRef ParentEnvironment As Environment_Memory) As String
+        Public MustOverride Function Evaluate(ByRef ParentEnvironment As ZX81_RAM) As String
         Public Function GetExpr() As String
             Return Expr
         End Function
@@ -45,7 +45,7 @@ Namespace Compiler
 
         End Function
 
-        Public Overrides Function Evaluate(ByRef ParentEnvironment As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnvironment As ZX81_RAM) As String
             Return GetValue()
         End Function
 
@@ -62,8 +62,8 @@ Namespace Compiler
     Public MustInherit Class UnaryExpression
         Inherits ConstantExpression
         Public Identifier As String
-        Public ParentEnv As Environment_Memory
-        Public Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As Environment_Memory)
+        Public ParentEnv As ZX81_RAM
+        Public Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As ZX81_RAM)
             MyBase.New(NodeType, Value, Type)
             Me.iValue = Value
             Me.Identifier = iName
@@ -73,7 +73,7 @@ Namespace Compiler
 
         End Sub
 
-        Public Overrides Function Evaluate(ByRef ParentEnvironment As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnvironment As ZX81_RAM) As String
             If ParentEnvironment.CheckVar(GetName) = True Then
                 Me.iValue = ParentEnvironment.GetVar(Me.GetName)
                 Return GetValue()
@@ -112,7 +112,7 @@ Namespace Compiler
         Public Right As Expression
 
 
-        Protected Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As Environment_Memory)
+        Protected Sub New(ByRef NodeType As String, ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As ZX81_RAM)
             MyBase.New(NodeType, iName, Value, Type, Env)
 
         End Sub
@@ -149,8 +149,8 @@ Namespace ConcreteExpressions
 
     Public Class ConditionalOperation
         Inherits BinaryExpression
-        Private Env As Environment_Memory
-        Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As Environment_Memory)
+        Private Env As ZX81_RAM
+        Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("_OPERATION", "_CONDITIONAL_OPERATION", "", "BOOLEAN", ParentEnv)
             Expr = Left.GetExpr & iOperator & Right.GetExpr
             Env = ParentEnv
@@ -159,7 +159,7 @@ Namespace ConcreteExpressions
             Evaluate(Env)
             Return iValue
         End Function
-        Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnv As ZX81_RAM) As String
             iValue = EvaluateBoolean(Left, iOperator, Right)
             Return GetValue()
         End Function
@@ -194,8 +194,8 @@ Namespace ConcreteExpressions
     End Class
     Public Class AddativeOperation
         Inherits BinaryExpression
-        Private Env As Environment_Memory
-        Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As Environment_Memory)
+        Private Env As ZX81_RAM
+        Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("_OPERATION", "ADDATIVE_OPERATION", "", "INT", ParentEnv)
             Expr = (Left.GetExpr & iOperator & Right.GetExpr)
         End Sub
@@ -203,7 +203,7 @@ Namespace ConcreteExpressions
             Evaluate(Env)
             Return iValue
         End Function
-        Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnv As ZX81_RAM) As String
             iValue = EvaluateAddative(Left, iOperator, Right)
 
             Return GetValue()
@@ -234,8 +234,8 @@ Namespace ConcreteExpressions
     End Class
     Public Class MultiplicativeOperation
         Inherits BinaryExpression
-        Private env As Environment_Memory
-        Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As Environment_Memory)
+        Private env As ZX81_RAM
+        Public Sub New(ByRef Left As ConstantExpression, iOperator As String, Right As ConstantExpression, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("_OPERATION", "MULTIPLICAIVE_OPERATION", "", "INT", ParentEnv)
             Expr = (Left.GetExpr & iOperator & Right.GetExpr)
         End Sub
@@ -244,7 +244,7 @@ Namespace ConcreteExpressions
             Evaluate(env)
             Return iValue
         End Function
-        Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnv As ZX81_RAM) As String
             iValue = EvaluateMultiplicative(Left, iOperator, Right)
             Return GetValue()
         End Function
@@ -273,15 +273,15 @@ Namespace ConcreteExpressions
     Public Class PrintFunction
         Inherits Expression
         Public ToPrint As UnaryExpression
-        Public ParentEnv As Environment_Memory
-        Public Sub New(ByRef ToPrint As UnaryExpression, ByRef ParentEnv As Environment_Memory)
+        Public ParentEnv As ZX81_RAM
+        Public Sub New(ByRef ToPrint As UnaryExpression, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("PRINT_FUNCTION")
             Me.ToPrint = ToPrint
             Expr = "PRINT" & ToPrint.GetValue
             Me.ParentEnv = ParentEnv
             Me.ToPrint.iValue = ToPrint.Evaluate(ParentEnv)
         End Sub
-        Public Sub New(ByRef ToPrint As ConstantExpression, ByRef ParentEnv As Environment_Memory)
+        Public Sub New(ByRef ToPrint As ConstantExpression, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("PrintFunction")
             Me.ToPrint.VarType = ToPrint.VarType
             Me.ToPrint.Expr = ToPrint.Expr
@@ -296,7 +296,7 @@ Namespace ConcreteExpressions
             Me.ToPrint.iValue = ToPrint.Evaluate(ParentEnv)
             Expr = "PRINT" & ToPrint.GetValue
         End Sub
-        Public Sub New(ByRef ToPrint As ConditionalOperation, ByRef ParentEnv As Environment_Memory)
+        Public Sub New(ByRef ToPrint As ConditionalOperation, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("PrintFunction")
             Me.ParentEnv = ParentEnv
             Me.ToPrint.iValue = ToPrint.Evaluate(ParentEnv)
@@ -304,7 +304,7 @@ Namespace ConcreteExpressions
 
             Expr = "PRINT" & ToPrint.GetValue
         End Sub
-        Public Sub New(ByRef ToPrint As MultiplicativeOperation, ByRef ParentEnv As Environment_Memory)
+        Public Sub New(ByRef ToPrint As MultiplicativeOperation, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("PrintFunction")
 
             Me.ToPrint.Expr = ToPrint.Expr
@@ -312,7 +312,7 @@ Namespace ConcreteExpressions
             Me.ToPrint.iValue = ToPrint.Evaluate(ParentEnv)
             Expr = "PRINT" & ToPrint.GetValue
         End Sub
-        Public Sub New(ByRef ToPrint As AddativeOperation, ByRef ParentEnv As Environment_Memory)
+        Public Sub New(ByRef ToPrint As AddativeOperation, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("PrintFunction")
 
             Me.ToPrint.Expr = ToPrint.Expr
@@ -320,7 +320,7 @@ Namespace ConcreteExpressions
             Me.ToPrint.iValue = ToPrint.Evaluate(ParentEnv)
             Expr = "PRINT" & ToPrint.GetValue
         End Sub
-        Public Overrides Function Evaluate(ByRef ParentEnV As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnV As ZX81_RAM) As String
             Return ToPrint.GetValue
         End Function
     End Class
@@ -329,9 +329,9 @@ Namespace ConcreteExpressions
         Inherits UnaryExpression
         Public Statements As Body
         Public Conditional As ConditionalOperation
-        Public Env As Environment_Memory
+        Public Env As ZX81_RAM
 
-        Public Sub New(ByRef Condition As ConditionalOperation, ByRef Block As Body, ByRef ParentEnv As Environment_Memory)
+        Public Sub New(ByRef Condition As ConditionalOperation, ByRef Block As Body, ByRef ParentEnv As ZX81_RAM)
             MyBase.New("_IF_FUNCTION", "IF_TRUE", Condition.GetValue, "BOOLEAN", ParentEnv)
             Me.ParentEnv = ParentEnv
             Conditional = Condition
@@ -341,7 +341,7 @@ Namespace ConcreteExpressions
             Return Conditional.GetValue
         End Function
 
-        Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnv As ZX81_RAM) As String
             Dim i As String = ""
             If Conditional.Evaluate(ParentEnv) = "TRUE" Then
                 For Each item In Statements.Statements
@@ -355,11 +355,11 @@ Namespace ConcreteExpressions
     Public Class LoopFunction
         Inherits Expression
         Public body As Body
-        Public Sub New(ByRef Body As Body, ByRef ParentEnvironment As Environment_Memory)
+        Public Sub New(ByRef Body As Body, ByRef ParentEnvironment As ZX81_RAM)
             MyBase.New("_LOOP_FUNCTION")
         End Sub
 
-        Public Overrides Function Evaluate(ByRef ParentEnvironment As Environment_Memory) As String
+        Public Overrides Function Evaluate(ByRef ParentEnvironment As ZX81_RAM) As String
             For Each item In body.Statements
                 item.Evaluate(ParentEnvironment)
             Next
