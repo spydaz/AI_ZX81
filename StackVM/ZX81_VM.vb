@@ -1,4 +1,7 @@
-﻿Namespace STACK_VM
+﻿Imports AI_ZX81.ConcreteExpressions
+Imports AI_ZX81.Environment_Memory
+
+Namespace STACK_VM
 
 
     ''' <summary>
@@ -53,10 +56,20 @@
                             Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                         Case "_PRINT_BOOL"
                             Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
+                        Case "_PRINT_VARIABLE"
+                            Prog.AddRange(_print(RAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
                         Case "Math_Operation"
                             Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
                         Case "Conditional_Operation"
                             Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
+                        Case "_DIM_AS"
+                            If TOK.RequiredTokens.Count >= 3 Then
+                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue, TOK.RequiredTokens(5).TokenValue)
+                            Else
+                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                            End If
+                        Case "ASSIGN_EQUALS"
+                            _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)
                     End Select
                 Next
             Next
@@ -65,6 +78,62 @@
             iCPU.LoadProgram(Prog)
             iCPU.RUN()
         End Sub
+        Private Sub _DIM_AS(ByRef iTEM As String, ByRef iTYPE As String)
+            Select Case iTYPE
+                Case "INT"
+                    Dim var As New Variable
+                    var.iName = iTEM
+                    var.iType = "INTEGER"
+                    var.iValue = 0
+                    iRAM.AddVar(var)
+                Case "BOOLEAN"
+                    Dim var As New Variable
+                    var.iName = iTEM
+                    var.iType = "BOOLEAN"
+                    var.iValue = "FALSE"
+                    iRAM.AddVar(var)
+                Case "STRING"
+                    Dim var As New Variable
+                    var.iName = iTEM
+                    var.iType = "STRING"
+                    var.iValue = ""
+                    iRAM.AddVar(var)
+            End Select
+
+        End Sub
+        Private Sub _DIM_AS(ByRef iTEM As String, ByRef iTYPE As String, ByRef VALUE As String)
+            Select Case iTYPE
+                Case "INT"
+                    Dim var As New Variable
+                    var.iName = iTEM
+                    var.iType = "INTEGER"
+                    var.iValue = VALUE
+                    iRAM.AddVar(var)
+                Case "BOOLEAN"
+                    Dim var As New Variable
+                    var.iName = iTEM
+                    var.iType = "BOOLEAN"
+                    var.iValue = VALUE
+                    iRAM.AddVar(var)
+                Case "STRING"
+                    Dim var As New Variable
+                    var.iName = iTEM
+                    var.iType = "STRING"
+                    var.iValue = VALUE
+                    iRAM.AddVar(var)
+            End Select
+
+        End Sub
+        Private Sub _VAR_EQ_VALUE(ByRef iTEM As String, ByRef VALUE As String)
+            If iRAM.CheckVar(iTEM) = True Then
+                iRAM.UpdateVar(iTEM, VALUE)
+
+            Else
+            End If
+        End Sub
+        Private Function GetVarValue(ByRef iName As String) As String
+            Return iRAM.GetVar(iName)
+        End Function
         Public Sub AddProgram(ByRef Program As List(Of AbstractSyntax))
             iProgram.Add(Program)
         End Sub
@@ -158,6 +227,7 @@
             End Select
             Return PROGRAM
         End Function
+
         Private Function _print(ByRef Str As String) As List(Of String)
 
             Dim PROGRAM As New List(Of String)
@@ -237,7 +307,8 @@
             'LineBefore store
             PROGRAM.Add(8)
             'end of loop
-            PROGRAM.Add("HALT")
+            '-PROGRAM.Add("HALT")
+            Return PROGRAM
         End Function
     End Class
     Public Enum instruction

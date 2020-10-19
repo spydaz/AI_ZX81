@@ -69,9 +69,7 @@ Namespace Compiler
             Me.Identifier = iName
             Me.VarType = Type
             Me.ParentEnv = Env
-            If Env.CheckVar(iName) = False Then
-                Env.AddVar(Me)
-            End If
+
 
         End Sub
 
@@ -148,29 +146,7 @@ Namespace Compiler
 End Namespace
 
 Namespace ConcreteExpressions
-    Public Class Variable
-        Inherits UnaryExpression
-        Private Env As Environment_Memory
-        Public Sub New(ByRef iName As String, ByRef Value As String, ByRef Type As String, ByRef Env As Environment_Memory)
-            MyBase.New("_VARIABLE", iName, Value, Type, Env)
-            Me.iValue = Value
-            Me.Identifier = iName
-            Me.VarType = Type
-            Me.ParentEnv = Env
-            If Env.CheckVar(iName) = False Then
-                Env.AddVar(Me)
-            End If
-            Me.Env = Env
-        End Sub
 
-        Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
-
-            Me.iValue = ParentEnv.GetVar(Me.GetName)
-
-
-            Return GetValue()
-        End Function
-    End Class
     Public Class ConditionalOperation
         Inherits BinaryExpression
         Private Env As Environment_Memory
@@ -348,26 +324,7 @@ Namespace ConcreteExpressions
             Return ToPrint.GetValue
         End Function
     End Class
-    Public Class DimFunction
-        Inherits Expression
-        Private nVar As UnaryExpression
-        Dim ParentEnvironment As Environment_Memory
-        Public Sub New(ByRef Identifier As String, ByRef Vartype As String, ByRef Value As String, ByRef ParentEnvironment As Environment_Memory)
-            MyBase.New("_ASSIGN")
-            nVar = New Variable(Identifier, Value, Vartype, ParentEnvironment)
 
-            Me.ParentEnvironment = ParentEnvironment
-            Me.Expr = "DIM" & Identifier & "AS" & Vartype & "=" & Value
-        End Sub
-        Public Overrides Function Evaluate(ByRef ParentEnv As Environment_Memory) As String
-            If ParentEnv.CheckVar(nVar.GetName) = False Then
-                ParentEnv.AddVar(nVar)
-                Return nVar.GetValue
-            Else
-            End If
-            Return Nothing
-        End Function
-    End Class
     Public Class IfFunction
         Inherits UnaryExpression
         Public Statements As Body

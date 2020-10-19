@@ -1009,8 +1009,8 @@ Namespace STACK_VM
         ''' SPYDAZWEB_VM_X86
         ''' </summary>
         Public Enum VM_x86_Cmds
-            _REMOVE
             _NULL
+            _REMOVE
             _PUSH
             _PULL
             _PEEK
