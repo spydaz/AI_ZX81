@@ -300,8 +300,6 @@ Public Module ModuleKnowledgeStructures
 #End Region
 
 
-
-
     <System.Runtime.CompilerServices.Extension()>
     Public Function ExtractLastChar(ByRef InputStr As String) As String
 

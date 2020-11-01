@@ -208,6 +208,7 @@
     <None Include="Resources\png-transparent-zx-spectrum-vega-zx81-sinclair-research-computer-computer-electronics-computer-video-game.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Compiler\Parser\TextFile1.txt" />
     <Content Include="Icon_SpydazBrain.ico" />
     <Content Include="CurrentScripts\PL_Help.txt" />
     <Content Include="CurrentScripts\IF.txt" />

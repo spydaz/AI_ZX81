@@ -26,20 +26,17 @@ Namespace Compiler
             Dim ASTgramm As New AST_Grammar
             Dim ast_statments As New List(Of List(Of AbstractSyntax))
             For Each item In AST.Statments
-
+                Dim x = ASTgramm.CreateGrammar()
                 For Each item2 In ASTgramm.CreateGrammar()
                     Dim Abstrac As New AbstractSyntax
                     Abstrac = GetSyntax(item, item2)
                     If Abstrac.RequiredTokens IsNot Nothing Then
-                        If Abstrac.RequiredTokens.Count > 1 Then
-                            AST_statement.Add(Abstrac)
-                        Else
 
-                        End If
-                    Else
+                        AST_statement.Add(Abstrac)
+
+                        Else
                     End If
                 Next
-
 
             Next
             If AST_statement.Count > 0 Then

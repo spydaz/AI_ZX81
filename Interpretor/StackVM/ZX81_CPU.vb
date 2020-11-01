@@ -276,6 +276,11 @@ Namespace STACK_VM
                 Case "PAUSE"
                     WaitTime = Integer.Parse(Fetch().ToString)
                     mRunningState = State.PAUSE
+                Case "RESUME"
+                    If mRunningState = State.PAUSE Then
+                        mRunningState = State.RUN
+                        RUN()
+                    End If
                 ' A Wait time Maybe Neccasary
                 Case "DUP"
                     Try
@@ -1011,6 +1016,7 @@ Namespace STACK_VM
         Public Enum VM_x86_Cmds
             _NULL
             _REMOVE
+            _RESUME
             _PUSH
             _PULL
             _PEEK

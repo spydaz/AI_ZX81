@@ -50,6 +50,8 @@ Namespace STACK_VM
             For Each ITEM In Program
                 For Each TOK In ITEM
                     Select Case TOK.SyntaxName
+                        Case "_PRINT"
+                            Prog.AddRange(_print("_"))
                         Case "_PRINT_STR"
                             Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                         Case "_PRINT_INT"
@@ -63,6 +65,13 @@ Namespace STACK_VM
                         Case "Conditional_Operation"
                             Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
                         Case "_DIM_AS"
+
+                            If TOK.RequiredTokens.Count = 4 Then
+                                    _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                                Else
+                                End If
+
+                        Case "_DIM_AS_EQ"
                             If TOK.RequiredTokens.Count = 6 Then
                                 _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue, TOK.RequiredTokens(5).TokenValue)
                             Else
@@ -70,7 +79,6 @@ Namespace STACK_VM
                                     _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
                                 Else
                                 End If
-
                             End If
                         Case "ASSIGN_EQUALS"
                             _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)

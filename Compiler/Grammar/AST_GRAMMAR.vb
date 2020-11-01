@@ -17,22 +17,27 @@
             Dim RuleList As New List(Of AbstractSyntax)
             RuleList.Add(AddMathOperation)
             RuleList.Add(AddConditionalOperation)
-            RuleList.Add(Add_DIM_AS_EQUALS_FUNCTION)
             RuleList.Add(Add_DIM_AS_FUNCTION)
+            RuleList.Add(Add_DIM_AS_EQUALS_FUNCTION)
+
             'Print
+
             RuleList.Add(Add_PRINT_STR_FUNCTION)
             RuleList.Add(Add_PRINT_BOOL_FUNCTION)
             RuleList.Add(Add_PRINT_INT_FUNCTION)
             RuleList.Add(Add_PRINT_VARIABLE_FUNCTION)
+            RuleList.Add(Add_PRINT_FUNCTION)
             RuleList.Add(Add_ASSIGN_EQUALS_FUNCTION)
-            'RuleList.Add(ADD_DO_WHILE_FUNCTION)
-            'RuleList.Add(ADD_LOOP_FUNCTION)
-            'RuleList.Add(ADD_WHILE_FUNCTION)
-            'RuleList.Add(ADD_ELSE_FUNCTION)
-            'RuleList.Add(ADD_END_IF_FUNCTION)
-            'RuleList.Add(ADD_FOR_FUNCTION)
-            'RuleList.Add(ADD_IF_THEN_FUNCTION)
-            'RuleList.Add(ADD_NEXT_FUNCTION)
+            RuleList.Add(ADD_DO_WHILE_FUNCTION)
+            RuleList.Add(ADD_LOOP_FUNCTION)
+            RuleList.Add(ADD_WHILE_FUNCTION)
+            RuleList.Add(ADD_ELSE_FUNCTION)
+            RuleList.Add(ADD_ELSE_END_IF_FUNCTION)
+            RuleList.Add(ADD_END_IF_FUNCTION)
+            RuleList.Add(ADD_FOR_FUNCTION)
+            RuleList.Add(ADD_IF_FUNCTION)
+            RuleList.Add(ADD_NEXT_FUNCTION)
+            RuleList.Add(ADD_THEN_FUNCTION)
             Return RuleList
         End Function
 
@@ -391,6 +396,16 @@
             rule.SyntaxStatments.Add(Statement)
             Return rule
         End Function
+        Public Function Add_PRINT_FUNCTION() As AbstractSyntax
+            Dim rule As New AbstractSyntax
+            Dim Statement As New List(Of String)
+            rule.SyntaxStatments = New List(Of List(Of String))
+            rule.SyntaxName = "_PRINT"
+            Statement = New List(Of String)
+            Statement.Add("_PRINT")
+            rule.SyntaxStatments.Add(Statement)
+            Return rule
+        End Function
         Public Function Add_PRINT_BOOL_FUNCTION() As AbstractSyntax
             Dim rule As New AbstractSyntax
             rule.SyntaxStatments = New List(Of List(Of String))
@@ -424,6 +439,7 @@
             rule.SyntaxStatments.Add(Statement)
             Return rule
         End Function
+
 #End Region
 #Region "DIM"
         Public Function Add_DIM_AS_FUNCTION() As AbstractSyntax
@@ -432,12 +448,11 @@
             rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_DIM_AS"
-            rule.SyntaxStatments.Add(Statement)
             Statement = New List(Of String)
             Statement.Add("_DIM")
             Statement.Add("_VARIABLE")
             Statement.Add("_AS")
-            Statement.Add("_STRING")
+            Statement.Add("_STRING_TYPE")
             rule.SyntaxStatments.Add(Statement)
             Statement = New List(Of String)
             Statement.Add("_DIM")
@@ -458,7 +473,7 @@
             Dim Statement As New List(Of String)
             rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING = NUMBER/TRUE/FALSE/STRING
-            rule.SyntaxName = "_DIM_AS"
+            rule.SyntaxName = "_DIM_AS_EQ"
             rule.SyntaxStatments.Add(Statement)
             Statement = New List(Of String)
             Statement.Add("_DIM")
@@ -509,6 +524,27 @@
             Statement.Add("_NEXT")
             Statement.Add("_VARIABLE")
             rule.SyntaxStatments.Add(Statement)
+
+            Statement = New List(Of String)
+            Statement.Add("_FOR")
+            Statement.Add("_VARIABLE")
+            Statement.Add("_EQUALS")
+            Statement.Add("_NUMBER")
+            Statement.Add("_TO")
+            Statement.Add("_NUMBER")
+            rule.SyntaxStatments.Add(Statement)
+
+            Statement = New List(Of String)
+            Statement.Add("_FOR")
+            Statement.Add("_VARIABLE")
+            Statement.Add("_EQUALS")
+            Statement.Add("_NUMBER")
+            Statement.Add("_TO")
+            Statement.Add("_NUMBER")
+            Statement.Add("_LEFT_CODE_BRACKET")
+            Statement.Add("*")
+            Statement.Add("_RIGHT_CODE_BRACKET")
+            rule.SyntaxStatments.Add(Statement)
             Return rule
 
         End Function
@@ -518,16 +554,16 @@
             rule.SyntaxStatments = New List(Of List(Of String))
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_NEXT"
-            rule.SyntaxStatments.Add(Statement)
             Statement = New List(Of String)
             Statement.Add("_NEXT")
             Statement.Add("_VARIABLE")
+            rule.SyntaxStatments.Add(Statement)
             Return rule
 
         End Function
 #End Region
 #Region "IF_THEN"
-        Public Function ADD_IF_THEN_FUNCTION()
+        Public Function ADD_IF_FUNCTION()
             Dim rule As New AbstractSyntax
             Dim Statement As New List(Of String)
             rule.SyntaxStatments = New List(Of List(Of String))
@@ -535,43 +571,21 @@
             rule.SyntaxName = "_IF"
             Statement = New List(Of String)
             Statement.Add("_IF")
-            Statement.Add("_LEFT_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_BRACKET")
-            Statement.Add("_THEN")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_END")
-            Statement.Add("_IF")
+            Statement.Add("Conditional_Operation")
             rule.SyntaxStatments.Add(Statement)
             Statement = New List(Of String)
             Statement.Add("_IF")
-            Statement.Add("_LEFT_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_BRACKET")
-            Statement.Add("_THEN")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_ELSE")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_END")
-            Statement.Add("_IF")
             rule.SyntaxStatments.Add(Statement)
+            Return rule
+        End Function
+        Public Function ADD_THEN_FUNCTION()
+            Dim rule As New AbstractSyntax
+            Dim Statement As New List(Of String)
+            rule.SyntaxStatments = New List(Of List(Of String))
+            'DIM A AS INTEGER/BOOLEAN/STRING
+            rule.SyntaxName = "_THEN"
             Statement = New List(Of String)
-            Statement.Add("_IF")
-            Statement.Add("_LEFT_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_BRACKET")
             Statement.Add("_THEN")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_END")
-            Statement.Add("_IF")
             rule.SyntaxStatments.Add(Statement)
             Return rule
         End Function
@@ -583,11 +597,6 @@
             rule.SyntaxName = "_ELSE"
             Statement = New List(Of String)
             Statement.Add("_ELSE")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("*")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_END")
-            Statement.Add("_IF")
             rule.SyntaxStatments.Add(Statement)
             Return rule
         End Function
@@ -598,6 +607,19 @@
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_END_IF"
             Statement = New List(Of String)
+            Statement.Add("_END")
+            Statement.Add("_IF")
+            rule.SyntaxStatments.Add(Statement)
+            Return rule
+        End Function
+        Public Function ADD_ELSE_END_IF_FUNCTION()
+            Dim rule As New AbstractSyntax
+            rule.SyntaxStatments = New List(Of List(Of String))
+            Dim Statement As New List(Of String)
+            'DIM A AS INTEGER/BOOLEAN/STRING
+            rule.SyntaxName = "_ELSE_END_IF"
+            Statement = New List(Of String)
+            Statement.Add("_ELSE")
             Statement.Add("_END")
             Statement.Add("_IF")
             rule.SyntaxStatments.Add(Statement)
@@ -627,11 +649,11 @@
             Statement = New List(Of String)
             Statement.Add("_DO")
             Statement.Add("_WHILE")
-            Statement.Add("_LEFT_BRACKET")
-            Statement.Add("_RIGHT_BRACKET")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_LOOP")
+            Statement.Add("Conditional_Operation")
+            rule.SyntaxStatments.Add(Statement)
+            Statement = New List(Of String)
+            Statement.Add("_DO")
+            Statement.Add("_WHILE")
             rule.SyntaxStatments.Add(Statement)
             Return rule
         End Function
@@ -642,11 +664,6 @@
             'DIM A AS INTEGER/BOOLEAN/STRING
             rule.SyntaxName = "_WHILE"
             Statement.Add("_WHILE")
-            Statement.Add("_LEFT_BRACKET")
-            Statement.Add("_RIGHT_BRACKET")
-            Statement.Add("_LEFT_CODE_BRACKET")
-            Statement.Add("_RIGHT_CODE_BRACKET")
-            Statement.Add("_LOOP")
             rule.SyntaxStatments.Add(Statement)
             Return rule
         End Function

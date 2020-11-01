@@ -20,7 +20,7 @@
             Rule = New GrammarRule
             Rule.TAGSTRING = "_PRINT"
             Rule.COMPONENTSTRINGS = New List(Of String)
-            Rule.COMPONENTSTRINGS.Add("Print")
+            Rule.COMPONENTSTRINGS.Add("PRINT")
             Rule.COMPONENTSTRINGS.Add("P.")
             RuleList.Add(Rule)
 

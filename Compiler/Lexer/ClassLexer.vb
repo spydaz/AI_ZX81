@@ -219,10 +219,7 @@ Namespace Compiler
             Next
         End Function
 #End Region
-#Region "GRAMMAR MANAGEMENT"
 
-
-#End Region
 #Region "MAIN FUNCTION"
         Private mAbstract_Token_Tree As New AbstractTokenTree
         Public ReadOnly Property Abstract_Token_Tree As AbstractTokenTree
@@ -406,33 +403,33 @@ Namespace Compiler
                     'First Create Statements(list of Lists)
                     Program.Statments = CollectStatements(CurrentTokens)
 
-                    '-----------------------------------------------
-                    'Parse 2
-                    '-----------------------------------------------
-                    NewProgram = New AbstractTokenTree
-                    NewProgram.Statments = New List(Of List(Of Token))
-                    'Get Operations and Place in Codeblocks.Subtree
-                    'List of Tokens
-                    For Each item In Program.Statments
-                        'Add List back into list of lists
-                        NewProgram.Statments.Add(CollectOperationBlocks(item))
-                    Next
-                    'Reset Program to new tree
-                    Program = NewProgram
+                    ''-----------------------------------------------
+                    ''Parse 2
+                    ''-----------------------------------------------
+                    'NewProgram = New AbstractTokenTree
+                    'NewProgram.Statments = New List(Of List(Of Token))
+                    ''Get Operations and Place in Codeblocks.Subtree
+                    ''List of Tokens
+                    'For Each item In Program.Statments
+                    '    'Add List back into list of lists
+                    '    NewProgram.Statments.Add(CollectOperationBlocks(item))
+                    'Next
+                    ''Reset Program to new tree
+                    'Program = NewProgram
 
-                    '-----------------------------------------------
-                    'Parse 3
-                    '-----------------------------------------------
-                    NewProgram = New AbstractTokenTree
-                    NewProgram.Statments = New List(Of List(Of Token))
-                    'Get CodeBlocks and add to SubTrees
-                    For Each item In Program.Statments
-                        'Add List back into list of lists
-                        NewProgram.Statments.Add(CollectCodeBlocks(item))
-                    Next
-                    'Reset Program to new tree
-                    Program = NewProgram
-                    '-----------------------------------------------
+                    ''-----------------------------------------------
+                    ''Parse 3
+                    ''-----------------------------------------------
+                    'NewProgram = New AbstractTokenTree
+                    'NewProgram.Statments = New List(Of List(Of Token))
+                    ''Get CodeBlocks and add to SubTrees
+                    'For Each item In Program.Statments
+                    '    'Add List back into list of lists
+                    '    NewProgram.Statments.Add(CollectCodeBlocks(item))
+                    'Next
+                    ''Reset Program to new tree
+                    'Program = NewProgram
+                    ''-----------------------------------------------
 
 
 
