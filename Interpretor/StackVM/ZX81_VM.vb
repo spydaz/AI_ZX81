@@ -62,23 +62,25 @@ Namespace STACK_VM
                             Prog.AddRange(_print(RAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
                         Case "Math_Operation"
                             'Token (1) = Operator
-                            If TOK.RequiredTokens.Count > 0 Then
+                            If TOK.RequiredTokens.Count = 3 Then
                                 Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
                                 Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
                             End If
                         Case "Conditional_Operation"
                             'Token (1) = Operator
-                            If TOK.RequiredTokens.Count > 0 Then
+                            If TOK.RequiredTokens.Count = 3 Then
                                 Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
                                 Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
                             End If
                         Case "_DIM_AS"
+                            'DIm,var,as,type
                             If TOK.RequiredTokens.Count = 4 Then
                                 _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
                             Else
                             End If
 
                         Case "_DIM_AS_EQ"
+                            'DIm,Var,as,type,=,value
                             If TOK.RequiredTokens.Count = 6 Then
                                 _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue, TOK.RequiredTokens(5).TokenValue)
                             Else
@@ -88,16 +90,20 @@ Namespace STACK_VM
                                 End If
                             End If
                         Case "ASSIGN_EQUALS"
+                            'var,=,value(int,Bool,String)
                             _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)
-                        Case "_NEXT"
-                            'GET AND iNCREMENT vALUE 
-                            'UPDATE THE ENVIRONMENT VARIABLE
-                            Dim X As Integer = GetValue(TOK.RequiredTokens(0).TokenValue)
-                            RAM.UpdateVar(TOK.RequiredTokens(0).TokenValue, X + 1)
-                            'Required to jump back to for....
+
                         Case "_FOR"
+                            'For,Var,=,start,to,finish
+                            If TOK.RequiredTokens.Count = 6 Then
+                                _for(TOK.RequiredTokens(1).TokenValue, GetValue(TOK.RequiredTokens(3).TokenValue), GetValue(TOK.RequiredTokens(5).TokenValue))
+                            End If
 
-
+                        Case "_NEXT"
+                            If TOK.RequiredTokens.Count = 2 Then
+                                'next,var
+                                _next(TOK.RequiredTokens(1).TokenValue)
+                            End If
 
                     End Select
                 Next
@@ -347,37 +353,27 @@ Namespace STACK_VM
             Return PROGRAM
         End Function
 #End Region
-        Private Function for_value_to_value(ByRef Start As Integer, ByRef Finish As Integer)
-            Dim PROGRAM As New List(Of String)
-            PROGRAM.Add("PUSH")
-            PROGRAM.Add(Start)
-            PROGRAM.Add("STORE")
-            PROGRAM.Add(0)
-            PROGRAM.Add("PUSH")
-            PROGRAM.Add(Finish)
-            PROGRAM.Add("STORE")
-            PROGRAM.Add(1)
-            'Start Statments
+        Public Sub _for(ByRef iVar As String, ByRef iStart As Integer, ByRef ifinish As Integer)
+            Dim Temp As New Variable
+            Temp.iType = "INTEGER"
+            Temp.iName = iVar
+            Temp.iValue = Integer.Parse(iStart)
+            iRAM.AddVar(Temp)
+            Dim Fin As New Variable
+            Fin.iName = "FOR_END_" & iVar
+            Fin.iValue = Integer.Parse(ifinish)
+            Temp.iType = "INTEGER"
 
-            'BeginNext
-            PROGRAM.Add("LOAD")
-            PROGRAM.Add(1)
-            PROGRAM.Add("LOAD")
-            PROGRAM.Add(0)
-            PROGRAM.Add("INCR")
-            PROGRAM.Add("REMOVE")
-            PROGRAM.Add(0)
-            PROGRAM.Add("STORE")
-            PROGRAM.Add(0)
-            'LOOP
-            PROGRAM.Add("JIF_LT")
-            'LineBefore store
-            PROGRAM.Add(8)
-            'end of loop
-            '-PROGRAM.Add("HALT")
-            Return PROGRAM
-        End Function
+        End Sub
+        Public Sub _next(ByRef Ivar As String)
+            Dim fin As String = "FOR_END_" & Ivar
+            If iRAM.GetVar(Ivar) < iRAM.GetVar(fin) Then
+                iRAM.UpdateVar(Ivar, iRAM.GetVar(Ivar) + 1)
+                'REPEAT CODE-BLOCK(codeblock required)
+            Else
 
+            End If
+        End Sub
 
     End Class
     Public Enum instruction
