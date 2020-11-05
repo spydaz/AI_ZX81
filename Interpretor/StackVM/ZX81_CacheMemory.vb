@@ -1,6 +1,6 @@
 ﻿Namespace STACK_VM
     ''' <summary>
-    ''' Memory frame for Variables
+    ''' Memory frame for Variables 
     ''' </summary>
     Public Class StackMemoryFrame
         Public Structure Var
