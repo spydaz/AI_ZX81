@@ -51,7 +51,7 @@ Namespace STACK_VM
                 For Each TOK In ITEM
                     Select Case TOK.SyntaxName
                         Case "_PRINT"
-                            Prog.AddRange(_print("_"))
+                            Prog.AddRange(_print(""))
                         Case "_PRINT_STR"
                             Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                         Case "_PRINT_INT"
@@ -61,15 +61,22 @@ Namespace STACK_VM
                         Case "_PRINT_VARIABLE"
                             Prog.AddRange(_print(RAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
                         Case "Math_Operation"
-                            Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
+                            'Token (1) = Operator
+                            If TOK.RequiredTokens.Count > 0 Then
+                                Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
+                                Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
+                            End If
                         Case "Conditional_Operation"
-                            Prog.AddRange(_Binary_op(Integer.Parse(TOK.RequiredTokens(0).TokenValue), Integer.Parse(TOK.RequiredTokens(2).TokenValue), TOK.RequiredTokens(1).TokenValue))
+                            'Token (1) = Operator
+                            If TOK.RequiredTokens.Count > 0 Then
+                                Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
+                                Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
+                            End If
                         Case "_DIM_AS"
-
                             If TOK.RequiredTokens.Count = 4 Then
-                                    _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
-                                Else
-                                End If
+                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                            Else
+                            End If
 
                         Case "_DIM_AS_EQ"
                             If TOK.RequiredTokens.Count = 6 Then
@@ -90,6 +97,18 @@ Namespace STACK_VM
             iCPU.LoadProgram(Prog)
             iCPU.RUN()
         End Sub
+        Public Function GetValue(ByRef Val As String) As Integer
+            Try
+                Dim XVal As Integer = Integer.Parse(Val)
+                Return XVal
+            Catch ex As Exception
+                'isvariable
+                Dim XVal As Integer = Integer.Parse(RAM.GetVar(Val))
+                Return XVal
+
+            End Try
+
+        End Function
         Private Sub _DIM_AS(ByRef iTEM As String, ByRef iTYPE As String)
             Select Case iTYPE
                 Case "INT"
