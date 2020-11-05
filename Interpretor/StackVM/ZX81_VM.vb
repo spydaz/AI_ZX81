@@ -89,6 +89,16 @@ Namespace STACK_VM
                             End If
                         Case "ASSIGN_EQUALS"
                             _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)
+                        Case "_NEXT"
+                            'GET AND iNCREMENT vALUE 
+                            'UPDATE THE ENVIRONMENT VARIABLE
+                            Dim X As Integer = GetValue(TOK.RequiredTokens(0).TokenValue)
+                            RAM.UpdateVar(TOK.RequiredTokens(0).TokenValue, X + 1)
+                            'Required to jump back to for....
+                        Case "_FOR"
+
+
+
                     End Select
                 Next
             Next
@@ -97,7 +107,12 @@ Namespace STACK_VM
             iCPU.LoadProgram(Prog)
             iCPU.RUN()
         End Sub
-        Public Function GetValue(ByRef Val As String) As Integer
+        ''' <summary>
+        ''' returns the value if it is a var it is returned as a value
+        ''' </summary>
+        ''' <param name="Val"></param>
+        ''' <returns></returns>
+        Private Function GetValue(ByRef Val As String) As Integer
             Try
                 Dim XVal As Integer = Integer.Parse(Val)
                 Return XVal
@@ -109,6 +124,11 @@ Namespace STACK_VM
             End Try
 
         End Function
+        ''' <summary>
+        ''' Sets type of variable
+        ''' </summary>
+        ''' <param name="iTEM"></param>
+        ''' <param name="iTYPE"></param>
         Private Sub _DIM_AS(ByRef iTEM As String, ByRef iTYPE As String)
             Select Case iTYPE
                 Case "INT"
@@ -132,6 +152,12 @@ Namespace STACK_VM
             End Select
 
         End Sub
+        ''' <summary>
+        ''' dims varibale as type and sets value
+        ''' </summary>
+        ''' <param name="iTEM"></param>
+        ''' <param name="iTYPE"></param>
+        ''' <param name="VALUE"></param>
         Private Sub _DIM_AS(ByRef iTEM As String, ByRef iTYPE As String, ByRef VALUE As String)
             Select Case iTYPE
                 Case "INT"
@@ -155,6 +181,11 @@ Namespace STACK_VM
             End Select
 
         End Sub
+        ''' <summary>
+        ''' Sets var eq to value
+        ''' </summary>
+        ''' <param name="iTEM"></param>
+        ''' <param name="VALUE"></param>
         Private Sub _VAR_EQ_VALUE(ByRef iTEM As String, ByRef VALUE As String)
             If iRAM.CheckVar(iTEM) = True Then
                 iRAM.UpdateVar(iTEM, VALUE)
@@ -162,6 +193,11 @@ Namespace STACK_VM
             Else
             End If
         End Sub
+        ''' <summary>
+        ''' Returns var value as string value
+        ''' </summary>
+        ''' <param name="iName"></param>
+        ''' <returns></returns>
         Private Function GetVarValue(ByRef iName As String) As String
             Return iRAM.GetVar(iName)
         End Function
@@ -341,6 +377,8 @@ Namespace STACK_VM
             '-PROGRAM.Add("HALT")
             Return PROGRAM
         End Function
+
+
     End Class
     Public Enum instruction
         _halt
