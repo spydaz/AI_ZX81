@@ -91,6 +91,13 @@ Namespace Compiler
                 CleanTree.Add(RemoveEmptySyntax(item))
             Next
         End Function
+        Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+            POPULATED_TREE = CleanTree(ParseFOR_NEXT(POPULATED_TREE))
+            POPULATED_TREE = CleanTree(ParseIF_ENDIF(POPULATED_TREE))
+            POPULATED_TREE = CleanTree(ParseWHILE_LOOP(POPULATED_TREE))
+            Return POPULATED_TREE
+        End Function
+
         Public Function ParseFOR_NEXT(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
             '   POPULATED_TREE = CleanTree(POPULATED_TREE)
             'At this time there is only 1 ProgramList
@@ -151,13 +158,6 @@ Namespace Compiler
                 Cnt_ = POPULATED_TREE.Count
             Loop
 
-            Return POPULATED_TREE
-        End Function
-
-        Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
-            POPULATED_TREE = ParseFOR_NEXT(POPULATED_TREE)
-            POPULATED_TREE = ParseIF_ENDIF(POPULATED_TREE)
-            POPULATED_TREE = ParseWHILE_LOOP(POPULATED_TREE)
             Return POPULATED_TREE
         End Function
         Private Function CheckWHILE_LOOP(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
@@ -247,7 +247,6 @@ Namespace Compiler
             Return Pop_Tree
 
         End Function
-
         Private Function CheckIF_ENDIF(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
             Dim Prog As New List(Of AbstractSyntax)
             Dim Pop_Tree_begin As New List(Of AbstractSyntax)
@@ -335,7 +334,6 @@ Namespace Compiler
             Return Pop_Tree
 
         End Function
-
         Public Function RemoveEmptySyntax(ByRef lst As List(Of AbstractSyntax)) As List(Of AbstractSyntax)
             Dim NEwLst As New List(Of AbstractSyntax)
             For Each item In lst
