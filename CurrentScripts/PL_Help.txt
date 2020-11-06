@@ -5,18 +5,23 @@ Basic Program Language;
 {executable}
 Print "Hello World"("PRINT_STR")
 Print 23 ("PRINT_INT")
-9+4-8*8 9/9 8-6
-4>7 5<4 5>=4 5<=4 5=8
-
-[to be implemented]
-DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
-Conditional Operations () Output TRUE/FALSE
-IF () THEN {} ELSE {} END IF
 Basic Math Operators +-/*=<>
-Block Code {}
-DO WHILE () {} LOOP 
+9+4-8*8 9/9 8-6
+Conditional Operations () Output TRUE/FALSE
+4>7 5<4 5>=4 5<=4 5=8
+DIM $VARNAME$ AS INTEGER/BOOLEAN/STRING/FLOAT = TRUE/FALSE / 0.5 / $VARNAME$ / 1
+{parsed not implemented}
 FOR $VARNAME$ = START to FINISH {} NEXT $VARNAME$
 NEXT $VARNAME$
+WHILE _CONDITIONAL {} LOOP 
+IF _CONDITIONAL THEN {} ELSE {} END IF
+
+[to be implemented]
+IF () THEN {} ELSE {} END IF
+WHILE () {} LOOP 
+INCREMEMENT $VARNAME$
+Block Code {}
+CONDITIONAL / MATHS ()
 
 Spydaz Virtual Machine Code Language ;
 

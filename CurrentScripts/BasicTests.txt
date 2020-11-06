@@ -19,3 +19,18 @@ Dim $C$ as Boolean
 $C$ = True
 Print $C$
 Print "Assign boolean - end"
+print
+Print "IF THEN - test"
+IF 
+4 > 5
+Then 
+Else
+End if
+Print "IF THEN - end"
+print
+print "WHILE - test"
+while
+4 > 5
+print "cat"
+loop
+print "WHILE - end"

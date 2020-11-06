@@ -108,13 +108,191 @@ Namespace Compiler
 
             Return POPULATED_TREE
         End Function
-        Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
-            POPULATED_TREE = ParseFOR_NEXT(POPULATED_TREE)
+        Public Function ParseIF_ENDIF(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+            '   POPULATED_TREE = CleanTree(POPULATED_TREE)
+            'At this time there is only 1 ProgramList
+            Dim nPOPULATED_TREE As New List(Of List(Of AbstractSyntax))
+            For Each item In POPULATED_TREE
+                nPOPULATED_TREE.AddRange(CheckIF_ENDIF(item))
+            Next
+            POPULATED_TREE = nPOPULATED_TREE
 
+            Dim Count_ As Integer = 1
+            Dim Cnt_ As Integer = 0
+            'Starts with 3 parts
+            Do Until (Cnt_ = Count_)
+                Count_ = POPULATED_TREE.Count
+                Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
+                POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
+                POPULATED_TREE.AddRange(CheckIF_ENDIF(Last))
+                Cnt_ = POPULATED_TREE.Count
+            Loop
+
+            Return POPULATED_TREE
+        End Function
+        Public Function ParseWHILE_LOOP(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+            '   POPULATED_TREE = CleanTree(POPULATED_TREE)
+            'At this time there is only 1 ProgramList
+            Dim nPOPULATED_TREE As New List(Of List(Of AbstractSyntax))
+            For Each item In POPULATED_TREE
+                'nPOPULATED_TREE.Add(item)
+                nPOPULATED_TREE.AddRange(CheckWHILE_LOOP(item))
+            Next
+            POPULATED_TREE = nPOPULATED_TREE
+
+            Dim Count_ As Integer = 1
+            Dim Cnt_ As Integer = 0
+            'Starts with 3 parts
+            Do Until (Cnt_ = Count_)
+                Count_ = POPULATED_TREE.Count
+                Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
+                POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
+                POPULATED_TREE.AddRange(CheckWHILE_LOOP(Last))
+                Cnt_ = POPULATED_TREE.Count
+            Loop
 
             Return POPULATED_TREE
         End Function
 
+        Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+            POPULATED_TREE = ParseFOR_NEXT(POPULATED_TREE)
+            POPULATED_TREE = ParseIF_ENDIF(POPULATED_TREE)
+            POPULATED_TREE = ParseWHILE_LOOP(POPULATED_TREE)
+            Return POPULATED_TREE
+        End Function
+        Private Function CheckWHILE_LOOP(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
+            Dim Prog As New List(Of AbstractSyntax)
+            Dim Pop_Tree_begin As New List(Of AbstractSyntax)
+            Dim Pop_Tree_end As New List(Of AbstractSyntax)
+            Dim Pop_Tree_Prog As New List(Of AbstractSyntax)
+            Dim Pop_Tree As New List(Of List(Of AbstractSyntax))
+            Dim Capturing As Boolean = False
+            Dim detected As Boolean = False
+            Dim Finished As Boolean = False
+            Dim Position = 0
+            Dim Found As Integer = 0
+
+
+            For Each TOK In POPULATED_TREE
+                If TOK.SyntaxName = "_WHILE" Then
+                    detected = True
+                    Capturing = True
+                    Found = Position
+                End If
+                If Capturing = True Then
+                    Prog.Add(TOK)
+                End If
+                If TOK.SyntaxName = "_LOOP" Then
+                    Capturing = False
+
+                    Finished = True
+                End If
+
+                Position += 1
+                If Finished = True And Capturing = False Then
+
+                    'Remove a range of items from a list, starting at index 0, for a count of 1)
+                    'This will remove index 0, and 1!
+                    'Removes the detected Collection
+                    'Grab before
+                    Pop_Tree_begin = POPULATED_TREE.GetRange(0, Found)
+                    'Grab Loop
+                    Pop_Tree_Prog = Prog
+                    'Grab_End
+
+                    Try
+                        Pop_Tree_end = POPULATED_TREE.GetRange(Found + Prog.Count, (POPULATED_TREE.Count) - (Found + Prog.Count))
+                        'End was captured
+                        Pop_Tree.Add(Pop_Tree_begin)
+                        Pop_Tree.Add(Pop_Tree_Prog)
+                        Pop_Tree.Add(Pop_Tree_end)
+                        Finished = False
+                        Return Pop_Tree
+                    Catch ex As Exception
+                        'Prog was end
+                        Pop_Tree.Add(Pop_Tree_begin)
+                        Pop_Tree.Add(Pop_Tree_Prog)
+                        Finished = True
+                        '  Return Pop_Tree
+                    End Try
+                    Found = 0
+                End If
+            Next
+            If detected = False Then
+                Pop_Tree = New List(Of List(Of AbstractSyntax))
+                Pop_Tree.Add(POPULATED_TREE)
+
+            End If
+            Return Pop_Tree
+
+        End Function
+
+        Private Function CheckIF_ENDIF(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
+            Dim Prog As New List(Of AbstractSyntax)
+            Dim Pop_Tree_begin As New List(Of AbstractSyntax)
+            Dim Pop_Tree_end As New List(Of AbstractSyntax)
+            Dim Pop_Tree_Prog As New List(Of AbstractSyntax)
+            Dim Pop_Tree As New List(Of List(Of AbstractSyntax))
+            Dim Capturing As Boolean = False
+            Dim detected As Boolean = False
+            Dim Finished As Boolean = False
+            Dim Position = 0
+            Dim Found As Integer = 0
+
+
+            For Each TOK In POPULATED_TREE
+                If TOK.SyntaxName = "_IF" Then
+                    detected = True
+                    Capturing = True
+                    Found = Position
+                End If
+                If Capturing = True Then
+                    Prog.Add(TOK)
+                End If
+                If TOK.SyntaxName = "_END_IF" Then
+                    Capturing = False
+
+                    Finished = True
+                End If
+
+                Position += 1
+                If Finished = True And Capturing = False Then
+
+                    'Remove a range of items from a list, starting at index 0, for a count of 1)
+                    'This will remove index 0, and 1!
+                    'Removes the detected Collection
+                    'Grab before
+                    Pop_Tree_begin = POPULATED_TREE.GetRange(0, Found)
+                    'Grab Loop
+                    Pop_Tree_Prog = Prog
+                    'Grab_End
+
+                    Try
+                        Pop_Tree_end = POPULATED_TREE.GetRange(Found + Prog.Count, (POPULATED_TREE.Count) - (Found + Prog.Count))
+                        'End was captured
+                        Pop_Tree.Add(Pop_Tree_begin)
+                        Pop_Tree.Add(Pop_Tree_Prog)
+                        Pop_Tree.Add(Pop_Tree_end)
+                        Finished = False
+                        Return Pop_Tree
+                    Catch ex As Exception
+                        'Prog was end
+                        Pop_Tree.Add(Pop_Tree_begin)
+                        Pop_Tree.Add(Pop_Tree_Prog)
+                        Finished = True
+                        '  Return Pop_Tree
+                    End Try
+                    Found = 0
+                End If
+            Next
+            If detected = False Then
+                Pop_Tree = New List(Of List(Of AbstractSyntax))
+                Pop_Tree.Add(POPULATED_TREE)
+
+            End If
+            Return Pop_Tree
+
+        End Function
 
         Public Function RemoveEmptySyntax(ByRef lst As List(Of AbstractSyntax)) As List(Of AbstractSyntax)
             Dim NEwLst As New List(Of AbstractSyntax)
