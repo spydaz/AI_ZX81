@@ -219,6 +219,10 @@ Public Class FormDevIDE
                 Dim tree = Parser.GetParseAST_Tree(Tokentree)
                 'Add Test --------------------
                 Dim vm As New ZX81_VM("IDE")
+                'ParseNExt
+
+                tree = Parser.ParseTree(tree)
+
                 Parser.executeON_CPU(vm, tree)
             Else
                 Errr = True
