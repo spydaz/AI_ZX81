@@ -21,7 +21,7 @@ Print $C$
 Print "Assign boolean - end"
 print
 Print "IF THEN - test"
-IF 
+IF  
 4 > 5
 Then 
 Else
