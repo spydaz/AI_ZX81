@@ -94,7 +94,7 @@ Namespace Compiler
         Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
             '   POPULATED_TREE = CleanTree(POPULATED_TREE)
             'At this time there is only 1 ProgramList
-            '   POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
+            POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
             'At this time there can be multiple lists
 
 
@@ -151,21 +151,24 @@ Namespace Compiler
                     'Grab_End
 
                     Try
-                        Pop_Tree_end = POPULATED_TREE.GetRange(Found + Prog.Count, POPULATED_TREE.Count)
+                        Pop_Tree_end = POPULATED_TREE.GetRange(Found + Prog.Count, (POPULATED_TREE.Count) - (Found + Prog.Count))
                         'End was captured
                         Pop_Tree.Add(Pop_Tree_begin)
                         Pop_Tree.Add(Pop_Tree_Prog)
                         Pop_Tree.Add(Pop_Tree_end)
                         Finished = False
+                        Return Pop_Tree
                     Catch ex As Exception
                         'Prog was end
                         Pop_Tree.Add(Pop_Tree_begin)
                         Pop_Tree.Add(Pop_Tree_Prog)
                         Finished = True
+                        '  Return Pop_Tree
                     End Try
                     Found = 0
                 End If
             Next
+            Pop_Tree.Add(POPULATED_TREE)
             Return Pop_Tree
         End Function
     End Class

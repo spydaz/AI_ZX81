@@ -3,7 +3,6 @@ Print
 For $I$ = 1 to 10
 Print $I$
 Next $I$
-
 Print "Assign Variable"
 Print 
 Dim $A$ as string 
