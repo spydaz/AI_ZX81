@@ -42,7 +42,7 @@ Namespace Compiler
             If AST_statement.Count > 0 Then
                 ast_statments.Add(AST_statement)
             End If
-            Return ast_statments
+            Return CleanTree(ast_statments)
         End Function
         ''' <summary>
         ''' Given as statment (Token Statment) 
@@ -80,10 +80,6 @@ Namespace Compiler
             Dim My_VM As ZX81_VM = VM
 
 
-            'IF Counts are the same then ITem 1 in the list is the raw program
-            'THis should prduce an outcome with multiple lists with the for commands in thier own lists
-            POPULATED_TREE = CheckFOR_NEXT(RemoveEmptySyntax(POPULATED_TREE.Item(1)))
-
 
             My_VM.SetProgram(POPULATED_TREE)
             'Program will need to be Parsed again for codeblocks (If then else,End If)), (for next), (while,LOOP)
@@ -96,9 +92,9 @@ Namespace Compiler
             Next
         End Function
         Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
-            POPULATED_TREE = CleanTree(POPULATED_TREE)
+            '   POPULATED_TREE = CleanTree(POPULATED_TREE)
             'At this time there is only 1 ProgramList
-            POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
+            '   POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
             'At this time there can be multiple lists
 
 
@@ -159,7 +155,7 @@ Namespace Compiler
                         'End was captured
                         Pop_Tree.Add(Pop_Tree_begin)
                         Pop_Tree.Add(Pop_Tree_Prog)
-                        '  Pop_Tree.Add(Pop_Tree_end)
+                        Pop_Tree.Add(Pop_Tree_end)
                         Finished = False
                     Catch ex As Exception
                         'Prog was end

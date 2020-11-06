@@ -147,10 +147,11 @@ Public Class FormDevIDE
         If CurrentTokens IsNot Nothing Then
             If CurrentTokens.Count > 0 Then
                 Dim Tokentree As AbstractTokenTree = New ClassLexer(UCase(GetCode), PL_Grammar.CreatePLGrammar, "PL").Abstract_Token_Tree
-                Dim Parser As New ClassParser
+
                 AST.Nodes.Clear()
                 AST.Nodes.Add(ClassLexer.GetTokenExprTree(Tokentree))
                 Dim tree = Parser.GetParseAST_Tree(Tokentree)
+                tree = Parser.ParseTree(tree)
                 For Each DefinedSyntax In tree
                     If DefinedSyntax IsNot Nothing Then
                         Dim DefinedSyntaxNDE As New TreeNode
@@ -205,25 +206,51 @@ Public Class FormDevIDE
         TextBoxEnterStatments.Clear()
         RichTextBoxDisplayOutput.Clear()
     End Sub
+    Dim Parser As New ClassParser
     Private Sub ButtonExecuteTree_Click(sender As Object, e As EventArgs) Handles ButtonExecuteTree.Click
         CLEAR()
-        Dim cpu As New STACK_VM.ZX81_CPU("IDE")
         Dim Errr As Boolean = False
-        Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(GetCode()))
+        Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(UCase(GetCode)))
         If CurrentTokens IsNot Nothing Then
             If CurrentTokens.Count > 0 Then
                 Dim Tokentree As AbstractTokenTree = New ClassLexer(UCase(GetCode), PL_Grammar.CreatePLGrammar, "PL").Abstract_Token_Tree
-                Dim Parser As New ClassParser
+
                 AST.Nodes.Clear()
                 AST.Nodes.Add(ClassLexer.GetTokenExprTree(Tokentree))
                 Dim tree = Parser.GetParseAST_Tree(Tokentree)
-                'Add Test --------------------
-                Dim vm As New ZX81_VM("IDE")
-                'ParseNExt
+                For Each DefinedSyntax In tree
+                    If DefinedSyntax IsNot Nothing Then
+                        Dim DefinedSyntaxNDE As New TreeNode
+                        DefinedSyntaxNDE.Text = "Syntax"
 
-                tree = Parser.ParseTree(tree)
 
-                Parser.executeON_CPU(vm, tree)
+                        For Each AbstractSyntaxDefinedToken In DefinedSyntax
+                            Dim AbstractSyntaxDefinedTokenNDE As New TreeNode
+                            AbstractSyntaxDefinedTokenNDE.Text = AbstractSyntaxDefinedToken.SyntaxName
+                            RichTextBoxDisplayOutput.Text &= AbstractSyntaxDefinedToken.SyntaxName & vbNewLine
+                            If AbstractSyntaxDefinedToken.RequiredTokens IsNot Nothing Then
+
+                                For Each tok In AbstractSyntaxDefinedToken.RequiredTokens
+                                    Dim tokNDE As New TreeNode
+                                    tokNDE.Text = AbstractSyntaxDefinedToken.SyntaxName & " Value = " & tok.TokenValue
+                                    AbstractSyntaxDefinedTokenNDE.Nodes.Add(tokNDE)
+                                Next
+
+
+                            End If
+                            DefinedSyntaxNDE.Nodes.Add(AbstractSyntaxDefinedTokenNDE)
+                        Next
+
+                        AST.Nodes.Add(DefinedSyntaxNDE)
+                    Else
+                        Errr = True
+                        ' DisplayError("Error" & ToJson(item) & ")" & vbNewLine)
+                    End If
+
+                Next
+                DisplayError("Parse Completed" & vbNewLine & "Abstract Token Tree Generated" & vbNewLine)
+                'add test --------------------
+                RunTree(tree)
             Else
                 Errr = True
                 DisplayError("No tokens detected" & vbNewLine)
@@ -235,5 +262,14 @@ Public Class FormDevIDE
         If Errr = True Then
             DisplayError("TOKENS NOT FULLY DEFINED - NO SYNTAX DEFINED" & vbNewLine)
         End If
+    End Sub
+
+
+    Public Sub RunTree(ByRef tree As List(Of List(Of AbstractSyntax)))
+
+        'Add Test --------------------
+        Dim vm As New ZX81_VM("IDE")
+        tree = Parser.ParseTree(tree)
+        Parser.executeON_CPU(vm, tree)
     End Sub
 End Class
