@@ -279,7 +279,7 @@ Namespace Compiler
 
 
                         End If
-                        CurrentState.CurrentOperation = Null
+                        CurrentState.CurrentOperation = "Null"
                         NumericStr = ""
 
                         GramaticalStr = ""
@@ -305,7 +305,7 @@ Namespace Compiler
 
 
                         End If
-                        CurrentState.CurrentOperation = Null
+                        CurrentState.CurrentOperation = "Null"
                         StringStr = ""
                         GramaticalStr = ""
                         TokenChar = ""
@@ -331,7 +331,7 @@ Namespace Compiler
                             DefinedTokens.Add(NewToken)
 
                         End If
-                        CurrentState.CurrentOperation = Null
+                        CurrentState.CurrentOperation = "Null"
                         TextStr = ""
                         GramaticalStr = ""
                         TokenChar = ""
