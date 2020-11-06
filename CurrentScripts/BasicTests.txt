@@ -1,36 +1,36 @@
-﻿Print "for and next Test"
-Print
-For $I$ = 1 to 10
-Print $I$
-Next $I$
-Print $I$
-Print "for and next Test - End"
-Print "Assign Variable"
-Print 
-Dim $A$ as string 
-$A$ = "Hello World"
-Print $A$
-Print "Assign string end"
-Dim $B$ as Int
+﻿PRINT "FOR AND NEXT TEST"
+PRINT
+FOR $I$ = 1 TO 10
+PRINT $I$
+NEXT $I$
+PRINT $I$
+PRINT "FOR AND NEXT TEST - END"
+PRINT "ASSIGN VARIABLE"
+PRINT 
+DIM $A$ AS STRING 
+$A$ = "HELLO WORLD"
+PRINT $A$
+PRINT "ASSIGN STRING END"
+DIM $B$ AS INT
 $B$ = 10
-Print $B$
-Print "Assign int end"
-Dim $C$ as Boolean
-$C$ = True
-Print $C$
-Print "Assign boolean - end"
-print
-Print "IF THEN - test"
-IF  
+PRINT $B$
+PRINT "ASSIGN INT END"
+DIM $C$ AS BOOLEAN
+$C$ = TRUE
+PRINT $C$
+PRINT "ASSIGN BOOLEAN - END"
+PRINT
+PRINT "IF THEN - TEST"
+IF 
 4 > 5
-Then 
-Else
-End if
-Print "IF THEN - end"
-print
-print "WHILE - test"
-while
+THEN 
+ELSE
+END IF
+PRINT "IF THEN - END"
+PRINT
+PRINT "WHILE - TEST"
+WHILE
 4 > 5
-print "cat"
-loop
-print "WHILE - end"
+PRINT "CAT"
+LOOP
+PRINT "WHILE - END"
