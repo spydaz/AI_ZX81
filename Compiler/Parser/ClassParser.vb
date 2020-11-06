@@ -78,15 +78,30 @@ Namespace Compiler
 
         Public Sub executeON_CPU(ByRef VM As ZX81_VM, ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax)))
             Dim My_VM As ZX81_VM = VM
+            Dim NewCount = 0
+            Dim OldCount = 1
+            Dim OrgiginalProgramLength = POPULATED_TREE.Count
+            'IF Counts are the same then 
+            Do Until (NewCount = OldCount)
+                ParseNext(OldCount, NewCount, POPULATED_TREE)
 
-            For Each item In POPULATED_TREE              '
-                POPULATED_TREE = CheckFOR_NEXT(RemoveEmptySyntax(item))
-            Next
+            Loop
+
 
             My_VM.SetProgram(POPULATED_TREE)
             'Program will need to be Parsed again for codeblocks (If then else,End If)), (for next), (while,LOOP)
             My_VM.ExecuteProgram()
         End Sub
+
+        Public Function ParseNext(ByRef Original As Integer, ByRef newCount As Integer, ByRef Populated_tree As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+            Original = Populated_tree.Count
+            Dim Last As List(Of AbstractSyntax) = Populated_tree(Populated_tree.Count - 1)
+            Populated_tree = CheckFOR_NEXT(RemoveEmptySyntax(Last))
+            newCount = Populated_tree.Count
+            Return Populated_tree
+
+        End Function
+
         Public Function RemoveEmptySyntax(ByRef lst As List(Of AbstractSyntax)) As List(Of AbstractSyntax)
             Dim NEwLst As New List(Of AbstractSyntax)
             For Each item In lst
