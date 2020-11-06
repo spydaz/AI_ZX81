@@ -206,14 +206,17 @@ Namespace Compiler
                         Pop_Tree.Add(Pop_Tree_begin)
                         Dim First As New List(Of AbstractSyntax)
                         First.Add(Pop_Tree_Prog(0))
+                        First.Add(Pop_Tree_Prog(1))
                         Dim Last As New List(Of AbstractSyntax)
                         Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        Pop_Tree_Prog.RemoveAt(0)
                         Pop_Tree_Prog.RemoveAt(0)
                         Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
                         Pop_Tree.Add(First)
                         Pop_Tree.Add(Pop_Tree_Prog)
                         Pop_Tree.Add(Last)
                         Pop_Tree.Add(Pop_Tree_end)
+
                         Finished = False
                         Return Pop_Tree
                     Catch ex As Exception
@@ -221,8 +224,10 @@ Namespace Compiler
                         Pop_Tree.Add(Pop_Tree_begin)
                         Dim First As New List(Of AbstractSyntax)
                         First.Add(Pop_Tree_Prog(0))
+                        First.Add(Pop_Tree_Prog(1))
                         Dim Last As New List(Of AbstractSyntax)
                         Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        Pop_Tree_Prog.RemoveAt(0)
                         Pop_Tree_Prog.RemoveAt(0)
                         Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
                         Pop_Tree.Add(First)
@@ -287,14 +292,35 @@ Namespace Compiler
                         Pop_Tree_end = POPULATED_TREE.GetRange(Found + Prog.Count, (POPULATED_TREE.Count) - (Found + Prog.Count))
                         'End was captured
                         Pop_Tree.Add(Pop_Tree_begin)
+                        Dim First As New List(Of AbstractSyntax)
+                        First.Add(Pop_Tree_Prog(0))
+                        First.Add(Pop_Tree_Prog(1))
+                        Dim Last As New List(Of AbstractSyntax)
+                        Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        Pop_Tree_Prog.RemoveAt(0)
+                        Pop_Tree_Prog.RemoveAt(0)
+                        Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
+                        Pop_Tree.Add(First)
                         Pop_Tree.Add(Pop_Tree_Prog)
+                        Pop_Tree.Add(Last)
                         Pop_Tree.Add(Pop_Tree_end)
                         Finished = False
                         Return Pop_Tree
                     Catch ex As Exception
                         'Prog was end
                         Pop_Tree.Add(Pop_Tree_begin)
+                        Dim First As New List(Of AbstractSyntax)
+                        First.Add(Pop_Tree_Prog(0))
+                        First.Add(Pop_Tree_Prog(1))
+                        Dim Last As New List(Of AbstractSyntax)
+                        Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        Pop_Tree_Prog.RemoveAt(0)
+                        Pop_Tree_Prog.RemoveAt(0)
+                        Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
+                        Pop_Tree.Add(First)
                         Pop_Tree.Add(Pop_Tree_Prog)
+                        Pop_Tree.Add(Last)
+
                         Finished = True
                         '  Return Pop_Tree
                     End Try
