@@ -1,4 +1,0 @@
-﻿Print "for and next loop Test"
-For $I$ = 1 to 10
-Print $I$
-Next $I$

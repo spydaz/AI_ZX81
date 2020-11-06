@@ -209,7 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Compiler\Parser\CureWorkingSyntax.txt" />
-    <Content Include="CurrentScripts\for_next_loop.txt" />
+    <Content Include="CurrentScripts\BasicTests.txt" />
     <Content Include="Icon_SpydazBrain.ico" />
     <Content Include="CurrentScripts\PL_Help.txt" />
     <Content Include="CurrentScripts\IF.txt" />

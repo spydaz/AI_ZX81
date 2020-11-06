@@ -1,0 +1,20 @@
+﻿Print "for and next loop Test"
+Print
+For $I$ = 1 to 10
+Print $I$
+Next $I$
+
+Print "Assign Variable"
+Print 
+Dim $A$ as string 
+$A$ = "Hello World"
+Print $A$
+Print
+Dim $B$ as Integer
+$B$ = 10
+Print $B$
+Print
+Dim $C$ as Boolean
+$C$ = True
+Print $C$
+Print

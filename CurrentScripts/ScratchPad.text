@@ -84,7 +84,9 @@
 
     'For/STEP And START/STEP
 
-    'Both FOR/NEXT And START/NEXT support a user-defined step increment. By replacing the terminating NEXT keyword with an increment And the STEP keyword, the loop variable will be incremented Or decremented by a different value than the default of +1. For instance, the following loop steps back from 10 to 2 by decrementing the loop index by 2
+    'Both FOR/NEXT And START/NEXT support a user-defined step increment. 
+    'By replacing the terminating NEXT keyword with an increment And the STEP keyword, 
+    'the loop variable will be incremented Or decremented by a different value than the default of +1. For instance, the following loop steps back from 10 to 2 by decrementing the loop index by 2
 
     ' « 10 2 START -2 STEP »
 
