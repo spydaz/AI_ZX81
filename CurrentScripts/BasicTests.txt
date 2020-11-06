@@ -1,19 +1,21 @@
-﻿Print "for and next loop Test"
+﻿Print "for and next Test"
 Print
 For $I$ = 1 to 10
 Print $I$
 Next $I$
+Print $I$
+Print "for and next Test - End"
 Print "Assign Variable"
 Print 
 Dim $A$ as string 
 $A$ = "Hello World"
 Print $A$
-Print
-Dim $B$ as Integer
+Print "Assign string end"
+Dim $B$ as Int
 $B$ = 10
 Print $B$
-Print
+Print "Assign int end"
 Dim $C$ as Boolean
 $C$ = True
 Print $C$
-Print
+Print "Assign boolean - end"

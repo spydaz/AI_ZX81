@@ -91,7 +91,7 @@ Namespace Compiler
                 CleanTree.Add(RemoveEmptySyntax(item))
             Next
         End Function
-        Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+        Public Function ParseFOR_NEXT(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
             '   POPULATED_TREE = CleanTree(POPULATED_TREE)
             'At this time there is only 1 ProgramList
             POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
@@ -108,6 +108,13 @@ Namespace Compiler
 
             Return POPULATED_TREE
         End Function
+        Public Function ParseTree(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
+            POPULATED_TREE = ParseFOR_NEXT(POPULATED_TREE)
+
+
+            Return POPULATED_TREE
+        End Function
+
 
         Public Function RemoveEmptySyntax(ByRef lst As List(Of AbstractSyntax)) As List(Of AbstractSyntax)
             Dim NEwLst As New List(Of AbstractSyntax)
@@ -118,7 +125,7 @@ Namespace Compiler
             Next
             Return NEwLst
         End Function
-        Public Function CheckFOR_NEXT(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
+        Private Function CheckFOR_NEXT(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
             Dim Prog As New List(Of AbstractSyntax)
             Dim Pop_Tree_begin As New List(Of AbstractSyntax)
             Dim Pop_Tree_end As New List(Of AbstractSyntax)
