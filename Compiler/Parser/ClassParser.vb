@@ -95,8 +95,16 @@ Namespace Compiler
             '   POPULATED_TREE = CleanTree(POPULATED_TREE)
             'At this time there is only 1 ProgramList
             POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
-            'At this time there can be multiple lists
-
+            Dim Count_ As Integer = 1
+            Dim Cnt_ As Integer = 0
+            'Starts with 3 parts
+            Do Until (Cnt_ = Count_)
+                Count_ = POPULATED_TREE.Count
+                Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
+                POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
+                POPULATED_TREE.AddRange(CheckFOR_NEXT(Last))
+                Cnt_ = POPULATED_TREE.Count
+            Loop
 
             Return POPULATED_TREE
         End Function
@@ -168,8 +176,13 @@ Namespace Compiler
                     Found = 0
                 End If
             Next
-            Pop_Tree.Add(POPULATED_TREE)
+            If detected = False Then
+                Pop_Tree = New List(Of List(Of AbstractSyntax))
+                Pop_Tree.Add(POPULATED_TREE)
+
+            End If
             Return Pop_Tree
+
         End Function
     End Class
 End Namespace
