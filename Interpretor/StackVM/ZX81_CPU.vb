@@ -738,7 +738,7 @@ Namespace STACK_VM
                 Select Case INSTRUCTION
                     Case "IS_EQ"
                         Try
-                            Return ToInt((ToBool(LEFT) = ToBool(RIGHT)))
+                            Return ToBool(ToInt((ToBool(LEFT) = ToBool(RIGHT))))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation - isEQ", Me)
@@ -746,7 +746,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_GT"
                         Try
-                            Return ToInt((ToBool(LEFT) < ToBool(RIGHT)))
+                            Return ToBool(ToInt((ToBool(LEFT) < ToBool(RIGHT))))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation - isGT", Me)
@@ -754,7 +754,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_GTE"
                         Try
-                            Return ToInt((ToBool(LEFT) <= ToBool(RIGHT)))
+                            Return ToBool(ToInt((ToBool(LEFT) <= ToBool(RIGHT))))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation isGTE", Me)
@@ -762,7 +762,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_LT"
                         Try
-                            Return ToInt((ToBool(LEFT) > ToBool(RIGHT)))
+                            Return ToBool(ToInt((ToBool(LEFT) > ToBool(RIGHT))))
 
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
@@ -771,7 +771,7 @@ Namespace STACK_VM
                         End Try
                     Case "IS_LE"
                         Try
-                            Return ToInt((ToBool(LEFT) >= ToBool(RIGHT)))
+                            Return ToBool(ToInt((ToBool(LEFT) >= ToBool(RIGHT))))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation isLTE", Me)
@@ -819,7 +819,7 @@ Namespace STACK_VM
                         End Try
                     Case "AND"
                         Try
-                            Return ToInt((ToBool(LEFT) And ToBool(RIGHT)))
+                            Return ToBool(ToInt((ToBool(LEFT) And ToBool(RIGHT))))
                         Catch ex As Exception
                             Me.mRunningState = State.HALT
                             CPU_ERR = New VM_ERR("Invalid Operation -and", Me)

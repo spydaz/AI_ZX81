@@ -50,7 +50,19 @@
     Public Function GetVar(ByRef VarName As String) As String
         For Each item In CurrentVars
             If item.iName = VarName = True Then
-                Return item.iValue
+                If item.iType = "BOOLEAN" Then
+                    Select Case item.iValue
+                        Case 0
+                            Return "False"
+                        Case 1
+                            Return "True"
+                        Case Else
+                            Return item.iValue
+                    End Select
+                Else
+                    Return item.iValue
+                End If
+
             Else
             End If
         Next
