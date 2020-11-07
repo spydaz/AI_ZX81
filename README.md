@@ -48,8 +48,8 @@ Also to be used to Parse English grammar to make abstract syntax trees.
 	Description :
 		This assembly language is specific to this virtual processor 
 		Enableing for the code to be executed on the cpu: 
-		This is a Micro based instruction set (Misc)
-	ZX81:
+		This is a Micro based instruction set (Misc) Uses Reverse Polish Notation
+	SAL:
 		_PUSH					: Pushes items on to the stack (top)
 		_POP					: Pops items off the stack (top)
 		_PEEK					: Views items on the stack (top)
