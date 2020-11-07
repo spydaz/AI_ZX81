@@ -4,9 +4,11 @@ A Basic Experiment in Parser and Compilers and Stack VM . A basic stack based CP
 A basic programming Languge Parsed to Tokens to e parsed to expressions to be compiled to assembly code to be executed on the virtual CPU... 
 Also to be used to Parse English grammar to make abstract syntax trees. 
 
-Current Position: Tokens created; Parser created(still in progress); InstructionSet StackVM-CPU-RAM (WORKING); Basic Language - Simple Language Defined (expressions being created to execute on cpu instruction set)
-Issues: ? None as of yet ? Currently solving how to manage codeblocks (without creating named structure)
-Extra Works: Would like to implement functions/subs/lambadas
+Current Position: Tokens created; Parser created(still in progress); InstructionSet StackVM-CPU-RAM (WORKING); Basic Language - Simple Language Defined (expressions being created to execute on cpu instruction set).
+
+Issues: ? None as of yet ? Currently solving how to manage codeblocks (without creating named structure).
+
+Extra Works: Would like to implement functions/subs/lambadas.
 
 ## SpydazWeb Basic Programming Language :
 	DESCRIPTION:
