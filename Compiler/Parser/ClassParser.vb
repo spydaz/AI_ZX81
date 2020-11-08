@@ -95,7 +95,7 @@ Namespace Compiler
             POPULATED_TREE = CleanTree(ParseFOR_NEXT(POPULATED_TREE))
             POPULATED_TREE = CleanTree(ParseIF_ENDIF(POPULATED_TREE))
             POPULATED_TREE = CleanTree(ParseWHILE_LOOP(POPULATED_TREE))
-            Return POPULATED_TREE
+            Return CleanTree(POPULATED_TREE)
         End Function
 
         Public Function ParseFOR_NEXT(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
@@ -292,16 +292,26 @@ Namespace Compiler
                         'End was captured
                         Pop_Tree.Add(Pop_Tree_begin)
                         Dim First As New List(Of AbstractSyntax)
+                        'If 
                         First.Add(Pop_Tree_Prog(0))
+                        'Conditional
                         First.Add(Pop_Tree_Prog(1))
                         Dim Last As New List(Of AbstractSyntax)
+                        'End if
                         Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        'If 
                         Pop_Tree_Prog.RemoveAt(0)
+                        'COnditional
                         Pop_Tree_Prog.RemoveAt(0)
+                        'end if
                         Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
+                        'IF CONDITIONAL
                         Pop_Tree.Add(First)
-                        Pop_Tree.Add(Pop_Tree_Prog)
+                        'THEN ELSE
+                        Pop_Tree.AddRange(CleanTree(CheckTHEN_ELSE(Pop_Tree_Prog)))
+                        'END IF
                         Pop_Tree.Add(Last)
+                        'REST
                         Pop_Tree.Add(Pop_Tree_end)
                         Finished = False
                         Return Pop_Tree
@@ -316,10 +326,95 @@ Namespace Compiler
                         Pop_Tree_Prog.RemoveAt(0)
                         Pop_Tree_Prog.RemoveAt(0)
                         Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
+                        'IF CONDITIONAL
+                        Pop_Tree.Add(First)
+                        'THEN ELSE
+                        Pop_Tree.AddRange(CleanTree(CheckTHEN_ELSE(Pop_Tree_Prog)))
+                        'END IF
+                        Pop_Tree.Add(Last)
+
+                        Finished = True
+                        '  Return Pop_Tree
+                    End Try
+                    Found = 0
+                End If
+            Next
+            If detected = False Then
+                Pop_Tree = New List(Of List(Of AbstractSyntax))
+                Pop_Tree.Add(POPULATED_TREE)
+
+            End If
+            Return CleanTree(Pop_Tree)
+
+        End Function
+        Private Function CheckTHEN_ELSE(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
+            Dim Prog As New List(Of AbstractSyntax)
+            Dim Pop_Tree_begin As New List(Of AbstractSyntax)
+            Dim Pop_Tree_end As New List(Of AbstractSyntax)
+            Dim Pop_Tree_Prog As New List(Of AbstractSyntax)
+            Dim Pop_Tree As New List(Of List(Of AbstractSyntax))
+            Dim Capturing As Boolean = False
+            Dim detected As Boolean = False
+            Dim Finished As Boolean = False
+            Dim Position = 0
+            Dim Found As Integer = 0
+
+
+            For Each TOK In POPULATED_TREE
+                If TOK.SyntaxName = "_THEN" Then
+                    detected = True
+                    Capturing = True
+                    Found = Position
+                End If
+                If Capturing = True Then
+                    Prog.Add(TOK)
+                End If
+                If TOK.SyntaxName = "_ELSE" Then
+                    Capturing = False
+
+                    Finished = True
+                End If
+
+                Position += 1
+                If Finished = True And Capturing = False Then
+
+                    'Remove a range of items from a list, starting at index 0, for a count of 1)
+                    'This will remove index 0, and 1!
+                    'Removes the detected Collection
+                    'Grab before
+                    Pop_Tree_begin = POPULATED_TREE.GetRange(0, Found)
+                    'Grab Loop
+                    Pop_Tree_Prog = Prog
+                    'Grab_End
+
+                    Try
+                        Pop_Tree_end = POPULATED_TREE.GetRange(Found + Prog.Count, (POPULATED_TREE.Count) - (Found + Prog.Count))
+                        'End was captured
+                        Pop_Tree.Add(Pop_Tree_begin)
+                        Dim First As New List(Of AbstractSyntax)
+                        First.Add(Pop_Tree_Prog(0))
+                        Dim Last As New List(Of AbstractSyntax)
+                        Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        Pop_Tree_Prog.RemoveAt(0)
+                        Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
                         Pop_Tree.Add(First)
                         Pop_Tree.Add(Pop_Tree_Prog)
                         Pop_Tree.Add(Last)
-
+                        Pop_Tree.Add(Pop_Tree_end)
+                        Finished = False
+                        Return Pop_Tree
+                    Catch ex As Exception
+                        'Prog was end
+                        Pop_Tree.Add(Pop_Tree_begin)
+                        Dim First As New List(Of AbstractSyntax)
+                        First.Add(Pop_Tree_Prog(0))
+                        Dim Last As New List(Of AbstractSyntax)
+                        Last.Add(Pop_Tree_Prog(Pop_Tree_Prog.Count - 1))
+                        Pop_Tree_Prog.RemoveAt(0)
+                        Pop_Tree_Prog.RemoveAt(Pop_Tree_Prog.Count - 1)
+                        Pop_Tree.Add(First)
+                        Pop_Tree.Add(Pop_Tree_Prog)
+                        Pop_Tree.Add(Last)
                         Finished = True
                         '  Return Pop_Tree
                     End Try
@@ -334,6 +429,7 @@ Namespace Compiler
             Return Pop_Tree
 
         End Function
+
         Public Function RemoveEmptySyntax(ByRef lst As List(Of AbstractSyntax)) As List(Of AbstractSyntax)
             Dim NEwLst As New List(Of AbstractSyntax)
             For Each item In lst

@@ -208,7 +208,7 @@
     <None Include="Resources\png-transparent-zx-spectrum-vega-zx81-sinclair-research-computer-computer-electronics-computer-video-game.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Compiler\Parser\CureWorkingSyntax.txt" />
+    <Content Include="Compiler\Parser\Current_WorkingSyntax.txt" />
     <Content Include="CurrentScripts\BasicTests.txt" />
     <Content Include="Icon_SpydazBrain.ico" />
     <Content Include="CurrentScripts\PL_Help.txt" />

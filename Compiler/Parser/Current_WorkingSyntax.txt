@@ -1,0 +1,25 @@
+﻿DIM $A$ as STRING 
+$A$ = " HELLO"
+DIM $B$ as STRING = "WORLD"
+DIM $X$ as INT
+$X$ = 1
+
+IF 
+5 > 9
+THEN
+Print "IF TRUE"
+ELSE
+Print "IF FALSE"
+END IF
+
+FOR $I$ = 1 to 10
+Print $A$ 
+Print $B$
+NEXT $I$
+
+WHILE
+8 > 8
+Print $A$ 
+Print $B$
+LOOP
+
