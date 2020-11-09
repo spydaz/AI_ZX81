@@ -13,8 +13,7 @@ Print "IF FALSE"
 END IF
 
 FOR $I$ = 1 to 10
-Print $A$ 
-Print $B$
+Print $I$ 
 NEXT $I$
 
 WHILE

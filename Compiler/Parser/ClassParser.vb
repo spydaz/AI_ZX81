@@ -100,64 +100,79 @@ Namespace Compiler
 
         Public Function ParseFOR_NEXT(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
             '   POPULATED_TREE = CleanTree(POPULATED_TREE)
-            'At this time there is only 1 ProgramList
-            POPULATED_TREE = CheckFOR_NEXT(POPULATED_TREE.Item(0))
-            Dim Count_ As Integer = 1
-            Dim Cnt_ As Integer = 0
-            'Starts with 3 parts
-            Do Until (Cnt_ = Count_)
-                Count_ = POPULATED_TREE.Count
-                Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
-                POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
-                POPULATED_TREE.AddRange(CheckFOR_NEXT(Last))
-                Cnt_ = POPULATED_TREE.Count
-            Loop
+            Try
 
+
+                'At this time there is only 1 ProgramList
+                POPULATED_TREE = CleanTree(CheckFOR_NEXT(POPULATED_TREE.Item(0)))
+                Dim Count_ As Integer = 1
+                Dim Cnt_ As Integer = 0
+                'Starts with 3 parts
+                Do Until (Cnt_ = Count_)
+                    Count_ = POPULATED_TREE.Count
+                    Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
+                    POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
+                    POPULATED_TREE.AddRange(CleanTree(CheckFOR_NEXT(Last)))
+                    Cnt_ = POPULATED_TREE.Count
+                Loop
+            Catch ex As Exception
+
+            End Try
             Return POPULATED_TREE
         End Function
         Public Function ParseIF_ENDIF(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
             '   POPULATED_TREE = CleanTree(POPULATED_TREE)
             'At this time there is only 1 ProgramList
-            Dim nPOPULATED_TREE As New List(Of List(Of AbstractSyntax))
-            For Each item In POPULATED_TREE
-                nPOPULATED_TREE.AddRange(CheckIF_ENDIF(item))
-            Next
-            POPULATED_TREE = nPOPULATED_TREE
+            Try
 
-            Dim Count_ As Integer = 1
-            Dim Cnt_ As Integer = 0
-            'Starts with 3 parts
-            Do Until (Cnt_ = Count_)
-                Count_ = POPULATED_TREE.Count
-                Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
-                POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
-                POPULATED_TREE.AddRange(CheckIF_ENDIF(Last))
-                Cnt_ = POPULATED_TREE.Count
-            Loop
 
+                Dim nPOPULATED_TREE As New List(Of List(Of AbstractSyntax))
+                For Each item In POPULATED_TREE
+                    nPOPULATED_TREE.AddRange(CleanTree(CheckIF_ENDIF(item)))
+                Next
+                POPULATED_TREE = nPOPULATED_TREE
+
+                Dim Count_ As Integer = 1
+                Dim Cnt_ As Integer = 0
+                'Starts with 3 parts
+                Do Until (Cnt_ = Count_)
+                    Count_ = POPULATED_TREE.Count
+                    Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
+                    POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
+                    POPULATED_TREE.AddRange(CleanTree(CheckIF_ENDIF(Last)))
+                    Cnt_ = POPULATED_TREE.Count
+                Loop
+            Catch ex As Exception
+
+            End Try
             Return POPULATED_TREE
         End Function
         Public Function ParseWHILE_LOOP(ByRef POPULATED_TREE As List(Of List(Of AbstractSyntax))) As List(Of List(Of AbstractSyntax))
-            '   POPULATED_TREE = CleanTree(POPULATED_TREE)
-            'At this time there is only 1 ProgramList
-            Dim nPOPULATED_TREE As New List(Of List(Of AbstractSyntax))
-            For Each item In POPULATED_TREE
-                'nPOPULATED_TREE.Add(item)
-                nPOPULATED_TREE.AddRange(CheckWHILE_LOOP(item))
-            Next
-            POPULATED_TREE = nPOPULATED_TREE
+            Try
 
-            Dim Count_ As Integer = 1
-            Dim Cnt_ As Integer = 0
-            'Starts with 3 parts
-            Do Until (Cnt_ = Count_)
-                Count_ = POPULATED_TREE.Count
-                Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
-                POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
-                POPULATED_TREE.AddRange(CheckWHILE_LOOP(Last))
-                Cnt_ = POPULATED_TREE.Count
-            Loop
 
+                '   POPULATED_TREE = CleanTree(POPULATED_TREE)
+                'At this time there is only 1 ProgramList
+                Dim nPOPULATED_TREE As New List(Of List(Of AbstractSyntax))
+                For Each item In POPULATED_TREE
+                    'nPOPULATED_TREE.Add(item)
+                    nPOPULATED_TREE.AddRange(CleanTree(CheckWHILE_LOOP(item)))
+                Next
+                POPULATED_TREE = nPOPULATED_TREE
+
+                Dim Count_ As Integer = 1
+                Dim Cnt_ As Integer = 0
+                'Starts with 3 parts
+                Do Until (Cnt_ = Count_)
+                    Count_ = POPULATED_TREE.Count
+                    Dim Last = POPULATED_TREE.Item(POPULATED_TREE.Count - 1)
+                    POPULATED_TREE.RemoveAt(POPULATED_TREE.Count - 1)
+                    POPULATED_TREE.AddRange(CleanTree(CheckWHILE_LOOP(Last)))
+                    Cnt_ = POPULATED_TREE.Count
+                Loop
+            Catch ex As Exception
+
+            End Try
             Return POPULATED_TREE
         End Function
         Private Function CheckWHILE_LOOP(ByRef POPULATED_TREE As List(Of AbstractSyntax)) As List(Of List(Of AbstractSyntax))
@@ -433,7 +448,7 @@ Namespace Compiler
         Public Function RemoveEmptySyntax(ByRef lst As List(Of AbstractSyntax)) As List(Of AbstractSyntax)
             Dim NEwLst As New List(Of AbstractSyntax)
             For Each item In lst
-                If item.RequiredTokens.Count > 0 Then
+                If item.RequiredTokens.Count >= 1 Then
                     NEwLst.Add(item)
                 End If
             Next

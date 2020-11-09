@@ -42,77 +42,104 @@ Namespace STACK_VM
             iCPU = New STACK_VM.ZX81_CPU(Name)
             iProgram = New List(Of List(Of AbstractSyntax))
         End Sub
+        Dim LineNumber As Integer = 0
         ''' <summary>
         ''' Executes Program on CPU stack
         ''' </summary>
         Public Sub ExecuteProgram()
+            Dim str As New List(Of String)
             Dim Prog As New List(Of String)
-            For Each ITEM In Program
-                For Each TOK In ITEM
-                    Select Case TOK.SyntaxName
-                        Case "_PRINT"
-                            Prog.AddRange(_print(""))
-                        Case "_PRINT_STR"
-                            Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
-                        Case "_PRINT_INT"
-                            Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
-                        Case "_PRINT_BOOL"
-                            Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
-                        Case "_PRINT_VARIABLE"
-                            Prog.AddRange(_print(RAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
-                        Case "Math_Operation"
-                            'Token (1) = Operator
-                            If TOK.RequiredTokens.Count = 3 Then
-                                Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
-                                Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
-                            End If
-                        Case "Conditional_Operation"
-                            'Token (1) = Operator
-                            If TOK.RequiredTokens.Count = 3 Then
-                                Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
-                                Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
-                            End If
-                        Case "_DIM_AS"
-                            'DIm,var,as,type
-                            If TOK.RequiredTokens.Count = 4 Then
-                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
-                            Else
-                            End If
+            Try
 
-                        Case "_DIM_AS_EQ"
-                            'DIm,Var,as,type,=,value
-                            If TOK.RequiredTokens.Count = 6 Then
-                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue, TOK.RequiredTokens(5).TokenValue)
-                            Else
-                                If TOK.RequiredTokens.Count = 3 Then
-                                    _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
-                                Else
-                                End If
-                            End If
-                        Case "ASSIGN_EQUALS"
-                            'var,=,value(int,Bool,String)
-                            _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)
+                For Each ITEM In Program
+                    LineNumber += 1
 
-                        Case "_FOR"
-                            'For,Var,=,start,to,finish
-                            If TOK.RequiredTokens.Count = 6 Then
-                                _for(TOK.RequiredTokens(1).TokenValue, GetValue(TOK.RequiredTokens(3).TokenValue), GetValue(TOK.RequiredTokens(5).TokenValue))
-                            End If
 
-                        Case "_NEXT"
-                            If TOK.RequiredTokens.Count = 2 Then
-                                'next,var
-                                _next(TOK.RequiredTokens(1).TokenValue)
-                            End If
 
-                    End Select
+
+
+                    Prog.AddRange(ExecuteInstruction(ITEM))
+
                 Next
-            Next
+            Catch ex As Exception
 
+            End Try
             Prog.Add("HALT")
             iCPU.LoadProgram(Prog)
             iCPU.RUN()
         End Sub
+
+        Public Function ExecuteInstruction(ByRef Item As List(Of AbstractSyntax)) As List(Of String)
+            Dim Prog As New List(Of String)
+            For Each TOK In Item
+                Select Case TOK.SyntaxName
+                    Case "_PRINT"
+                        Prog.AddRange(_print(""))
+                    Case "_PRINT_STR"
+                        Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
+                    Case "_PRINT_INT"
+                        Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
+                    Case "_PRINT_BOOL"
+                        Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
+                    Case "_PRINT_VARIABLE"
+                        Prog.AddRange(_print(RAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
+                    Case "Math_Operation"
+                        'Token (1) = Operator
+                        If TOK.RequiredTokens.Count = 3 Then
+                            Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
+                            Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
+                        End If
+                    Case "Conditional_Operation"
+                        'Token (1) = Operator
+                        If TOK.RequiredTokens.Count = 3 Then
+                            Dim iOperator As String = TOK.RequiredTokens(1).TokenValue
+                            Prog.AddRange(_Binary_op(GetValue(TOK.RequiredTokens(0).TokenValue), GetValue(TOK.RequiredTokens(2).TokenValue), iOperator))
+                        End If
+                    Case "_DIM_AS"
+                        'DIm,var,as,type
+                        If TOK.RequiredTokens.Count = 4 Then
+                            _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                        Else
+                        End If
+
+                    Case "_DIM_AS_EQ"
+                        'DIm,Var,as,type,=,value
+                        If TOK.RequiredTokens.Count = 6 Then
+                            _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue, TOK.RequiredTokens(5).TokenValue)
+                        Else
+                            If TOK.RequiredTokens.Count = 3 Then
+                                _DIM_AS(TOK.RequiredTokens(1).TokenValue, TOK.RequiredTokens(3).TokenValue)
+                            Else
+                            End If
+                        End If
+                    Case "ASSIGN_EQUALS"
+                        'var,=,value(int,Bool,String)
+                        _VAR_EQ_VALUE(TOK.RequiredTokens(0).TokenValue, TOK.RequiredTokens(2).TokenValue)
+
+                    Case "_FOR"
+                        'For,Var,=,start,to,finish
+                        If TOK.RequiredTokens.Count = 6 Then
+                            _for(TOK.RequiredTokens(1).TokenValue, GetValue(TOK.RequiredTokens(3).TokenValue), GetValue(TOK.RequiredTokens(5).TokenValue))
+                        End If
+
+                    Case "_NEXT"
+                        If TOK.RequiredTokens.Count = 2 Then
+                            Dim Ivar = TOK.RequiredTokens(1).TokenValue
+                            Dim Cont As Boolean = True
+                            Do While (Cont) = True
+                                Cont = _next(Ivar)
+                                Prog.AddRange(ExecuteInstruction(Program(LineNumber - 2)))
+
+                            Loop
+                            Prog.RemoveAt(Prog.Count - 1)
+                            'next,var
+
+                        End If
+
+                End Select
+            Next
+            Return Prog
+        End Function
         ''' <summary>
         ''' returns the value if it is a var it is returned as a value
         ''' </summary>
@@ -362,18 +389,28 @@ Namespace STACK_VM
             Dim Fin As New Variable
             Fin.iName = "FOR_END_" & iVar
             Fin.iValue = Integer.Parse(ifinish)
-            Temp.iType = "INTEGER"
-
+            Fin.iType = "INTEGER"
+            iRAM.AddVar(Fin)
         End Sub
-        Public Sub _next(ByRef Ivar As String)
+        ''' <summary>
+        ''' Executes next Cmd Increment by 1 if not greater than target
+        ''' return true if loop is required
+        ''' </summary>
+        ''' <param name="Ivar"></param>
+        ''' <returns>True If loop is Required</returns>
+        Public Function _next(ByRef Ivar As String) As Boolean
             Dim fin As String = "FOR_END_" & Ivar
-            If iRAM.GetVar(Ivar) < iRAM.GetVar(fin) Then
-                iRAM.UpdateVar(Ivar, iRAM.GetVar(Ivar) + 1)
+            Dim finval As Integer = Integer.Parse(iRAM.GetVar(fin))
+            Dim Ival As Integer = Integer.Parse(iRAM.GetVar(Ivar))
+            If Integer.Parse(iRAM.GetVar(Ivar)) < Integer.Parse(iRAM.GetVar(fin)) Then
+                iRAM.UpdateVar(Ivar, Ival + 1)
+                Return True
                 'REPEAT CODE-BLOCK(codeblock required)
             Else
-
+                'Loop is not required
+                Return False
             End If
-        End Sub
+        End Function
 
     End Class
     Public Enum instruction

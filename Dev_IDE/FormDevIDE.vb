@@ -142,6 +142,7 @@ Public Class FormDevIDE
 
     Private Sub ButtonParseTree_Click(sender As Object, e As EventArgs) Handles ButtonParseTree.Click
         CLEAR()
+        Dim StatCount As Integer = 0
         Dim Errr As Boolean = False
         Dim CurrentTokens As List(Of Token) = ClassLexer.PL_Lexer(UCase(UCase(GetCode)))
         If CurrentTokens IsNot Nothing Then
@@ -150,29 +151,36 @@ Public Class FormDevIDE
 
                 AST.Nodes.Clear()
                 AST.Nodes.Add(ClassLexer.GetTokenExprTree(Tokentree))
-                Dim tree = Parser.GetParseAST_Tree(Tokentree)
+                Dim tree = Parser.CleanTree(Parser.GetParseAST_Tree(Tokentree))
                 tree = Parser.ParseTree(tree)
-                For Each DefinedSyntax In tree
+                For Each DefinedSyntax In Parser.CleanTree(tree)
+                    StatCount += 1
                     If DefinedSyntax IsNot Nothing Then
                         Dim DefinedSyntaxNDE As New TreeNode
-                        DefinedSyntaxNDE.Text = "Syntax"
+                        DefinedSyntaxNDE.Text = "Syntax -" & StatCount
 
 
                         For Each AbstractSyntaxDefinedToken In DefinedSyntax
-                            Dim AbstractSyntaxDefinedTokenNDE As New TreeNode
-                            AbstractSyntaxDefinedTokenNDE.Text = AbstractSyntaxDefinedToken.SyntaxName
-                            RichTextBoxDisplayOutput.Text &= AbstractSyntaxDefinedToken.SyntaxName & vbNewLine
-                            If AbstractSyntaxDefinedToken.RequiredTokens IsNot Nothing Then
-
-                                For Each tok In AbstractSyntaxDefinedToken.RequiredTokens
-                                    Dim tokNDE As New TreeNode
-                                    tokNDE.Text = AbstractSyntaxDefinedToken.SyntaxName & " Value = " & tok.TokenValue
-                                    AbstractSyntaxDefinedTokenNDE.Nodes.Add(tokNDE)
-                                Next
+                            If AbstractSyntaxDefinedToken IsNot Nothing Then
 
 
+                                Dim AbstractSyntaxDefinedTokenNDE As New TreeNode
+                                AbstractSyntaxDefinedTokenNDE.Text = AbstractSyntaxDefinedToken.SyntaxName
+                                RichTextBoxDisplayOutput.Text &= AbstractSyntaxDefinedToken.SyntaxName & vbNewLine
+                                If AbstractSyntaxDefinedToken.RequiredTokens IsNot Nothing Then
+
+                                    For Each tok In AbstractSyntaxDefinedToken.RequiredTokens
+                                        Dim tokNDE As New TreeNode
+                                        tokNDE.Text = AbstractSyntaxDefinedToken.SyntaxName & " Value = " & tok.TokenValue
+                                        AbstractSyntaxDefinedTokenNDE.Nodes.Add(tokNDE)
+                                    Next
+
+
+                                End If
+                                DefinedSyntaxNDE.Nodes.Add(AbstractSyntaxDefinedTokenNDE)
+                            Else
+                                'skip
                             End If
-                            DefinedSyntaxNDE.Nodes.Add(AbstractSyntaxDefinedTokenNDE)
                         Next
 
                         AST.Nodes.Add(DefinedSyntaxNDE)
@@ -181,8 +189,11 @@ Public Class FormDevIDE
                         ' DisplayError("Error" & ToJson(item) & ")" & vbNewLine)
                     End If
 
+
                 Next
-                DisplayError("Parse Completed" & vbNewLine & "Abstract Token Tree Generated" & vbNewLine)
+                DisplayError("Parse Completed" & vbNewLine &
+                             "Abstract Token Tree Generated" & vbNewLine &
+                             "Number of CodeBlocks defined =" & StatCount)
                 'add test --------------------
             Else
                 Errr = True
