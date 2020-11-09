@@ -14,11 +14,11 @@ END IF
 
 FOR $I$ = 1 to 10
 Print $I$ 
+Print
 NEXT $I$
 
 WHILE
 8 > 8
-Print $A$ 
-Print $B$
+Print "TEST""
 LOOP
 

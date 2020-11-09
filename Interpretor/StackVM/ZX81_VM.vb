@@ -71,7 +71,9 @@ Namespace STACK_VM
 
         Public Function ExecuteInstruction(ByRef Item As List(Of AbstractSyntax)) As List(Of String)
             Dim Prog As New List(Of String)
+            Dim ItemCount As Integer = 0
             For Each TOK In Item
+
                 Select Case TOK.SyntaxName
                     Case "_PRINT"
                         Prog.AddRange(_print(""))
@@ -82,7 +84,7 @@ Namespace STACK_VM
                     Case "_PRINT_BOOL"
                         Prog.AddRange(_print(TOK.RequiredTokens(1).TokenValue))
                     Case "_PRINT_VARIABLE"
-                        Prog.AddRange(_print(RAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
+                        Prog.AddRange(_print(iRAM.GetVar(TOK.RequiredTokens(1).TokenValue)))
                     Case "Math_Operation"
                         'Token (1) = Operator
                         If TOK.RequiredTokens.Count = 3 Then
@@ -123,23 +125,21 @@ Namespace STACK_VM
                         End If
 
                     Case "_NEXT"
+                        'Nex,Var
                         If TOK.RequiredTokens.Count = 2 Then
                             Dim Ivar = TOK.RequiredTokens(1).TokenValue
-                            Dim Cont As Boolean = True
-                            Do While (Cont) = True
-                                Cont = _next(Ivar)
+                            Do While (_next(Ivar)) = True
                                 Prog.AddRange(ExecuteInstruction(Program(LineNumber - 2)))
-
                             Loop
-                            Prog.RemoveAt(Prog.Count - 1)
-                            'next,var
-
+                        Else
                         End If
 
                 End Select
+
             Next
             Return Prog
         End Function
+
         ''' <summary>
         ''' returns the value if it is a var it is returned as a value
         ''' </summary>
@@ -327,7 +327,50 @@ Namespace STACK_VM
             End Select
             Return PROGRAM
         End Function
+        Private Function _CheckCondition(ByRef Left As Integer, ByRef Right As Integer, ByRef iOperator As String) As Boolean
 
+            Select Case iOperator
+
+                Case ">"
+                    If Left > Right Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+
+
+                Case "<"
+                    If Left < Right Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+
+                Case ">="
+                    If Left >= Right Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+
+                Case "<="
+                    If Left <= Right Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+
+                Case "="
+                    If Left = Right Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+                Case Else
+                    Return False
+            End Select
+
+        End Function
         Private Function _print(ByRef Str As String) As List(Of String)
 
             Dim PROGRAM As New List(Of String)
