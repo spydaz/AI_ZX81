@@ -196,9 +196,15 @@ Namespace Compiler
             CheckCurrentToken = False
             For Each item In iRuleList
                 For Each ITEM2 In item.COMPONENTSTRINGS
-                    If UCase(ITEM2) Like UCase(Token) Then
-                        Return True
-                    End If
+                    Try
+
+
+                        If UCase(ITEM2) Like UCase(Token) Then
+                            Return True
+                        End If
+                    Catch ex As Exception
+                        Return False
+                    End Try
                 Next
             Next
         End Function
@@ -641,6 +647,7 @@ Namespace Compiler
                     Return False
 
                 End If
+            Else
 
             End If
 
